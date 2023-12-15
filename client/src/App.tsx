@@ -10,6 +10,7 @@ import { Suspense } from "react";
 
 import AccRender from "./components/AccRender";
 import Burners from "./components/Burners";
+import Button from "./components/Button";
 
 function App() {
     const {
@@ -46,10 +47,7 @@ function App() {
                 <Physics>
                     <AccRender coords={[0,5,5]} account={account} click={() => console.log(account.address)}/>
                     <Burners coords={[5,5,5]} create={create} clear={clear} select={select} list={list}/>
-                    <mesh position = {[0,7,5]} onClick={() => spawn(account)}>
-                        <planeGeometry/>
-                        <meshBasicMaterial color = "red"/>
-                    </mesh>
+                    <Button coords = {[0,7,5]} click={() => spawn(account)} label = "spawn"/> 
                     <mesh scale = {3} onClick={() => set_secret(account, 200)}>
                         <sphereGeometry/>
                         <meshBasicMaterial color = {secret ? getColor(secret.value) : "black"}/>
