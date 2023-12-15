@@ -20,7 +20,20 @@ const Board: FC<BoardProps> = ({position, squareValues}) => {
 
     })
 
-    const joint = useFixedJoint(refs[0], refs[1] , [[0,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
+    const joint1 = useFixedJoint(refs[0], refs[1] , [[1,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
+    const joint2= useFixedJoint(refs[1], refs[2] , [[1,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
+    
+    const joint3 = useFixedJoint(refs[0], refs[3], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
+    const joint4 = useFixedJoint(refs[3], refs[6], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
+
+    const joint5 = useFixedJoint(refs[1], refs[4], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
+    const joint6 = useFixedJoint(refs[4], refs[7], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
+
+
+    const joint7 = useFixedJoint(refs[2], refs[5], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
+    const joint8 = useFixedJoint(refs[5], refs[8], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
+
+
 
     return (
         <>
