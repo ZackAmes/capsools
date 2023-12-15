@@ -9,5 +9,8 @@ export function createClientComponents({
     return {
         ...contractComponents,
         Secret: overridableComponent(contractComponents.Secret),
+        Game: overridableComponent(contractComponents.Game),
+        Square: overridableComponent(contractComponents.Square),
+
     };
 }

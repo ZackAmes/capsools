@@ -4,6 +4,19 @@ import { defineComponent, Type as RecsType, World } from "@dojoengine/recs";
 
 export function defineContractComponents(world: World) {
   return {
+	  Game: (() => {
+	    return defineComponent(
+	      world,
+	      { game_id: RecsType.Number, ones_turn: RecsType.Boolean },
+	      {
+	        metadata: {
+	          name: "Game",
+	          types: ["u32","bool"],
+	          customTypes: [],
+	        },
+	      }
+	    );
+	  })(),
 	  Secret: (() => {
 	    return defineComponent(
 	      world,
@@ -12,6 +25,19 @@ export function defineContractComponents(world: World) {
 	        metadata: {
 	          name: "Secret",
 	          types: ["contractaddress","u8"],
+	          customTypes: [],
+	        },
+	      }
+	    );
+	  })(),
+	  Square: (() => {
+	    return defineComponent(
+	      world,
+	      { game_id: RecsType.Number, x: RecsType.Number, y: RecsType.Number, value: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "Square",
+	          types: ["u32","u8","u8","u8"],
 	          customTypes: [],
 	        },
 	      }

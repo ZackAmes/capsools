@@ -16,7 +16,7 @@ function App() {
     const {
         setup: {
             systemCalls: { spawn, set_secret },
-            components: { Secret },
+            components: { Secret, Square, Game },
         },
         account: {
             create,
@@ -36,6 +36,11 @@ function App() {
     // get current component values
     const secret = useComponentValue(Secret, entityId);
 
+    const gameId = getEntityIdFromKeys([BigInt(0)]) as Entity
+    const squares = useComponentValue(Square, gameId);
+
+    console.log(squares);
+
     const getColor = (value: number) => {
         return "rgb(0," + ((value+53)*28) % 255 + ",0)" 
     }
@@ -48,10 +53,12 @@ function App() {
                     <AccRender coords={[0,5,5]} account={account} click={() => console.log(account.address)}/>
                     <Burners coords={[5,5,5]} create={create} clear={clear} select={select} list={list}/>
                     <Button coords = {[0,7,5]} click={() => spawn(account)} label = "spawn"/> 
+
                     <mesh scale = {3} onClick={() => set_secret(account, 200)}>
                         <sphereGeometry/>
                         <meshBasicMaterial color = {secret ? getColor(secret.value) : "black"}/>
                     </mesh>
+
                 </Physics>
                 </Suspense>
             </Canvas>

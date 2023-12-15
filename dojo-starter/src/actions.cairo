@@ -9,7 +9,7 @@ trait IActions<TContractState> {
 #[dojo::contract]
 mod actions {
     use starknet::{ContractAddress, get_caller_address};
-    use dojo_examples::models::{Secret};
+    use dojo_examples::models::{Secret, Game, Square};
     use super::IActions;
 
     
@@ -27,7 +27,17 @@ mod actions {
             set!(
                 world,
                 (
-                    Secret {player: caller, value: 69}
+                    Secret {player: caller, value: 69},
+                    Game {game_id: 0, ones_turn: true},
+                    Square {game_id: 0, x:0, y:0, value:0},
+                    Square {game_id: 0, x:1, y:0, value:0},
+                    Square {game_id: 0, x:2, y:0, value:0},
+                    Square {game_id: 0, x:0, y:1, value:0},
+                    Square {game_id: 0, x:1, y:1, value:0},
+                    Square {game_id: 0, x:2, y:1, value:0},
+                    Square {game_id: 0, x:0, y:2, value:0},
+                    Square {game_id: 0, x:1, y:2, value:0},
+                    Square {game_id: 0, x:2, y:2, value:0},
                 )
             );
         }
