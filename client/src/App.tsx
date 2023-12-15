@@ -7,7 +7,7 @@ import { getEntityIdFromKeys } from "@dojoengine/utils";
 import {Canvas} from "@react-three/fiber";
 import {Physics} from "@react-three/rapier";
 import { Suspense } from "react";
-import { FlyControls } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 
 import AccRender from "./components/AccRender";
 import Burners from "./components/Burners";
@@ -66,7 +66,7 @@ function App() {
     return (
         <>
             <Canvas style={{height:800, width:800}}camera={{rotation:[0,0,0], position:[0,10,20] }}>
-            <FlyControls/>
+            <OrbitControls/>
                 <Suspense>
                 <Physics debug>
                     <AccRender position={[0,10,10]} account={account} click={() => console.log(account.address)}/>
