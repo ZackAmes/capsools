@@ -3,15 +3,17 @@ import AccRender from './AccRender';
 import Button from './Button';
 
 interface BurnersProps {
-    create: () => any
-    clear: () => any
-    select: (arg:any) => any
-    list: () => any[]
-    isDeploying?: boolean
+    account : {
+        create: any,
+        clear: any,
+        list: () => any[],
+        select: any,
+
+    }
     position: [number,number,number]
 }
 
-const Burners: FC<BurnersProps> = ({create, clear, select, list, isDeploying, position}) => {
+const Burners: FC<BurnersProps> = ({account: {create, clear, select, list}, position}) => {
 
     const burners = list().map( (account, index) => {
         return (

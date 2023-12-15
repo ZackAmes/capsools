@@ -18,25 +18,17 @@ function App() {
     const {
         setup: {
             systemCalls: { spawn, set_secret },
-            components: { Secret, Square, Game },
+            components,
         },
-        account: {
-            create,
-            list,
-            select,
-            account,
-            isDeploying,
-            clear,
-            copyToClipboard,
-            applyFromClipboard,
-        },
+        account,
     } = useDojo();
 
     // entity id we are syncing
-    const entityId = getEntityIdFromKeys([BigInt(account.address)]) as Entity;
+    const signer = account.account;
+    const entityId = getEntityIdFromKeys([BigInt(signer.address)]) as Entity;
 
     // get current component values
-    const secret = useComponentValue(Secret, entityId);
+    const secret = useComponentValue(components.Secret, entityId);
 
     const squareIds = [];
     const squareValues = [];
@@ -46,7 +38,7 @@ function App() {
         let tempSquares = []
         for(let j=0; j<3; j++){
             let tempId = getEntityIdFromKeys([BigInt(0), BigInt(i), BigInt(j)]) as Entity 
-            let tempSquare = useComponentValue(Square, tempId)
+            let tempSquare = useComponentValue(components.Square, tempId)
             console.log(tempSquare)
             tempIds.push(tempId)
             tempSquares.push(tempSquare)
@@ -69,16 +61,16 @@ function App() {
             <OrbitControls/>
                 <Suspense>
                 <Physics debug>
-                    <AccRender position={[0,10,10]} account={account} click={() => console.log(account.address)}/>
-                    <Burners position={[5,10,10]} create={create} clear={clear} select={select} list={list}/>
-                    <Button position = {[0,7,5]} click={() => spawn(account)} label = "spawn"/> 
+                    <AccRender position={[0,10,10]} account={signer} click={() => console.log(signer.address)}/>
+                    <Burners position={[5,10,10]} account = {account}/>
+                    <Button position = {[0,7,5]} click={() => spawn(signer)} label = "spawn"/> 
 
-                    <mesh scale = {3} position={[4,5,0]} onClick={() => set_secret(account, 200)}>
+                    <mesh scale = {3} position={[4,5,0]} onClick={() => set_secret(signer, 200)}>
                         <sphereGeometry/>
                         <meshBasicMaterial color = {secret ? getColor(secret.value) : "black"}/>
                     </mesh>
 
-                    <Scene/>
+                    <Scene squareValues={squareValues}/>
 
                 </Physics>
                 </Suspense>

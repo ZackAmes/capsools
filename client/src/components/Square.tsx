@@ -5,12 +5,14 @@ import { FC } from "react";
 interface SquareProps {
     color: string
     position: [number, number, number]
+    index?: [number, number, number] 
+    ref?: any
 }
 
-const Square: FC<SquareProps> = ({color, position}) => {
+const Square: FC<SquareProps> = ({color, position, index=position, ref}) => {
     return (
         <>
-            <RigidBody position={position}>
+            <RigidBody ref={ref} position={position}>
                 <Box>
                     <meshBasicMaterial color={color}/>
                 </Box>
