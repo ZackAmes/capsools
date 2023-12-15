@@ -1,5 +1,7 @@
 import { FC } from "react";
 import Square from "./Square";
+import { useRef, RefObject } from "react";
+import { RapierRigidBody, useFixedJoint } from "@react-three/rapier";
 
 interface BoardProps {
     position: [number,number,number]
@@ -7,13 +9,18 @@ interface BoardProps {
 }
 
 const Board: FC<BoardProps> = ({position, squareValues}) => {
-    console.log(squareValues)
+    const refs: RefObject<RapierRigidBody>[] = [];
     const squares = squareValues.flat().map( (square) => {
-        console.log(square)
+
+        let ref = useRef<RapierRigidBody>(null);
+        refs.push(ref);
+
         let tempPosition: [number, number, number] = [position[0] + square.x, position[1]+3, position[2]+square.y];
-        console.log(tempPosition);
-        return (<Square position={tempPosition} color= "blue" />);
+        return (<Square ref={ref} position={tempPosition} color= "blue" />);
+
     })
+
+    const joint = useFixedJoint(refs[0], refs[1] , [[0,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
 
     return (
         <>

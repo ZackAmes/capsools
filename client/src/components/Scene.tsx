@@ -11,12 +11,12 @@ interface SceneProps {
 const Scene: FC<SceneProps> = ({squareValues}) => {
     return (
         <>
-            <Box args={[100, 1, 100]}>
-                <CuboidCollider args={[50,.5,50]}/>
+            <Box rotation={[0, 0,0]} args={[100, 1, 100]}>
+                <CuboidCollider rotation={[0, 0,0]} args={[50,.5,50]}/>
                 <meshBasicMaterial color="black"/>
             </Box>
-            <Square color="red" position = {[10,0,1]}/>
-            <Board position={[0,0,0]} squareValues={squareValues}/>
+            <Square color="red" position = {[0,5,0]}/>
+            <Board position={[0,3,0]} squareValues={squareValues}/>
         </>
     )
 }
