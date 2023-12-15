@@ -6,11 +6,11 @@ import {TextureLoader} from 'three';
 
 interface AccRenderProps {
     account: Account
-    coords: number[]
+    position: [number,number,number]
     click: () => any
 }
 
-const AccRender: FC<AccRenderProps> = ({account, coords, click}) => {
+const AccRender: FC<AccRenderProps> = ({account, position, click}) => {
     let address = account.address.slice(2);
     let img = blo(`0x${address}`);
     let texture = useLoader(TextureLoader, img);
@@ -18,7 +18,7 @@ const AccRender: FC<AccRenderProps> = ({account, coords, click}) => {
 
     return (
         <>
-        <mesh rotation={[0,0,0]} position={[coords[0], coords[1], coords[2]]} onClick={click}>
+        <mesh rotation={[0,0,0]} position={position} onClick={click}>
             <planeGeometry args={[1,1]} />
             <meshBasicMaterial map={texture}/>
         </mesh>

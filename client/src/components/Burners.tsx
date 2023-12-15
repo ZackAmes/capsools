@@ -8,23 +8,23 @@ interface BurnersProps {
     select: (arg:any) => any
     list: () => any[]
     isDeploying?: boolean
-    coords: number[]
+    position: [number,number,number]
 }
 
-const Burners: FC<BurnersProps> = ({create, clear, select, list, isDeploying, coords}) => {
+const Burners: FC<BurnersProps> = ({create, clear, select, list, isDeploying, position}) => {
 
     const burners = list().map( (account, index) => {
         return (
-            <AccRender key={account.address} account={account} coords={[coords[0], coords[1]-index, coords[2]]} click={() => select(account.address)}/>
+            <AccRender key={account.address} account={account} position={[position[0], position[1]-index, position[2]]} click={() => select(account.address)}/>
         )
     })
     
 
     return (
         <>
-            <Button scale = {.5} color={"blue"} coords={[coords[0]-1,coords[1] + 1,coords[2]]} 
+            <Button scale = {.5} color={"blue"} position={[position[0]-1,position[1] + 1,position[2]]} 
                     label={"clear"} click={clear}/>
-            <Button scale = {.5} color={"blue"} coords={[coords[0]+1, coords[1] + 1, coords[2]]} 
+            <Button scale = {.5} color={"blue"} position={[position[0]+1, position[1] + 1, position[2]]} 
                     label={"create"} click={create}/>
             {burners}
         </>

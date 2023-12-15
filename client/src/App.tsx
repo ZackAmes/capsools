@@ -7,10 +7,12 @@ import { getEntityIdFromKeys } from "@dojoengine/utils";
 import {Canvas} from "@react-three/fiber";
 import {Physics} from "@react-three/rapier";
 import { Suspense } from "react";
+import { FlyControls } from "@react-three/drei";
 
 import AccRender from "./components/AccRender";
 import Burners from "./components/Burners";
 import Button from "./components/Button";
+import Scene from "./components/Scene";
 
 function App() {
     const {
@@ -63,17 +65,20 @@ function App() {
 
     return (
         <>
-            <Canvas style={{height:800, width:800}}camera={{rotation:[0,0,0], position:[0,5,15] }}>
+            <Canvas style={{height:800, width:800}}camera={{rotation:[0,0,0], position:[0,10,20] }}>
+            <FlyControls/>
                 <Suspense>
-                <Physics>
-                    <AccRender coords={[0,5,5]} account={account} click={() => console.log(account.address)}/>
-                    <Burners coords={[5,5,5]} create={create} clear={clear} select={select} list={list}/>
-                    <Button coords = {[0,7,5]} click={() => spawn(account)} label = "spawn"/> 
+                <Physics debug>
+                    <AccRender position={[0,10,10]} account={account} click={() => console.log(account.address)}/>
+                    <Burners position={[5,10,10]} create={create} clear={clear} select={select} list={list}/>
+                    <Button position = {[0,7,5]} click={() => spawn(account)} label = "spawn"/> 
 
-                    <mesh scale = {3} onClick={() => set_secret(account, 200)}>
+                    <mesh scale = {3} position={[4,5,0]} onClick={() => set_secret(account, 200)}>
                         <sphereGeometry/>
                         <meshBasicMaterial color = {secret ? getColor(secret.value) : "black"}/>
                     </mesh>
+
+                    <Scene/>
 
                 </Physics>
                 </Suspense>
