@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { useDojo } from "./DojoContext";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
+import {Canvas} from "@react-three/fiber";
+import {Physics} from "@react-three/rapier";
+import { Suspense } from "react";
+
 function App() {
     const {
         setup: {
@@ -28,12 +32,26 @@ function App() {
     // get current component values
     const secret = useComponentValue(Secret, entityId);
 
+    const getColor = (value: number) => {
+        return "rgb(0," + ((value+53)*28) % 255 + ",0)" 
+    }
 
     return (
         <>
-            <div>
-                {secret? secret.value : "0"}
-            </div>
+            <Canvas style={{height:800, width:800}}camera={{rotation:[0,0,0], position:[0,5,30] }}>
+                <Suspense>
+                <Physics>
+                    <mesh position = {[0,7,5]} onClick={() => spawn(account)}>
+                        <planeGeometry/>
+                        <meshBasicMaterial color = "red"/>
+                    </mesh>
+                    <mesh scale = {5} onClick={() => set_secret(account, 200)}>
+                        <sphereGeometry/>
+                        <meshBasicMaterial color = {secret ? getColor(secret.value) : "black"}/>
+                    </mesh>
+                </Physics>
+                </Suspense>
+            </Canvas>
         </>
     );
 }
