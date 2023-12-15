@@ -36,10 +36,26 @@ function App() {
     // get current component values
     const secret = useComponentValue(Secret, entityId);
 
-    const gameId = getEntityIdFromKeys([BigInt(0)]) as Entity
-    const squares = useComponentValue(Square, gameId);
+    const squareIds = [];
+    const squareValues = [];
 
-    console.log(squares);
+    for(let i=0; i<3; i++){
+        let tempIds = [];
+        let tempSquares = []
+        for(let j=0; j<3; j++){
+            let tempId = getEntityIdFromKeys([BigInt(0), BigInt(i), BigInt(j)]) as Entity 
+            let tempSquare = useComponentValue(Square, tempId)
+            console.log(tempSquare)
+            tempIds.push(tempId)
+            tempSquares.push(tempSquare)
+        }
+        squareIds.push(tempIds);
+        squareValues.push(tempSquares)
+    }
+
+    const gameId = getEntityIdFromKeys([BigInt(0)]) as Entity
+
+    console.log(squareValues);
 
     const getColor = (value: number) => {
         return "rgb(0," + ((value+53)*28) % 255 + ",0)" 

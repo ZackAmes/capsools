@@ -19,7 +19,9 @@ struct Game {
 struct Square {
     #[key]
     game_id: u32,
+    #[key]
     x: u8,
+    #[key]
     y: u8,
     value: u8
 }
