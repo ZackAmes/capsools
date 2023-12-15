@@ -8,6 +8,9 @@ import {Canvas} from "@react-three/fiber";
 import {Physics} from "@react-three/rapier";
 import { Suspense } from "react";
 
+import AccRender from "./components/AccRender";
+import Burners from "./components/Burners";
+
 function App() {
     const {
         setup: {
@@ -38,14 +41,16 @@ function App() {
 
     return (
         <>
-            <Canvas style={{height:800, width:800}}camera={{rotation:[0,0,0], position:[0,5,30] }}>
+            <Canvas style={{height:800, width:800}}camera={{rotation:[0,0,0], position:[0,5,15] }}>
                 <Suspense>
                 <Physics>
+                    <AccRender coords={[0,5,5]} account={account} click={() => console.log(account.address)}/>
+                    <Burners coords={[5,5,5]} create={create} clear={clear} select={select} list={list}/>
                     <mesh position = {[0,7,5]} onClick={() => spawn(account)}>
                         <planeGeometry/>
                         <meshBasicMaterial color = "red"/>
                     </mesh>
-                    <mesh scale = {5} onClick={() => set_secret(account, 200)}>
+                    <mesh scale = {3} onClick={() => set_secret(account, 200)}>
                         <sphereGeometry/>
                         <meshBasicMaterial color = {secret ? getColor(secret.value) : "black"}/>
                     </mesh>
