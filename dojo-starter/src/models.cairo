@@ -12,6 +12,8 @@ struct Secret {
 struct Game {
     #[key]
     game_id: u32,
+    player_one: ContractAddress,
+    player_two: ContractAddress,
     ones_turn: bool
 }
 

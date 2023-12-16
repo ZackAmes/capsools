@@ -3,6 +3,7 @@
 trait IActions<TContractState> {
     fn spawn(self: @TContractState);
     fn set_secret(self: @TContractState, value: u8);
+    fn take_turn(self: @TContractState, game_id: u32, x:u8, y:u8);
 }
 
 // dojo decorator
@@ -28,7 +29,7 @@ mod actions {
                 world,
                 (
                     Secret {player: caller, value: 69},
-                    Game {game_id: 0, ones_turn: true},
+                    Game {game_id: 0,player_one:caller, player_two:caller, ones_turn: true},
                     Square {game_id: 0, x:0, y:0, value:0},
                     Square {game_id: 0, x:1, y:0, value:0},
                     Square {game_id: 0, x:2, y:0, value:0},
@@ -51,6 +52,32 @@ mod actions {
             let player = get_caller_address();
 
             set!(world, Secret {player, value});
+        }
+
+        fn take_turn(self: @ContractState, game_id: u32, x:u8, y:u8){
+            let world = self.world_dispatcher.read();
+
+            let player = get_caller_address();
+
+            let mut game = get!(world, game_id, (Game));
+
+            let mut square = get!(world, (game_id, x, y), (Square));
+
+            assert(square.value == 0, 'square taken');
+
+            if(game.ones_turn){
+                assert(player == game.player_one, 'not turn player, ones turn');
+                square.value = 1;
+                game.ones_turn = false;
+
+            }
+            else {
+                assert(player == game.player_two, 'not turn player, twos turn');
+                square.value = 2;
+                game.ones_turn = true;
+            }
+
+            set!(world, (game, square))
         }
     }
 }
