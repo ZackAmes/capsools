@@ -15,7 +15,7 @@ const Scene: FC<SceneProps> = ({squareValues}) => {
                 <CuboidCollider rotation={[0, 0,0]} args={[50,.5,50]}/>
                 <meshBasicMaterial color="black"/>
             </Box>
-            <Square color="red" position = {[0,5,0]}/>
+            <Square color="red" position = {[5,5,0]} state={1}/>
             <Board position={[0,3,0]} squareValues={squareValues}/>
         </>
     )

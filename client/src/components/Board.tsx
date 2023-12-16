@@ -16,13 +16,13 @@ const Board: FC<BoardProps> = ({position, squareValues}) => {
         refs.push(ref);
 
         let tempPosition: [number, number, number] = [position[0] + square.x, position[1]+3, position[2]+square.y];
-        return (<Square ref={ref} position={tempPosition} color= "blue" />);
+        return (<Square ref={ref} position={tempPosition} color= "blue" state={square.value}/>);
 
     })
 
     const joint1 = useFixedJoint(refs[0], refs[1] , [[1,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
     const joint2= useFixedJoint(refs[1], refs[2] , [[1,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-    
+
     const joint3 = useFixedJoint(refs[0], refs[3], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
     const joint4 = useFixedJoint(refs[3], refs[6], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
 
