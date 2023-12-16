@@ -1,10 +1,11 @@
+use starknet::{ContractAddress};
 
 #[starknet::interface]
 trait IActions<TContractState> {
     fn spawn(self: @TContractState);
     fn set_secret(self: @TContractState, value: u8);
     fn take_turn(self: @TContractState, game_id: u32, x:u8, y:u8);
-    fn challenge(sekf: @TContractState, opp: ContractAddress);
+    fn challenge(self: @TContractState, opp: ContractAddress);
 }
 
 // dojo decorator
@@ -87,7 +88,7 @@ mod actions {
 
             let player_one = get_caller_address();
 
-            let game_id = uuid();
+            let game_id = world.uuid();
 
             set!(
                 world,
