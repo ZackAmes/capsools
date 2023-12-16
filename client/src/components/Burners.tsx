@@ -8,7 +8,6 @@ interface BurnersProps {
         clear: any,
         list: () => any[],
         select: any,
-
     }
     position: [number,number,number]
 }
@@ -25,9 +24,9 @@ const Burners: FC<BurnersProps> = ({account: {create, clear, select, list}, posi
     return (
         <>
             <Button scale = {.5} color={"blue"} position={[position[0]-1,position[1] + 1,position[2]]} 
-                    label={"clear"} click={clear}/>
+                    label={"clear"} onClick={clear}/>
             <Button scale = {.5} color={"blue"} position={[position[0]+1, position[1] + 1, position[2]]} 
-                    label={"create"} click={create}/>
+                    label={"create"} onClick={create}/>
             {burners}
         </>
     )

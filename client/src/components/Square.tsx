@@ -20,7 +20,7 @@ const Square = forwardRef(({color, position, state, index=position}: SquareProps
 
     return (
         <>
-            <RigidBody ref={ref} position={position}>
+            <RigidBody rotation={[Math.PI/2,0,0]} ref={ref} position={position}>
                 <Box args={[1,1,.1]}>
                     <meshBasicMaterial color={color}/>
                 </Box>

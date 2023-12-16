@@ -7,13 +7,13 @@ interface ButtonProps {
     color?: string
     position: [number,number,number]
     scale?: number
-    click : () => any
+    onClick : () => any
 } 
 
-const Button: FC<ButtonProps> = ({scale=1,color="red", position, label, click}) => {
+const Button: FC<ButtonProps> = ({scale=1,color="red", position, label, onClick}) => {
     return (
     <>
-        <mesh scale={scale} rotation={[0,0,0]} position={position} onClick={click}>
+        <mesh scale={scale} rotation={[0,0,0]} position={position} onClick={onClick}>
             <Text color={color}>
                 {label}
             </Text>
