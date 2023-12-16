@@ -4,6 +4,7 @@ trait IActions<TContractState> {
     fn spawn(self: @TContractState);
     fn set_secret(self: @TContractState, value: u8);
     fn take_turn(self: @TContractState, game_id: u32, x:u8, y:u8);
+    fn challenge(sekf: @TContractState, opp: ContractAddress);
 }
 
 // dojo decorator
@@ -79,5 +80,31 @@ mod actions {
 
             set!(world, (game, square))
         }
+
+        fn challenge(self: @ContractState, opp: ContractAddress) {
+
+            let world = self.world_dispatcher.read();
+
+            let player_one = get_caller_address();
+
+            let game_id = uuid();
+
+            set!(
+                world,
+                (
+                    Game {game_id, player_one, player_two:opp, ones_turn: true},
+                    Square {game_id, x:0, y:0, value:0},
+                    Square {game_id, x:1, y:0, value:0},
+                    Square {game_id, x:2, y:0, value:0},
+                    Square {game_id, x:0, y:1, value:0},
+                    Square {game_id, x:1, y:1, value:0},
+                    Square {game_id, x:2, y:1, value:0},
+                    Square {game_id, x:0, y:2, value:0},
+                    Square {game_id, x:1, y:2, value:0},
+                    Square {game_id, x:2, y:2, value:0},
+                )
+            );
+        }
+
     }
 }
