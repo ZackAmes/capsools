@@ -71,8 +71,56 @@ export function createSystemCalls(
         } 
     };
 
+    const take_turn = async (signer: Account, game_id: number, x: number, y:number) => {
+        
+        try {
+            const { transaction_hash } = await execute(
+                signer,
+                "dojo_examples::actions::actions",
+                "take_turn",
+                [game_id, x, y]
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await signer.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } 
+    }
+
+    const challenge = async (signer: Account, opp: Account) => {
+        
+        try {
+            const { transaction_hash } = await execute(
+                signer,
+                "dojo_examples::actions::actions",
+                "take_turn",
+                [opp.address]
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await signer.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } 
+    }
+
     return {
         spawn,
         set_secret,
+        take_turn,
+        challenge
     };
 }

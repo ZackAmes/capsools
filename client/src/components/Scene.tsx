@@ -8,6 +8,7 @@ import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { Entity } from "@dojoengine/recs";
 import Secret from "./Secret";
 import Button from "./Button";
+import Piece from "./Piece";
 
 interface SceneProps {
     components: any
@@ -18,17 +19,16 @@ interface SceneProps {
 const Scene: FC<SceneProps> = ({components, signer, systemCalls}) => {
     const entityId = getEntityIdFromKeys([BigInt(signer.address)]) as Entity;
 
-    let {spawn, set_secret} = systemCalls;
+    let {spawn, set_secret, take_turn} = systemCalls;
     return (
         <>
             <Box rotation={[0, 0,0]} args={[100, 1, 100]}>
                 <CuboidCollider rotation={[0, 0,0]} args={[50,.5,50]}/>
-                <meshBasicMaterial color="black"/>
             </Box>
-            <Square color="red" position = {[5,5,0]} state={1}/>
-            <Board position={[0,3,0]} game_id={0} components={components}/>
+            <Piece position = {[5,5,0]} type={1}/>
+            <Board signer={signer} take_turn={take_turn} position={[0,3,0]} game_id={0} components={components}/>
 
-            <Button position = {[0,7,5]} onClick={() => spawn(signer)} label = "spawn"/> 
+            <Button scale={30} position = {[0,10,-50]} onClick={() => spawn(signer)} label = "spawn"/> 
             <Secret position={[5,0,0]} onClick = {() => set_secret(signer, 200)} components={components} signer={signer} />
         </>
     )

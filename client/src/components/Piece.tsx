@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { RigidBody } from "@react-three/rapier";
+import { Cylinder } from "@react-three/drei";
 
 interface PieceProps {
     position: [number, number, number]
@@ -8,14 +9,16 @@ interface PieceProps {
 
 const getColor = (type: number) => {
     switch(type){
-        case 1: return "blue"
+        case 1: return "purple"
+        case 2: return "yellow"
     }
 }
 const Piece: FC<PieceProps> = ({position, type}) => {
     return (
-        <RigidBody position={position}>
-            <cylinderGeometry args={[1,1,.1]}/>
-            <meshBasicMaterial color={getColor(type)}/>
+        <RigidBody scale = {.25} position={position}>
+            <Cylinder>
+                <meshBasicMaterial color={getColor(type)}/>
+            </Cylinder>
         </RigidBody>
     )
 }

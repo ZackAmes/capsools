@@ -9,23 +9,19 @@ interface SquareProps {
     position: [number, number, number]
     index?: [number, number, number] 
     state: number 
+    onClick: () => any
 }
 
-const Square = forwardRef(({color, position, state, index=position}: SquareProps, ref:Ref<RapierRigidBody>) => {
-    let piece = (<></>);
-    if(state>0){
-        let piece = (<Piece position={position} type={state}/>)
-    }
+const Square = forwardRef(({color, position, state, onClick, index=position}: SquareProps, ref:Ref<RapierRigidBody>) => {
     
-
     return (
         <>
             <RigidBody rotation={[Math.PI/2,0,0]} ref={ref} position={position}>
-                <Box args={[1,1,.1]}>
+                <Box onClick={onClick} args={[1,1,.1]}>
                     <meshBasicMaterial color={color}/>
                 </Box>
             </RigidBody>
-            {piece}
+            {state>0 && <Piece position={position} type={state}/>}
         </>
     )
 })
