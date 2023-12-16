@@ -21,7 +21,7 @@ const Square = forwardRef(({color, position, state, onClick, index=position}: Sq
                     <meshBasicMaterial color={color}/>
                 </Box>
             </RigidBody>
-            {state>0 && <Piece position={position} type={state}/>}
+            {state>0 && <Piece position={[position[0], position[1] + .5, position[2]]} type={state}/>}
         </>
     )
 })

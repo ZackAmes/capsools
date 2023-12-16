@@ -20,7 +20,7 @@ const Secret: FC<SecretProps> = ({position, components, signer, onClick}) => {
     }
 
     return (
-        <mesh scale = {3} position={[4,5,0]} onClick={onClick}>
+        <mesh scale = {3} position={position} onClick={onClick}>
             <sphereGeometry/>
             <meshBasicMaterial color = {secret ? getColor(secret.value) : "black"}/>
         </mesh>

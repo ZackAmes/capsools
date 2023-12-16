@@ -16,7 +16,9 @@ const Burners: FC<BurnersProps> = ({account: {create, clear, select, list}, posi
 
     const burners = list().map( (account, index) => {
         return (
-            <AccRender key={account.address} account={account} position={[position[0], position[1]-index, position[2]]} click={() => select(account.address)}/>
+            <AccRender key={account.address} address={account.address} 
+                       position={[position[0], position[1]-index, position[2]]} 
+                       onClick={() => select(account.address)}/>
         )
     })
     

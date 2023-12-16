@@ -34,7 +34,7 @@ function App() {
                 <Physics >
                     <Burners position={[5,10,10]} account = {account}/>
 
-                    <AccRender position={[0,10,10]} account={signer} click={() => console.log(signer.address)}/>
+                    <AccRender position={[0,10,10]} address={signer.address} />
 
                     <Scene components={components} systemCalls={systemCalls} signer = {signer}/>
 

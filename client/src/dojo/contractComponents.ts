@@ -7,11 +7,11 @@ export function defineContractComponents(world: World) {
 	  Game: (() => {
 	    return defineComponent(
 	      world,
-	      { game_id: RecsType.Number, ones_turn: RecsType.Boolean },
+	      { game_id: RecsType.Number, player_one: RecsType.BigInt, player_two: RecsType.BigInt, ones_turn: RecsType.Boolean },
 	      {
 	        metadata: {
 	          name: "Game",
-	          types: ["u32","bool"],
+	          types: ["u32","contractaddress","contractaddress","bool"],
 	          customTypes: [],
 	        },
 	      }

@@ -1,24 +1,22 @@
 import {FC} from 'react';
 import { blo } from 'blo';
-import {Account} from 'starknet';
 import { useLoader } from '@react-three/fiber';
 import {TextureLoader} from 'three';
 
 interface AccRenderProps {
-    account: Account
+    address: string
     position: [number,number,number]
-    click: () => any
+    onClick?: () => any
 }
 
-const AccRender: FC<AccRenderProps> = ({account, position, click}) => {
-    let address = account.address.slice(2);
-    let img = blo(`0x${address}`);
+const AccRender: FC<AccRenderProps> = ({address, position, onClick=(() => console.log(address.slice(2)))}) => {
+    let img = blo(`0x${address.slice(2)}`);
     let texture = useLoader(TextureLoader, img);
     
 
     return (
         <>
-        <mesh rotation={[0,0,0]} position={position} onClick={click}>
+        <mesh rotation={[0,0,0]} position={position} onClick={onClick}>
             <planeGeometry args={[1,1]} />
             <meshBasicMaterial map={texture}/>
         </mesh>
