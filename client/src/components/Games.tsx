@@ -3,13 +3,16 @@ import { FC } from "react";
 import { Account } from "starknet";
 import { Entity } from "@dojoengine/recs";
 import { useComponentValue } from "@latticexyz/react";
+import Board from "./Board";
 
 interface GamesProps {
+    position: [number, number, number]
     signer: Account
     components: any
+    take_turn: any
 }
 
-const Games: FC<GamesProps> = ({signer, components}) => {
+const Games: FC<GamesProps> = ({position, signer, components, take_turn}) => {
 
     let entityId = getEntityIdFromKeys([BigInt(signer.address)]) as Entity;
 
@@ -32,16 +35,19 @@ const Games: FC<GamesProps> = ({signer, components}) => {
         console.log(game_ids)
 
     }
+
+    const games = game_ids.map( (game_id, index) => {
+
+        return (
+            <Board key={game_id as number} position= {[position[0] + 5*index, position[1]+1, position[2]]} 
+                   game_id={game_id as number} components={components} signer={signer} take_turn={take_turn}/>
+        )
+    })
     
 
     return (
         <>
-        
-        
-        
-        
-        
-        
+            {games}
         </>
     )
 }

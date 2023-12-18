@@ -36,9 +36,8 @@ const Scene: FC<SceneProps> = ({components, account, systemCalls}) => {
             <Piece position = {[5,5,0]} type={1}/>
 
             <Challenge position={[-5,10,0]} list={account.list} challenge={challenge} signer = {signer}/>
-            <Board signer={signer} take_turn={take_turn} position={[0,3,0]} game_id={0} components={components}/>
 
-            <Games components={components} signer={signer}/>
+            <Games position={[0,0,0]} components={components} signer={signer} take_turn={take_turn} />
 
             <Button scale={30} position = {[0,10,-50]} onClick={() => spawn(signer)} label = "spawn"/> 
             <Secret position={[10,5,0]} onClick = {() => set_secret(signer, 200)} components={components} signer={signer} />
