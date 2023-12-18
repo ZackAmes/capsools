@@ -5,14 +5,14 @@ trait IActions<TContractState> {
     fn spawn(self: @TContractState);
     fn set_secret(self: @TContractState, value: u8);
     fn take_turn(self: @TContractState, game_id: u32, x:u8, y:u8);
-    fn challenge(self: @TContractState, opp: ContractAddress);
+    fn challenge(self: @TContractState, player_two: ContractAddress);
 }
 
 // dojo decorator
 #[dojo::contract]
 mod actions {
     use starknet::{ContractAddress, get_caller_address};
-    use dojo_examples::models::{Secret, Game, Square};
+    use dojo_examples::models::{Secret, Game, Square, Player, GameManager};
     use super::IActions;
 
     
@@ -26,21 +26,24 @@ mod actions {
             // Get the address of the current caller, possibly the player's address.
             let caller = get_caller_address();
 
+            let game_id = world.uuid();
             
             set!(
                 world,
                 (
                     Secret {player: caller, value: 69},
-                    Game {game_id: 0,player_one:caller, player_two:caller, ones_turn: true},
-                    Square {game_id: 0, x:0, y:0, value:0},
-                    Square {game_id: 0, x:1, y:0, value:0},
-                    Square {game_id: 0, x:2, y:0, value:0},
-                    Square {game_id: 0, x:0, y:1, value:0},
-                    Square {game_id: 0, x:1, y:1, value:0},
-                    Square {game_id: 0, x:2, y:1, value:0},
-                    Square {game_id: 0, x:0, y:2, value:0},
-                    Square {game_id: 0, x:1, y:2, value:0},
-                    Square {game_id: 0, x:2, y:2, value:0},
+                    Player {address: caller, games_count:1, pieces_count: 0},
+                    GameManager {player: caller, index: 0, game_id},
+                    Game {game_id, player_one:caller, player_two:caller, ones_turn: true},
+                    Square {game_id, x:0, y:0, value:0},
+                    Square {game_id, x:1, y:0, value:0},
+                    Square {game_id, x:2, y:0, value:0},
+                    Square {game_id, x:0, y:1, value:0},
+                    Square {game_id, x:1, y:1, value:0},
+                    Square {game_id, x:2, y:1, value:0},
+                    Square {game_id, x:0, y:2, value:0},
+                    Square {game_id, x:1, y:2, value:0},
+                    Square {game_id, x:2, y:2, value:0},
                 )
             );
         }
@@ -82,18 +85,27 @@ mod actions {
             set!(world, (game, square))
         }
 
-        fn challenge(self: @ContractState, opp: ContractAddress) {
+        fn challenge(self: @ContractState, player_two: ContractAddress) {
 
             let world = self.world_dispatcher.read();
 
             let player_one = get_caller_address();
 
+            let mut one = get!(world, player_one, (Player));
+            let mut two = get!(world, player_two, (Player));
+
+            assert(one.games_count > 0, 'player one must spawn');
+            assert(two.games_count > 0, 'player two must spawn');
+
             let game_id = world.uuid();
+
 
             set!(
                 world,
                 (
-                    Game {game_id, player_one, player_two:opp, ones_turn: true},
+                    GameManager {player: player_one, index: one.games_count, game_id},
+                    GameManager {player: player_two, index: two.games_count, game_id},
+                    Game {game_id, player_one, player_two, ones_turn: true},
                     Square {game_id, x:0, y:0, value:0},
                     Square {game_id, x:1, y:0, value:0},
                     Square {game_id, x:2, y:0, value:0},
@@ -105,6 +117,11 @@ mod actions {
                     Square {game_id, x:2, y:2, value:0},
                 )
             );
+
+            one.games_count += 1;
+            two.games_count +=1;
+
+            set!(world, (one,two));
         }
 
     }

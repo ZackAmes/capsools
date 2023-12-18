@@ -1,5 +1,5 @@
 import { useComponentValue } from "@dojoengine/react";
-import { Entity } from "@dojoengine/recs";
+import { Entity, getComponentValue } from "@dojoengine/recs";
 import { useEffect, useState } from "react";
 import { useDojo } from "./DojoContext";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
@@ -21,8 +21,6 @@ function App() {
         },
         account,
     } = useDojo();
-
-    const signer = account.account;
    
     const gameId = getEntityIdFromKeys([BigInt(0)]) as Entity
 
@@ -34,9 +32,9 @@ function App() {
                 <Physics >
                     <Burners position={[5,10,10]} account = {account}/>
 
-                    <AccRender position={[0,10,10]} address={signer.address} />
+                    <AccRender position={[0,10,10]} address={account.account.address} />
 
-                    <Scene components={components} systemCalls={systemCalls} signer = {signer}/>
+                    <Scene components={components} systemCalls={systemCalls} account = {account}/>
 
                 </Physics>
                 </Suspense>

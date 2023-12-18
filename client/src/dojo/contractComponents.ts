@@ -17,6 +17,45 @@ export function defineContractComponents(world: World) {
 	      }
 	    );
 	  })(),
+	  GameManager: (() => {
+	    return defineComponent(
+	      world,
+	      { player: RecsType.BigInt, index: RecsType.Number, game_id: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "GameManager",
+	          types: ["contractaddress","u32","u32"],
+	          customTypes: [],
+	        },
+	      }
+	    );
+	  })(),
+	  PieceManager: (() => {
+	    return defineComponent(
+	      world,
+	      { palyer: RecsType.BigInt, index: RecsType.Number, piece: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "PieceManager",
+	          types: ["contractaddress","u32","u8"],
+	          customTypes: [],
+	        },
+	      }
+	    );
+	  })(),
+	  Player: (() => {
+	    return defineComponent(
+	      world,
+	      { address: RecsType.BigInt, games_count: RecsType.Number, pieces_count: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "Player",
+	          types: ["contractaddress","u32","u32"],
+	          customTypes: [],
+	        },
+	      }
+	    );
+	  })(),
 	  Secret: (() => {
 	    return defineComponent(
 	      world,

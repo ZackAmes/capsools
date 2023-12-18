@@ -100,7 +100,7 @@ export function createSystemCalls(
             const { transaction_hash } = await execute(
                 signer,
                 "dojo_examples::actions::actions",
-                "take_turn",
+                "challenge",
                 [opp.address]
             );
 

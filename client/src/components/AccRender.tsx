@@ -9,7 +9,7 @@ interface AccRenderProps {
     onClick?: () => any
 }
 
-const AccRender: FC<AccRenderProps> = ({address, position, onClick=(() => console.log(address.slice(2)))}) => {
+const AccRender: FC<AccRenderProps> = ({address, position, onClick=(() => console.log(address))}) => {
     let img = blo(`0x${address.slice(2)}`);
     let texture = useLoader(TextureLoader, img);
     
