@@ -13,12 +13,15 @@ import Challenge from "./Challenge";
 import Games from "./Games";
 
 interface SceneProps {
-    components: any
+    setup: {
+        components: any,
+        systemCalls: any
+    }
     account: any
-    systemCalls: any
+    game_ids: number[]
 }
 
-const Scene: FC<SceneProps> = ({components, account, systemCalls}) => {
+const Scene: FC<SceneProps> = ({setup: {components, systemCalls}, account, game_ids}) => {
 
     const signer = account.account;
 
@@ -36,7 +39,7 @@ const Scene: FC<SceneProps> = ({components, account, systemCalls}) => {
 
             <Challenge position={[-5,10,0]} list={account.list} challenge={challenge} signer = {signer}/>
 
-            <Games position={[-10,0,0]} components={components} signer={signer} take_turn={take_turn} />
+            <Games game_ids={game_ids} position={[-10,0,0]} components={components} signer={signer} take_turn={take_turn} />
 
             <Button scale={30} position = {[0,10,-50]} onClick={() => spawn(signer)} label = "spawn"/> 
             <Secret position={[10,5,-10]} onClick = {() => set_secret(signer, 200)} components={components} signer={signer} />

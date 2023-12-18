@@ -10,31 +10,15 @@ interface GamesProps {
     signer: Account
     components: any
     take_turn: any
+    game_ids: number[]
 }
 
-const Games: FC<GamesProps> = ({position, signer, components, take_turn}) => {
+const Games: FC<GamesProps> = ({game_ids, position, signer, components, take_turn}) => {
 
     let entityId = getEntityIdFromKeys([BigInt(signer.address)]) as Entity;
 
     let player = useComponentValue(components.Player, entityId);
 
-    let game_ids = [];
-
-    if(player){
-
-        let count:number = player.games_count as number;
-
-        for(let i=0; i<count; i++){
-
-            let tempId = getEntityIdFromKeys([BigInt(signer.address), BigInt(i)]) as Entity;
-
-            game_ids.push( useComponentValue(components.GameManager, tempId)?.game_id )
-
-        }
-
-        console.log(game_ids)
-
-    }
 
     const games = game_ids.map( (game_id, index) => {
 

@@ -15,14 +15,28 @@ import Scene from "./components/Scene";
 
 function App() {
     const {
-        setup: {
-            systemCalls,
-            components,
-        },
+        setup,
         account,
     } = useDojo();
    
-    const gameId = getEntityIdFromKeys([BigInt(0)]) as Entity
+    const signer = account.account;
+    const playerId = getEntityIdFromKeys([BigInt(signer.address)]) as Entity
+
+    const player = useComponentValue(setup.components.Player, playerId);
+    const player_games_count = player?.games_count as number;
+    const player_pieces_count = player?.pieces_count as number;
+
+    const player_game_ids = [];
+    const player_piece_ids = [];
+
+    for(let i=0; i<player_games_count; i++){
+        let manager_id = getEntityIdFromKeys([BigInt(signer.address), BigInt(i)])
+        let game_manager = getComponentValue(setup.components.GameManager, manager_id);
+
+        let game_id = game_manager?.game_id as number;
+        player_game_ids.push(game_id);
+    }
+
 
     return (
         <>
@@ -34,7 +48,7 @@ function App() {
 
                     <AccRender position={[0,10,10]} address={account.account.address} />
 
-                    <Scene components={components} systemCalls={systemCalls} account = {account}/>
+                    <Scene setup={setup} account={account} game_ids={player_game_ids}/>
 
                 </Physics>
                 </Suspense>

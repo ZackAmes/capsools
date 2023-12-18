@@ -23,6 +23,7 @@ const Board: FC<BoardProps> = ({position, game_id, components, take_turn, signer
 
     let game = useComponentValue(components.Game, getEntityIdFromKeys([BigInt(game_id)]) as Entity);
 
+    //Create Id and Value arrays
     for(let i=0; i<3; i++){
         let tempIds = [];
         let tempSquares = []
@@ -36,6 +37,7 @@ const Board: FC<BoardProps> = ({position, game_id, components, take_turn, signer
         squareValues.push(tempSquares)
     }
 
+    //create Components and ref array
     const refs: RefObject<RapierRigidBody>[] = [];
     const squares = squareValues.flat().map( (square, index) => {
         if(square){
