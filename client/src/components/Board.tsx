@@ -54,7 +54,7 @@ const Board: FC<BoardProps> = ({position, game_id, components, take_turn, signer
     })
 
 
-
+    /*
     //TODO: FIX SPINNING && FIGURE OUT HOW JOINTS WORK
     if(refs.length > 0){
         const joint1 = useFixedJoint(refs[0], refs[1] , [[1,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
@@ -70,12 +70,12 @@ const Board: FC<BoardProps> = ({position, game_id, components, take_turn, signer
         const joint7 = useFixedJoint(refs[2], refs[5], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
         const joint8 = useFixedJoint(refs[5], refs[8], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
     }
-
+    */
 
     return (
         <>
-            {game && <AccRender address={"0x" + game.player_one.toString(16)} position={[position[0]-1, position[1], position[2] - 2]} />}
-            {game && <AccRender address={"0x" + game.player_two.toString(16)} position={[position[0]+1, position[1], position[2] - 2]} />}
+            {game && <AccRender address={"0x" + game.player_one.toString(16)} position={[position[0], position[1], position[2] - 2]} />}
+            {game && <AccRender address={"0x" + game.player_two.toString(16)} position={[position[0]+2, position[1], position[2] - 2]} />}
 
             <group>
                 {squares}

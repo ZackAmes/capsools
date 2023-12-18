@@ -7,22 +7,21 @@ import Piece from "./Piece";
 interface SquareProps {
     color: string
     position: [number, number, number]
-    index?: [number, number, number] 
     state: number 
     onClick: () => any
 }
 
-const Square = forwardRef(({color, position, state, onClick, index=position}: SquareProps, ref:Ref<RapierRigidBody>) => {
+const Square = forwardRef( ({color, position, state, onClick}: SquareProps, ref:Ref<RapierRigidBody>) => {
     
     return (
-        <>
-            <RigidBody rotation={[Math.PI/2,0,0]} ref={ref} position={position}>
+        <group position={position}>
+            <RigidBody rotation={[Math.PI/2,0,0]} ref={ref}>
                 <Box onClick={onClick} args={[1,1,.1]}>
                     <meshBasicMaterial color={color}/>
                 </Box>
             </RigidBody>
-            {state>0 && <Piece position={[position[0], position[1] + .5, position[2]]} type={state}/>}
-        </>
+            {state>0 && <Piece position={[0, .5, 0]} type={state}/>}
+        </group>
     )
 })
 
