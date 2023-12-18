@@ -33,14 +33,13 @@ const Scene: FC<SceneProps> = ({components, account, systemCalls}) => {
             <Box rotation={[0, 0,0]} args={[100, 1, 100]}>
                 <CuboidCollider rotation={[0, 0,0]} args={[50,.5,50]}/>
             </Box>
-            <Piece position = {[5,5,0]} type={1}/>
 
             <Challenge position={[-5,10,0]} list={account.list} challenge={challenge} signer = {signer}/>
 
-            <Games position={[0,0,0]} components={components} signer={signer} take_turn={take_turn} />
+            <Games position={[-10,0,0]} components={components} signer={signer} take_turn={take_turn} />
 
             <Button scale={30} position = {[0,10,-50]} onClick={() => spawn(signer)} label = "spawn"/> 
-            <Secret position={[10,5,0]} onClick = {() => set_secret(signer, 200)} components={components} signer={signer} />
+            <Secret position={[10,5,-10]} onClick = {() => set_secret(signer, 200)} components={components} signer={signer} />
         </>
     )
 }

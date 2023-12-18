@@ -27,7 +27,7 @@ const Board: FC<BoardProps> = ({position, game_id, components, take_turn, signer
         let tempIds = [];
         let tempSquares = []
         for(let j=0; j<3; j++){
-            let tempId = getEntityIdFromKeys([BigInt(0), BigInt(i), BigInt(j)]) as Entity 
+            let tempId = getEntityIdFromKeys([BigInt(game_id), BigInt(i), BigInt(j)]) as Entity 
             let tempSquare = useComponentValue(components.Square, tempId)
             tempIds.push(tempId)
             tempSquares.push(tempSquare)
