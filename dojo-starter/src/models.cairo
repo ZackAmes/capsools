@@ -28,7 +28,7 @@ struct GameManager {
 #[derive(Model, Drop, Serde)]
 struct PieceManager {
     #[key]
-    palyer:ContractAddress,
+    player:ContractAddress,
     #[key]
     index: u32,
     piece: u8

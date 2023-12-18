@@ -12,8 +12,9 @@ interface ChallengeProps {
 
 const Challenge: FC<ChallengeProps> = ({list, signer, challenge, position}) => {
 
+
     const accounts = list().map( ( account: Account, index:number) => {
-        if(account != signer){
+        if(account.address != signer.address){
             return (
                 <AccRender key={account.address} address={account.address} 
                         position={[position[0], position[1]-index, position[2]]} 
