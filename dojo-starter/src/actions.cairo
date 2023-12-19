@@ -6,13 +6,16 @@ trait IActions<TContractState> {
     fn set_secret(self: @TContractState, value: u8);
     fn take_turn(self: @TContractState, game_id: u32, x:u8, y:u8);
     fn challenge(self: @TContractState, player_two: ContractAddress);
+    fn create_piece(self: @TContractState, piece_type: u8, owner: ContractAddress);
 }
 
 // dojo decorator
 #[dojo::contract]
 mod actions {
     use starknet::{ContractAddress, get_caller_address};
-    use dojo_examples::models::{Secret, Game, Square, Player, GameManager};
+    use project::models::player::{Secret,  Player};
+    use project::models::game::{Game, Square,GameManager};
+    use project::models::piece::{Piece, PieceManager};
     use super::IActions;
 
     
@@ -123,6 +126,18 @@ mod actions {
 
             set!(world, (one,two));
         }
+
+        fn create_piece(self: @ContractState, piece_type: u8, owner: ContractAddress) {
+            let world = self.world_dispatcher.read();
+            let piece_id = world.uuid();
+            let index = get!(world, owner, (Player)).pieces_count;
+            set!(world, 
+                    (
+                        PieceManager {owner, index, piece_id},
+                        Piece {piece_id, owner, location: owner, piece_type},
+                    )
+                )
+        }        
 
     }
 }
