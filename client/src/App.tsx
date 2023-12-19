@@ -11,7 +11,8 @@ import { OrbitControls } from "@react-three/drei";
 
 import AccRender from "./components/AccRender";
 import Burners from "./components/Burners";
-import Scene from "./components/Scene";
+import Scene from "./scenes/Scene";
+import SlidingBoard from "./scenes/SlidingBoard";
 
 function App() {
     const {
@@ -37,6 +38,17 @@ function App() {
         player_game_ids.push(game_id);
     }
 
+    for(let i=0; i<player_pieces_count; i++){
+        let manager_id = getEntityIdFromKeys([BigInt(signer.address), BigInt(i)])
+        let piece_manager = getComponentValue(setup.components.PieceManager, manager_id);
+
+        let piece_id = piece_manager?.piece_id as number;
+        player_piece_ids.push(piece_id);
+
+    }
+
+    console.log(player_piece_ids)
+
 
     return (
         <>
@@ -49,6 +61,7 @@ function App() {
                     <AccRender position={[0,10,10]} address={account.account.address} />
 
                     <Scene setup={setup} account={account} game_ids={player_game_ids}/>
+                    <SlidingBoard/>
 
                 </Physics>
                 </Suspense>

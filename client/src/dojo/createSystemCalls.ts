@@ -117,10 +117,34 @@ export function createSystemCalls(
         } 
     }
 
+    const create_piece = async (signer: Account, piece_type: number) => {
+        
+        try {
+            const { transaction_hash } = await execute(
+                signer,
+                "actions",
+                "create_piece",
+                [piece_type]
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await signer.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } 
+    }
+
     return {
         spawn,
         set_secret,
         take_turn,
-        challenge
+        challenge,
+        create_piece
     };
 }

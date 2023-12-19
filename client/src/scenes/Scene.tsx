@@ -1,16 +1,10 @@
 import { CuboidCollider } from "@react-three/rapier";
 import {Box} from "@react-three/drei";
 import { FC } from "react";
-import Square from "./Square";
-import Board from "./Board";
-import { Account } from "starknet";
-import { getEntityIdFromKeys } from "@dojoengine/utils";
-import { Entity } from "@dojoengine/recs";
-import Secret from "./Secret";
-import Button from "./Button";
-import Piece from "./Piece";
-import Challenge from "./Challenge";
-import Games from "./Games";
+import Secret from "../components/Secret";
+import Button from "../components/Button";
+import Challenge from "../components/Challenge";
+import Games from "../components/Games";
 
 interface SceneProps {
     setup: {
@@ -25,9 +19,7 @@ const Scene: FC<SceneProps> = ({setup: {components, systemCalls}, account, game_
 
     const signer = account.account;
 
-    const entityId = getEntityIdFromKeys([BigInt(signer.address)]) as Entity;
-
-    let {spawn, set_secret, take_turn, challenge} = systemCalls;
+    let {spawn, set_secret, take_turn, challenge, create_piece} = systemCalls;
 
 
 
@@ -37,6 +29,7 @@ const Scene: FC<SceneProps> = ({setup: {components, systemCalls}, account, game_
                 <CuboidCollider rotation={[0, 0,0]} args={[50,.5,50]}/>
             </Box>
 
+            <Button position={[-5,5,0]} onClick={() => create_piece(signer, 1)} label="create piece"/>
             <Challenge position={[-5,10,0]} list={account.list} challenge={challenge} signer = {signer}/>
 
             <Games game_ids={game_ids} position={[-10,0,0]} components={components} signer={signer} take_turn={take_turn} />

@@ -6,7 +6,7 @@ trait IActions<TContractState> {
     fn set_secret(self: @TContractState, value: u8);
     fn take_turn(self: @TContractState, game_id: u32, x:u8, y:u8);
     fn challenge(self: @TContractState, player_two: ContractAddress);
-    fn create_piece(self: @TContractState, piece_type: u8, owner: ContractAddress);
+    fn create_piece(self: @TContractState, piece_type: u8);
 }
 
 // dojo decorator
@@ -127,14 +127,19 @@ mod actions {
             set!(world, (one,two));
         }
 
-        fn create_piece(self: @ContractState, piece_type: u8, owner: ContractAddress) {
+        fn create_piece(self: @ContractState, piece_type: u8) {
             let world = self.world_dispatcher.read();
+            let owner = get_caller_address();
             let piece_id = world.uuid();
-            let index = get!(world, owner, (Player)).pieces_count;
+            let mut player = get!(world, owner, (Player));
+            let index = player.pieces_count;
+            player.pieces_count += 1;
+            
             set!(world, 
                     (
                         PieceManager {owner, index, piece_id},
                         Piece {piece_id, owner, location: owner, piece_type},
+                        player
                     )
                 )
         }        
