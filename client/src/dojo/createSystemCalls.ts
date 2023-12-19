@@ -25,7 +25,7 @@ export function createSystemCalls(
         try {
             const { transaction_hash } = await execute(
                 signer,
-                "dojo_examples::actions::actions",
+                "actions",
                 "spawn",
                 []
             );
@@ -53,7 +53,7 @@ export function createSystemCalls(
         try {
             const { transaction_hash } = await execute(
                 signer,
-                "dojo_examples::actions::actions",
+                "actions",
                 "set_secret",
                 [value]
             );
@@ -76,7 +76,7 @@ export function createSystemCalls(
         try {
             const { transaction_hash } = await execute(
                 signer,
-                "dojo_examples::actions::actions",
+                "actions",
                 "take_turn",
                 [game_id, x, y]
             );
@@ -99,7 +99,7 @@ export function createSystemCalls(
         try {
             const { transaction_hash } = await execute(
                 signer,
-                "dojo_examples::actions::actions",
+                "actions",
                 "challenge",
                 [opp.address]
             );
