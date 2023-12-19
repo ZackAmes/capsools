@@ -30,14 +30,40 @@ export function defineContractComponents(world: World) {
 	      }
 	    );
 	  })(),
+	  Square: (() => {
+	    return defineComponent(
+	      world,
+	      { game_id: RecsType.Number, x: RecsType.Number, y: RecsType.Number, value: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "Square",
+	          types: ["u32","u8","u8","u8"],
+	          customTypes: [],
+	        },
+	      }
+	    );
+	  })(),
+	  Piece: (() => {
+	    return defineComponent(
+	      world,
+	      { piece_id: RecsType.Number, owner: RecsType.BigInt, location: RecsType.BigInt, piece_type: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "Piece",
+	          types: ["u32","contractaddress","contractaddress","u8"],
+	          customTypes: [],
+	        },
+	      }
+	    );
+	  })(),
 	  PieceManager: (() => {
 	    return defineComponent(
 	      world,
-	      { palyer: RecsType.BigInt, index: RecsType.Number, piece: RecsType.Number },
+	      { owner: RecsType.BigInt, index: RecsType.Number, piece_id: RecsType.Number },
 	      {
 	        metadata: {
 	          name: "PieceManager",
-	          types: ["contractaddress","u32","u8"],
+	          types: ["contractaddress","u32","u32"],
 	          customTypes: [],
 	        },
 	      }
@@ -64,19 +90,6 @@ export function defineContractComponents(world: World) {
 	        metadata: {
 	          name: "Secret",
 	          types: ["contractaddress","u8"],
-	          customTypes: [],
-	        },
-	      }
-	    );
-	  })(),
-	  Square: (() => {
-	    return defineComponent(
-	      world,
-	      { game_id: RecsType.Number, x: RecsType.Number, y: RecsType.Number, value: RecsType.Number },
-	      {
-	        metadata: {
-	          name: "Square",
-	          types: ["u32","u8","u8","u8"],
 	          customTypes: [],
 	        },
 	      }
