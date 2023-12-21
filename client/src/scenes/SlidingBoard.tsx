@@ -1,7 +1,7 @@
 import { Box, Sphere } from "@react-three/drei";
 import { usePrismaticJoint, RigidBody, RapierRigidBody } from "@react-three/rapier";
 import { useRef } from "react";
-
+import { CuboidCollider } from "@react-three/rapier";
 
 
 
@@ -29,9 +29,22 @@ const SlidingBoard = () => {
         [0,1,0],
         [0,.5]
     ])
-  
+    
+    
     return (
-      <group>
+        <>
+
+        <Box rotation={[0,0,0]} position={[-1,1,-1]} args={[1, 3, 5]}>
+            <CuboidCollider rotation={[0, 0,0]} args={[.5,1.5,2.5]}/>
+            <meshBasicMaterial color="black"/>
+        </Box>
+        
+        
+        
+        
+         <group>
+
+
         <RigidBody position={[0,3,0]}ref={bodyA}>
           <Box>
             <meshBasicMaterial color={"black"}/>
@@ -54,6 +67,8 @@ const SlidingBoard = () => {
             </Sphere>
         </RigidBody>
       </group>
+
+      </>
       
     );
   };
