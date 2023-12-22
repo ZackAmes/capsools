@@ -1,4 +1,5 @@
 use starknet::ContractAddress;
+use project::models::piece::{Piece};
 
 #[derive(Model, Drop, Serde)]
 struct GameManager {
@@ -8,7 +9,6 @@ struct GameManager {
     index: u32,
     game_id: u32
 }
-
 
 #[derive(Model, Drop, Serde)]
 struct Game {
@@ -24,8 +24,12 @@ struct Square {
     #[key]
     game_id: u32,
     #[key]
+    position: Vec2,
+    state: u32
+}
+
+#[derive(Copy, Drop, Serde, Introspect)]
+struct Vec2 {
     x: u8,
-    #[key]
-    y: u8,
-    value: u8
+    y: u8
 }

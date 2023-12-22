@@ -1,4 +1,5 @@
 use starknet::{ContractAddress};
+use project::models::piece::{PieceType};
 
 #[starknet::interface]
 trait IActions<TContractState> {
@@ -6,16 +7,15 @@ trait IActions<TContractState> {
     fn set_secret(self: @TContractState, value: u8);
     fn take_turn(self: @TContractState, game_id: u32, x:u8, y:u8);
     fn challenge(self: @TContractState, player_two: ContractAddress);
-    fn create_piece(self: @TContractState, piece_type: u8);
 }
 
 // dojo decorator
 #[dojo::contract]
 mod actions {
     use starknet::{ContractAddress, get_caller_address};
-    use project::models::player::{Secret,  Player};
-    use project::models::game::{Game, Square,GameManager};
-    use project::models::piece::{Piece, PieceManager};
+    use project::models::player::{Secret,  Player, Team};
+    use project::models::game::{Game, Square,GameManager, Vec2};
+    use project::models::piece::{Piece, PieceManager, PieceType};
     use super::IActions;
 
     
@@ -35,20 +35,16 @@ mod actions {
                 world,
                 (
                     Secret {player: caller, value: 69},
-                    Player {address: caller, games_count:1, pieces_count: 0},
+                    Player {address: caller, games_count:1, pieces_count: 0, team_count: 0},
                     GameManager {player: caller, index: 0, game_id},
                     Game {game_id, player_one:caller, player_two:caller, ones_turn: true},
-                    Square {game_id, x:0, y:0, value:0},
-                    Square {game_id, x:1, y:0, value:0},
-                    Square {game_id, x:2, y:0, value:0},
-                    Square {game_id, x:0, y:1, value:0},
-                    Square {game_id, x:1, y:1, value:0},
-                    Square {game_id, x:2, y:1, value:0},
-                    Square {game_id, x:0, y:2, value:0},
-                    Square {game_id, x:1, y:2, value:0},
-                    Square {game_id, x:2, y:2, value:0},
                 )
             );
+
+            self.create_squares(game_id, 3);
+
+            self.create_pieces(caller);
+
         }
 
         // Implementation of the move function for the ContractState struct.
@@ -71,17 +67,17 @@ mod actions {
 
             let mut square = get!(world, (game_id, x, y), (Square));
 
-            assert(square.value == 0, 'square taken');
+            assert(square.state == 0, 'square taken');
 
             if(game.ones_turn){
                 assert(player == game.player_one, 'not turn player, ones turn');
-                square.value = 1;
+                square.state = 1;
                 game.ones_turn = false;
 
             }
             else {
                 assert(player == game.player_two, 'not turn player, twos turn');
-                square.value = 2;
+                square.state = 2;
                 game.ones_turn = true;
             }
 
@@ -109,17 +105,11 @@ mod actions {
                     GameManager {player: player_one, index: one.games_count, game_id},
                     GameManager {player: player_two, index: two.games_count, game_id},
                     Game {game_id, player_one, player_two, ones_turn: true},
-                    Square {game_id, x:0, y:0, value:0},
-                    Square {game_id, x:1, y:0, value:0},
-                    Square {game_id, x:2, y:0, value:0},
-                    Square {game_id, x:0, y:1, value:0},
-                    Square {game_id, x:1, y:1, value:0},
-                    Square {game_id, x:2, y:1, value:0},
-                    Square {game_id, x:0, y:2, value:0},
-                    Square {game_id, x:1, y:2, value:0},
-                    Square {game_id, x:2, y:2, value:0},
                 )
             );
+
+            self.create_squares(game_id, 3);
+            self.create_pieces(player_one);
 
             one.games_count += 1;
             two.games_count +=1;
@@ -127,7 +117,67 @@ mod actions {
             set!(world, (one,two));
         }
 
-        fn create_piece(self: @ContractState, piece_type: u8) {
+        
+
+    }
+
+    #[generate_trait]
+    impl Private of PrivateTrait {
+        fn create_squares(self: @ContractState, game_id: u32, size: u8) {
+            let world = self.world_dispatcher.read();
+
+            let total = size * size;
+
+            let mut index = 0;
+
+            loop {
+                if (index >= total) {break;}
+
+                let x = index % size;
+                let y = index/ size;
+
+                let position = Vec2 {x, y};
+
+                set!(world, Square {game_id, position , state: 0});
+
+                index +=1;
+            };
+        }   
+
+        fn create_pieces(self: @ContractState, owner: ContractAddress) {
+            let world = self.world_dispatcher.read();
+           
+            let id_1 = world.uuid();
+            let piece_1 = Piece {piece_id: id_1, owner, location: owner, piece_type: PieceType::X};
+
+            let id_2 = world.uuid();
+            let piece_2 = Piece {piece_id: id_2, owner, location: owner, piece_type: PieceType::X};
+
+            let id_3 = world.uuid();
+            let piece_3 = Piece {piece_id: id_3, owner, location: owner, piece_type: PieceType::X};
+
+            let id_4= world.uuid();
+            let piece_4 = Piece {piece_id: id_4, owner, location: owner, piece_type: PieceType::X};
+
+            set!(world, (piece_1, piece_2, piece_3, piece_4));
+
+        }
+
+        fn create_team(self: @ContractState, owner: ContractAddress, id_1: u32, id_2: u32, id_3: u32, id_4:u32) {
+            let world = self.world_dispatcher.read();
+
+            let piece_1 = get!(world, id_1, (Piece));   
+            let piece_2 = get!(world, id_2, (Piece));   
+            let piece_3 = get!(world, id_3, (Piece));   
+            let piece_4 = get!(world, id_4, (Piece));           
+
+            let team = Team {owner, index: 0, piece_1, piece_2, piece_3, piece_4};
+
+            set!(world, (team));         
+            
+        }
+
+        fn create_piece(self: @ContractState, piece_type: PieceType) {
             let world = self.world_dispatcher.read();
             let owner = get_caller_address();
             let piece_id = world.uuid();
@@ -142,7 +192,8 @@ mod actions {
                         player
                     )
                 )
-        }        
+        }
 
+        
     }
 }
