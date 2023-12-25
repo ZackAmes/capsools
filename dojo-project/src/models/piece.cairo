@@ -1,49 +1,52 @@
 use starknet::ContractAddress;
 use project::models::game::{Vec2};
 
-#[derive(Model, Drop, Serde)]
-struct PieceManager {
-    #[key]
-    owner:ContractAddress,
-    #[key]
-    index: u32,
-    piece_id: u32
-}
+
 
 #[derive(Model, Drop, Serde)]
 struct Piece {
     #[key]
     piece_id: u32,
-    owner: ContractAddress,
-    location: ContractAddress,
-    piece_type: PieceType
+    data: PieceData
 }
 
+#[derive(Copy, Drop, Serde, Introspect)]
+struct PieceData {
+   owner: ContractAddress,
+   location: ContractAddress
+}
 
 trait PieceTrait {
-    fn check_move_valid(self: @Piece, next: Vec2) -> bool;
+    fn new(id: u32, owner: ContractAddress) -> Piece;
+    fn check_move_valid(self: Piece, next: Vec2) -> bool;
 
-    fn check_available(self: @Piece) -> bool;
-    
+    fn check_available(self: Piece) -> bool;
+
+    fn owner(self: Piece) -> ContractAddress;
 }
 
 impl PieceImpl of PieceTrait {
 
-    fn check_move_valid(self: @Piece, next:Vec2) -> bool {
-        true
+    fn new(id: u32, owner: ContractAddress) -> Piece {
+        
+        let data = PieceData {owner, location: owner}; 
+        Piece {piece_id: id, data}
     }
 
-    fn check_available(self: @Piece) -> bool {
-        return self.owner == self.location;
+    fn check_move_valid(self: Piece, next:Vec2) -> bool {
+        return true;
     }
+
+    fn check_available(self: Piece) -> bool {
+        return self.data.owner == self.data.location;
+    }
+
+    fn owner(self: Piece) -> ContractAddress {
+
+        return self.data.owner;
+    }
+
     
 }
-
-#[derive(Serde, Drop, Copy, PartialEq, Introspect)]
-enum PieceType {
-    X,
-    O
-}
-
 
 
