@@ -12,7 +12,7 @@ trait IActions<TContractState> {
 mod actions {
     use starknet::{ContractAddress, get_caller_address};
     use project::models::player::{Player, PlayerTrait};
-    use project::models::game::{Game, Square, Vec2};
+    use project::models::game::{Game, GameTrait, Square, Vec2};
     use project::models::piece::{Piece, PieceTrait};
     use project::models::manager::{Manager};
 
@@ -32,13 +32,14 @@ mod actions {
             let game_id = world.uuid();
 
             let player = PlayerTrait::new(caller, 'test');
+            let game = GameTrait::new(game_id, caller, caller);
             
             set!(
                 world,
                 (
                     player,
                     Manager {owner: caller, label:'game', index: 0, id: game_id},
-                    Game {game_id, player_one:caller, player_two:caller, ones_turn: true},
+                    game,
                 )
             );
 
@@ -61,16 +62,16 @@ mod actions {
 
             assert(square.state == 0, 'square taken');
 
-            if(game.ones_turn){
-                assert(player == game.player_one, 'not turn player, ones turn');
+            if(game.data.ones_turn){
+                assert(player == game.data.team_one.player, 'not turn player, ones turn');
                 square.state = 1;
-                game.ones_turn = false;
+                game.data.ones_turn = false;
 
             }
             else {
-                assert(player == game.player_two, 'not turn player, twos turn');
+                assert(player == game.data.team_two.player, 'not turn player, twos turn');
                 square.state = 2;
-                game.ones_turn = true;
+                game.data.ones_turn = true;
             }
 
             set!(world, (game, square))
@@ -89,6 +90,7 @@ mod actions {
             assert(two.games_count() > 0, 'player two must spawn');
 
             let game_id = world.uuid();
+            let game = GameTrait::new(game_id, player_one, player_two);
 
 
             set!(
@@ -96,7 +98,7 @@ mod actions {
                 (
                     Manager {owner: player_one, label: 'game', index: one.games_count(), id: game_id},
                     Manager {owner: player_two, label: 'game', index: two.games_count(), id: game_id},
-                    Game {game_id, player_one, player_two, ones_turn: true},
+                    game,
                 )
             );
 
