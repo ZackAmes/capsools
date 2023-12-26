@@ -1,5 +1,4 @@
 use starknet::ContractAddress;
-use project::models::piece::{Piece};
 
 #[derive(Model, Drop, Serde)]
 struct Game {
@@ -25,41 +24,42 @@ struct Vec2 {
 
 #[derive(Copy, Drop, Serde, Introspect)]
 struct GameData {
-    team_one: Team,
-    team_two: Team,
+    team_one: u32,
+    team_two: u32,
     ones_turn: bool
 }
 
-#[derive(Copy, Drop, Serde, Introspect)]
-struct Team {
-    player: ContractAddress
-}
-
 trait GameTrait {
-    fn new(id: u32, player_one: ContractAddress, player_two: ContractAddress) -> Game;
+    fn new(id: u32, team_one: u32, team_two: u32) -> Game;
 
-    fn turn_player(ref self: Game) -> ContractAddress;
+    fn turn_player(ref self: Game) -> u32;
 }
 
 impl GameImpl of GameTrait {
-    fn new(id: u32, player_one: ContractAddress, player_two: ContractAddress) -> Game {
+
+    fn new(id: u32, team_one: u32, team_two: u32) -> Game {
         let data = GameData {
-            team_one: Team {player: player_one},
-            team_two: Team {player: player_two},
+            team_one,
+            team_two,
             ones_turn: true
         };
 
         Game {id, data}
     }
 
-    fn turn_player(ref self: Game) -> ContractAddress {
-        if(self.data.ones_turn) {
-            self.data.team_one.player
+    fn turn_player(ref self: Game) -> u32 {
+        
+        let data = self.data;
+
+        if(data.ones_turn) {
+            data.team_one
         }
         else {
-            self.data.team_two.player
+            data.team_two
         }
     }
+
+    
 }
 
 
