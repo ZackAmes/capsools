@@ -1,5 +1,5 @@
 use project::models::game::{Vec2};
-
+use starknet::OptionTrait;
 
 
 #[derive(Model, Drop, Serde)]
@@ -21,14 +21,16 @@ struct PieceData {
 enum PieceType {
     Tower,
     A,
-    B
+    B,
+    C
 }
 
 
 
 trait PieceTrait {
     fn new(id: u32, owner: felt252) -> Piece;
-    fn check_move_valid(ref self: Piece, next: Vec2) -> bool;
+    fn check_move_valid(ref self: Piece,move: Vec2, next: Vec2) -> bool;
+    fn check_next(ref self: Piece, next: Vec2) -> bool;
 
     fn get_moves(ref self: Piece) -> Array<Vec2>;
 
@@ -45,30 +47,50 @@ impl PieceImpl of PieceTrait {
         Piece {id, data}
     }
 
-    fn check_move_valid(ref self: Piece, next:Vec2) -> bool {
+    fn check_next(ref self: Piece, next:Vec2) -> bool {
         let mut moves = self.get_moves();
-        let mut i = 0;
         let mut valid = false;
+        let position = self.data.position;
+        
+        let mut i=0;
 
-        loop{
-            if(i == moves.len()) {break;}
+        loop {
+            if(i == moves.len()) {break;};
 
-            let move = moves.pop_front().unwrap();
-            valid = move == next;
+            let move: Vec2 = moves.pop_front().unwrap();
             
-            if valid {
-                break;
-            };
+            let valid = self.check_move_valid(move, next);
+            if(valid) {break;};
 
             i+=1;
         };
 
-        if valid {
-            return true;
+        valid
+    }
+
+    fn check_move_valid(ref self: Piece, move: Vec2, next: Vec2) -> bool {
+
+        let position = self.data.position;
+
+        let mut valid: bool = position.x + move.x == next.x && position.x + move.y == next.y;
+
+        if(valid) {
+            return valid;
         }
 
-        return false;
-    }
+        valid = position.x - move.x == next.x && position.x - move.y == next.y;
+        if(valid) {
+            return valid;
+        };    
+
+        valid = position.x + move.x == next.x && position.x - move.y == next.y;
+        if(valid) {
+            return valid;
+        };    
+       
+        valid = position.x - move.x == next.x && position.x + move.y == next.y;
+        valid
+}
 
     fn get_moves(ref self: Piece) -> Array<Vec2> {
         
@@ -81,10 +103,13 @@ impl PieceImpl of PieceTrait {
                 res.append( Vec2 {x:0, y:1} );                  
             },
             PieceType::A => {
-
+                res.append( Vec2 {x:1, y:0});
             },
             PieceType::B => {
-
+                res.append( Vec2 {x:0, y:1});
+            },
+            PieceType::C => {
+                res.append( Vec2 {x:1, y:1} )
             }
         };
 
