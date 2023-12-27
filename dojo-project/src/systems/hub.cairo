@@ -7,14 +7,14 @@ trait IHub <TContractState>{
 
 
 #[dojo::contract]
-mod Hub {
+mod hub {
     use starknet::{ContractAddress, get_caller_address};
     use project::models::player::{Player, PlayerTrait};
     use project::models::manager::{Manager, ManagerTrait, PlayerCount};
     use super::IHub;
 
 
-    impl IHubImpl of IHub<ContractState>{
+    impl HubImpl of IHub<ContractState>{
 
         fn new_player(self: @ContractState, name: felt252) {
 

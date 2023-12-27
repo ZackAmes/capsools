@@ -4,7 +4,7 @@ trait IGenshin <TContractState>{
 }
 
 #[dojo::contract]
-mod Genshin {   
+mod genshin {   
 
     use super::IGenshin;
 
@@ -13,7 +13,7 @@ mod Genshin {
     use project::models::player::{Player, PlayerTrait};
     use project::models::manager::{Manager, ManagerTrait};
 
-    impl IGenshinImpl of IGenshin<ContractState> {
+    impl GenshinImpl of IGenshin<ContractState> {
 
         fn mint_piece(self: @ContractState) {
 
