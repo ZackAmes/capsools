@@ -7,37 +7,37 @@ export function defineContractComponents(world: World) {
 	  Game: (() => {
 	    return defineComponent(
 	      world,
-	      { game_id: RecsType.Number, player_one: RecsType.BigInt, player_two: RecsType.BigInt, ones_turn: RecsType.Boolean },
+	      { id: RecsType.Number, data: { team_one: RecsType.Number, team_two: RecsType.Number, turn_count: RecsType.Number, is_active: RecsType.Boolean } },
 	      {
 	        metadata: {
 	          name: "Game",
-	          types: ["u32","contractaddress","contractaddress","bool"],
+	          types: ["u32","u32","u32","u32","bool"],
+	          customTypes: ["GameData"],
+	        },
+	      }
+	    );
+	  })(),
+	  Manager: (() => {
+	    return defineComponent(
+	      world,
+	      { owner: RecsType.BigInt, label: RecsType.Number, index: RecsType.Number, id: RecsType.BigInt },
+	      {
+	        metadata: {
+	          name: "Manager",
+	          types: ["felt252","u8","u32","felt252"],
 	          customTypes: [],
 	        },
 	      }
 	    );
 	  })(),
-	  GameManager: (() => {
+	  PlayerCount: (() => {
 	    return defineComponent(
 	      world,
-	      { player: RecsType.BigInt, index: RecsType.Number, game_id: RecsType.Number },
+	      { world: RecsType.BigInt, count: RecsType.Number },
 	      {
 	        metadata: {
-	          name: "GameManager",
-	          types: ["contractaddress","u32","u32"],
-	          customTypes: [],
-	        },
-	      }
-	    );
-	  })(),
-	  Square: (() => {
-	    return defineComponent(
-	      world,
-	      { game_id: RecsType.Number, x: RecsType.Number, y: RecsType.Number, value: RecsType.Number },
-	      {
-	        metadata: {
-	          name: "Square",
-	          types: ["u32","u8","u8","u8"],
+	          name: "PlayerCount",
+	          types: ["felt252","u32"],
 	          customTypes: [],
 	        },
 	      }
@@ -46,25 +46,12 @@ export function defineContractComponents(world: World) {
 	  Piece: (() => {
 	    return defineComponent(
 	      world,
-	      { piece_id: RecsType.Number, owner: RecsType.BigInt, location: RecsType.BigInt, piece_type: RecsType.Number },
+	      { id: RecsType.Number, data: { owner: RecsType.BigInt, location: RecsType.BigInt, position: { x: RecsType.Number, y: RecsType.Number }, piece_type: RecsType.Number } },
 	      {
 	        metadata: {
 	          name: "Piece",
-	          types: ["u32","contractaddress","contractaddress","u8"],
-	          customTypes: [],
-	        },
-	      }
-	    );
-	  })(),
-	  PieceManager: (() => {
-	    return defineComponent(
-	      world,
-	      { owner: RecsType.BigInt, index: RecsType.Number, piece_id: RecsType.Number },
-	      {
-	        metadata: {
-	          name: "PieceManager",
-	          types: ["contractaddress","u32","u32"],
-	          customTypes: [],
+	          types: ["u32","felt252","felt252","u8","u8","enum"],
+	          customTypes: ["PieceData","Vec2","PieceType"],
 	        },
 	      }
 	    );
@@ -72,24 +59,24 @@ export function defineContractComponents(world: World) {
 	  Player: (() => {
 	    return defineComponent(
 	      world,
-	      { address: RecsType.BigInt, games_count: RecsType.Number, pieces_count: RecsType.Number },
+	      { address: RecsType.BigInt, name: RecsType.BigInt, counts: { game_count: RecsType.Number, piece_count: RecsType.Number, team_count: RecsType.Number }, points: RecsType.Number },
 	      {
 	        metadata: {
 	          name: "Player",
-	          types: ["contractaddress","u32","u32"],
-	          customTypes: [],
+	          types: ["felt252","felt252","u32","u32","u32","u32"],
+	          customTypes: ["Counts"],
 	        },
 	      }
 	    );
 	  })(),
-	  Secret: (() => {
+	  Team: (() => {
 	    return defineComponent(
 	      world,
-	      { player: RecsType.BigInt, value: RecsType.Number },
+	      { id: RecsType.Number, owner: RecsType.BigInt, piece_count: RecsType.Number, piece_one: RecsType.Number, piece_two: RecsType.Number },
 	      {
 	        metadata: {
-	          name: "Secret",
-	          types: ["contractaddress","u8"],
+	          name: "Team",
+	          types: ["u32","felt252","u8","u32","u32"],
 	          customTypes: [],
 	        },
 	      }

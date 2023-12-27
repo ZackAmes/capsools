@@ -1,3 +1,4 @@
+#[starknet::interface]
 trait IGenshin <TContractState>{
 
     fn mint_piece(self: @TContractState);
@@ -13,6 +14,7 @@ mod genshin {
     use project::models::player::{Player, PlayerTrait};
     use project::models::manager::{Manager, ManagerTrait};
 
+    #[external(v0)]
     impl GenshinImpl of IGenshin<ContractState> {
 
         fn mint_piece(self: @ContractState) {

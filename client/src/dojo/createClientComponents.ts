@@ -8,11 +8,11 @@ export function createClientComponents({
 }: SetupNetworkResult) {
     return {
         ...contractComponents,
-        Secret: overridableComponent(contractComponents.Secret),
+        Team: overridableComponent(contractComponents.Team),
         Game: overridableComponent(contractComponents.Game),
-        Square: overridableComponent(contractComponents.Square),
+        Piece: overridableComponent(contractComponents.Piece),
         Player: overridableComponent(contractComponents.Player),
-        GameManager: overridableComponent(contractComponents.GameManager)
+        Manager: overridableComponent(contractComponents.Manager)
 
     };
 }

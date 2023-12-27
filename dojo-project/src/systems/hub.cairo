@@ -13,7 +13,7 @@ mod hub {
     use project::models::manager::{Manager, ManagerTrait, PlayerCount};
     use super::IHub;
 
-
+    #[external(v0)]
     impl HubImpl of IHub<ContractState>{
 
         fn new_player(self: @ContractState, name: felt252) {
@@ -29,9 +29,12 @@ mod hub {
 
             assert(player.name == '', 'player already created');
 
-            let mut count = get!(world, world_address, (PlayerCount)).count;
+            let mut count = get!(world, world_address, (PlayerCount));
             player = PlayerTrait::new(caller, name, 1000);
-            let manager = ManagerTrait::player(world_address, count, caller);
+            let manager = ManagerTrait::player(world_address, count.count, caller);
+            count.count+=1;
+
+            set!(world, (player, manager, count))
 
 
         }

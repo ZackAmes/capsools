@@ -17,6 +17,7 @@ mod challenge {
     use project::models::manager::{Manager, ManagerTrait};
 
 
+    #[external(v0)]
     impl ChallengeImpl of IChallenge<ContractState>{
 
         fn create_team(self: @ContractState) {
