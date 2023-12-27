@@ -16,7 +16,7 @@ struct Square {
     state: u32
 }
 
-#[derive(Copy, Drop, Serde, Introspect)]
+#[derive(Copy, Drop, Serde, Introspect, PartialEq)]
 struct Vec2 {
     x: u8,
     y: u8

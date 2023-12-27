@@ -12,12 +12,25 @@ struct Piece {
 #[derive(Copy, Drop, Serde, Introspect)]
 struct PieceData {
    owner: felt252,
-   location: felt252
+   location: felt252,
+   position: Vec2,
+   piece_type: PieceType
 }
+
+#[derive(Copy, Drop, Serde, Introspect)]
+enum PieceType {
+    Tower,
+    A,
+    B
+}
+
+
 
 trait PieceTrait {
     fn new(id: u32, owner: felt252) -> Piece;
     fn check_move_valid(ref self: Piece, next: Vec2) -> bool;
+
+    fn get_moves(ref self: Piece) -> Array<Vec2>;
 
     fn is_available(ref self: Piece) -> bool;
 
@@ -28,13 +41,54 @@ trait PieceTrait {
 impl PieceImpl of PieceTrait {
 
     fn new(id: u32, owner: felt252) -> Piece {  
-        let data = PieceData {owner, location: owner}; 
+        let data = PieceData {owner, location: owner, position: Vec2 {x:0, y:0}, piece_type: PieceType::Tower}; 
         Piece {id, data}
     }
 
-    #[inline(always)]
     fn check_move_valid(ref self: Piece, next:Vec2) -> bool {
-        return true;
+        let mut moves = self.get_moves();
+        let mut i = 0;
+        let mut valid = false;
+
+        loop{
+            if(i == moves.len()) {break;}
+
+            let move = moves.pop_front().unwrap();
+            valid = move == next;
+            
+            if valid {
+                break;
+            };
+
+            i+=1;
+        };
+
+        if valid {
+            return true;
+        }
+
+        return false;
+    }
+
+    fn get_moves(ref self: Piece) -> Array<Vec2> {
+        
+        let mut res = ArrayTrait::new();
+        
+        match self.data.piece_type {
+            PieceType::Tower => {
+                res.append( Vec2 {x:1, y:1} );     
+                res.append( Vec2 {x:1, y:0} );                 
+                res.append( Vec2 {x:0, y:1} );                  
+            },
+            PieceType::A => {
+
+            },
+            PieceType::B => {
+
+            }
+        };
+
+        res
     }
 
     #[inline(always)]
