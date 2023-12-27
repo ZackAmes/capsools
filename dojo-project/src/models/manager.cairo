@@ -1,5 +1,12 @@
 
 #[derive(Model, Drop, Serde)]
+struct PlayerCount {
+    #[key]
+    world: felt252,
+    count: u32
+}
+
+#[derive(Model, Drop, Serde)]
 struct Manager {
     #[key]
     owner: felt252,

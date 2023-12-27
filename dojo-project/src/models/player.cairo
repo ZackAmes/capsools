@@ -7,7 +7,8 @@ struct Player {
     #[key]
     address: felt252,
     name: felt252,
-    counts: Counts
+    counts: Counts,
+    points: u32
 }
 
 #[derive(Copy, Drop, Serde, Introspect)]
@@ -18,7 +19,7 @@ struct Counts {
 }
 
 trait PlayerTrait {
-    fn new(address: felt252, name: felt252) -> Player;
+    fn new(address: felt252, name: felt252, points: u32) -> Player;
 
     fn game_count(ref self: Player) -> u32;
     fn piece_count(ref self: Player) -> u32;
@@ -28,12 +29,15 @@ trait PlayerTrait {
     fn increment_pieces(ref self: Player);
     fn increment_teams(ref self: Player);
 
+    fn add(ref self: Player, points: u32);
+    fn sub(ref self: Player, points: u32);
+
 }
 
 impl PlayerImpl of PlayerTrait {
-    fn new(address: felt252, name: felt252) -> Player {
+    fn new(address: felt252, name: felt252, points: u32) -> Player {
         let counts = Counts {game_count:0, piece_count: 0, team_count: 0};
-        Player { address, name , counts}
+        Player { address, name , counts, points}
     }
 
     fn game_count(ref self: Player) -> u32 {
@@ -58,6 +62,19 @@ impl PlayerImpl of PlayerTrait {
 
     fn increment_pieces(ref self: Player) {
         self.counts.piece_count += 1;
+    }
+
+    fn add(ref self: Player, points: u32) {
+        self.points += points;
+    }
+
+    fn sub(ref self: Player, points: u32) {
+        if(self.points > points) {
+            self.points = 0;
+        }
+        else {
+            self.points - points;
+        }
     }
 
 }
