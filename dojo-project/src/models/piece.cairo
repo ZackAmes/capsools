@@ -38,6 +38,7 @@ trait PieceTrait {
 
     fn owner(ref self: Piece) -> felt252;
     
+    fn update_location(ref self: Piece, location: felt252);
 
     fn move(ref self: Piece, next: Vec2);
 
@@ -142,6 +143,10 @@ impl PieceImpl of PieceTrait {
 
         self.data = data;
         
+    }
+
+    fn update_location(ref self: Piece, location: felt252) {
+        self.data.location = location;
     }
 
     fn move(ref self: Piece, next: Vec2) {
