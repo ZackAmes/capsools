@@ -33,15 +33,6 @@ const SlidingBoard = () => {
     
     return (
         <>
-
-        <Box rotation={[0,0,0]} position={[-1,1,-1]} args={[1, 3, 5]}>
-            <CuboidCollider rotation={[0, 0,0]} args={[.5,1.5,2.5]}/>
-            <meshBasicMaterial color="black"/>
-        </Box>
-        
-        
-        
-        
          <group>
 
 
