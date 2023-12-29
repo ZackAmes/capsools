@@ -1,12 +1,8 @@
 import { CuboidCollider } from "@react-three/rapier";
 import {Box} from "@react-three/drei";
 import { FC } from "react";
-import Secret from "../components/Secret";
-import Button from "../components/Button";
-import Challenge from "../components/Challenge";
-import Games from "../components/Games";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
-import { Entity, getComponentValue } from "@dojoengine/recs";
+import { getComponentValue } from "@dojoengine/recs";
 import Piece from "../components/Piece";
 
 
@@ -17,26 +13,17 @@ interface PiecesProps {
         systemCalls: any
     }
     account: any
-    pieces_count: number
+    piece_ids: any[]
     position: [number, number, number]
 }
 
-const Pieces: FC<PiecesProps> = ({setup: {components, systemCalls}, account, pieces_count, position}) => {
+const Pieces: FC<PiecesProps> = ({setup: {components, systemCalls}, account, piece_ids, position}) => {
 
     const signer = account.account;
 
     let {create_piece} = systemCalls;
 
-    const piece_ids = [];
-
-    for(let i=0; i<pieces_count; i++){
-        let manager_id = getEntityIdFromKeys([BigInt(signer.address),BigInt(1),BigInt(i)])
-        let piece_manager = getComponentValue(components.Manager, manager_id);
-
-
-        let piece_id = getEntityIdFromKeys([BigInt(piece_manager?.id)]);
-        piece_ids.push(piece_id);
-    }
+    
     console.log(piece_ids);
 
     let pieces = piece_ids.map( (piece_id, index) => {
@@ -46,7 +33,7 @@ const Pieces: FC<PiecesProps> = ({setup: {components, systemCalls}, account, pie
         console.log(piece);
         if(piece){
             return (
-                <Piece key={piece.id} position={[index % grid_size, 1.5, Math.floor(index / grid_size)]} type = {1}/>
+                <Piece key={piece.id} position={[index % grid_size, 1.5, Math.floor(index / grid_size)]} type = {piece.data.piece_type}/>
             )
         }
 

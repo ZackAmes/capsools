@@ -15,6 +15,9 @@ import SlidingBoard from "./scenes/SlidingBoard";
 import Button from "./components/Button";
 import Pieces from "./scenes/Pieces";
 
+import get_ids from "./utils/get_ids";
+import Teams from "./scenes/Teams";
+
 function App() {
     const {
         setup,
@@ -26,6 +29,13 @@ function App() {
 
     const player = useComponentValue(setup.components.Player, playerId);
     const player_pieces_count = player?.counts.piece_count as number;
+    const player_games_count = player?.counts.game_count as number;
+    const player_teams_count = player?.counts.team_count as number;
+
+
+    const piece_ids = get_ids(setup.components.Manager, signer.address, player_pieces_count, "piece");
+    const game_ids = get_ids(setup.components.Manager, signer.address, player_games_count, "game");
+    const team_ids = get_ids(setup.components.Manager, signer.address, player_teams_count, "team");
 
 
 
@@ -43,8 +53,8 @@ function App() {
                     {!player && <Button position={[0,5,0]} label="new" onClick={() => setup.systemCalls.new_player(account.account)}/>}
 
                     <SlidingBoard/>
-                    <Pieces position={[-3,0,2]} setup={setup} account={account} pieces_count={player_pieces_count}/>
-
+                    <Pieces position={[-3,0,2]} setup={setup} account={account} piece_ids={piece_ids}/>
+                    <Teams position = {[5,.1,0]} setup={setup} account={account} team_ids={team_ids}/>
                 </Physics>
                 </Suspense>
             </Canvas>

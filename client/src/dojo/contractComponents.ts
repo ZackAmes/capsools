@@ -50,8 +50,8 @@ export function defineContractComponents(world: World) {
 	      {
 	        metadata: {
 	          name: "Piece",
-	          types: ["u32","felt252","felt252","u8","u8","enum"],
-	          customTypes: ["PieceData","Vec2","PieceType"],
+	          types: ["u32","felt252","felt252","u8","u8","u8"],
+	          customTypes: ["PieceData","Vec2"],
 	        },
 	      }
 	    );

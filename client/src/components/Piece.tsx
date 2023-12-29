@@ -9,9 +9,12 @@ interface PieceProps {
 
 const getColor = (type: number) => {
     switch(type){
+        case 0: return "red"
         case 1: return "purple"
         case 2: return "yellow"
+        case 3: return "green"
     }
+    return "blue"
 }
 const Piece: FC<PieceProps> = ({position, type}) => {
     return (
