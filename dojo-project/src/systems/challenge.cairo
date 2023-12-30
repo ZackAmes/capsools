@@ -24,11 +24,12 @@ mod challenge {
             let world = self.world_dispatcher.read();
             let caller = get_caller_address().into();
             let mut player = get!(world, caller, (Player));
+            assert(!(player.name ==''), 'player not created' );
 
             let count = player.team_count();
 
             let team = TeamTrait::new(world.uuid(), caller);
-            let manager = ManagerTrait::team(caller, count, team.id.into());
+            let manager = ManagerTrait::team(caller, count, team.id);
             player.increment_teams();
             
             set!(world, (player, team, manager));

@@ -21,7 +21,7 @@ trait ManagerTrait{
     fn player(owner: felt252, index: u32, id: felt252) -> Manager;
     fn piece(owner: felt252, index: u32, piece_id: u32) -> Manager;
     fn game(owner: felt252, index: u32, game_id: u32) -> Manager;
-    fn team(owner: felt252, index: u32, id: felt252) -> Manager;
+    fn team(owner: felt252, index: u32, team_id: u32) -> Manager;
 
 }
 
@@ -40,8 +40,9 @@ impl ManagerImpl of ManagerTrait {
         let id = game_id.into();
         Manager {owner, label, index, id}
     }
-    fn team(owner: felt252, index: u32, id: felt252) -> Manager {
+    fn team(owner: felt252, index: u32, team_id: u32) -> Manager {
         let label = 3;
+        let id = team_id.into();
         Manager {owner, label, index, id}
     }
 }

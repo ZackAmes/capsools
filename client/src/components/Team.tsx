@@ -21,12 +21,13 @@ const Team: FC<TeamProps> = ({position, components, piece_ids}) => {
 
     let base_squares = [ 0,1,2,3,4,5,6,7,8,9];
 
-    let squares = base_squares.map( (square) => {
-        let x = Math.floor(square/5);
-        let y = square%5;
+    let squares = base_squares.map( (square, index) => {
+        let y = Math.floor(square/5);
+        let x = square%5;
+        let color = index % 2 == 0 ? "blue" : "black"
         return (
-            <Box position = {[x,0,y]}>
-                <meshBasicMaterial color = "blue"/>
+            <Box position = {[x,.1,y]}>
+                <meshBasicMaterial color = {color}/>
             </Box>
         )
     })

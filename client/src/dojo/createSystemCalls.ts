@@ -44,6 +44,59 @@ export function createSystemCalls(
     };
 
 
+
+    const add_piece_to_team = async (signer: Account, piece_id: number, team_id: number) => {
+        const entityId = getEntityIdFromKeys([
+            BigInt(signer.address),
+        ]) as Entity;
+
+        let args: [number, number] = [piece_id, team_id];
+
+        try {
+            const { transaction_hash } = await execute(
+                signer,
+                "challenge",
+                "add_piece_to_team",
+                args
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await signer.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } 
+    };
+
+    const create_team = async (signer: Account) => {
+
+        try {
+            const {transaction_hash} = await execute(
+                signer,
+                "challenge",
+                "create_team",
+                []
+            )
+        
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await signer.waitForTransaction(transaction_hash, {
+                        retryInterval: 100
+                    })
+                )
+            )
+        } catch (e) {
+            console.log(e);
+        } 
+    }
+
+
    
 
     const mint_piece = async (signer: Account) => {
@@ -71,6 +124,8 @@ export function createSystemCalls(
 
     return {
         new_player,
-        mint_piece
+        mint_piece,
+        add_piece_to_team,
+        create_team
     };
 }

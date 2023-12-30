@@ -5,6 +5,7 @@ import { Cylinder } from "@react-three/drei";
 interface PieceProps {
     position: [number, number, number]
     type: number
+    onClick?: () => any
 }
 
 const getColor = (type: number) => {
@@ -16,10 +17,10 @@ const getColor = (type: number) => {
     }
     return "blue"
 }
-const Piece: FC<PieceProps> = ({position, type}) => {
+const Piece: FC<PieceProps> = ({position, type, onClick = () => console.log(type)}) => {
     return (
-        <RigidBody scale = {.25} position={position}>
-            <Cylinder>
+        <RigidBody scale = {.25} position={position} >
+            <Cylinder onClick={onClick}>
                 <meshBasicMaterial color={getColor(type)}/>
             </Cylinder>
         </RigidBody>

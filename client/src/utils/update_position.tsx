@@ -8,3 +8,5 @@ function update_position(position:[number, number, number], update: [number, num
     
     return res
 }
+
+export default update_position;

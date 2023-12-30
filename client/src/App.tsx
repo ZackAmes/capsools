@@ -5,18 +5,18 @@ import { useDojo } from "./DojoContext";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 
 import {Canvas} from "@react-three/fiber";
-import {Physics} from "@react-three/rapier";
+import {Physics, CuboidCollider} from "@react-three/rapier";
 import { Suspense } from "react";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls,Box } from "@react-three/drei";
+
 
 import AccRender from "./components/AccRender";
 import Burners from "./components/Burners";
 import SlidingBoard from "./scenes/SlidingBoard";
 import Button from "./components/Button";
-import Pieces from "./scenes/Pieces";
 
 import get_ids from "./utils/get_ids";
-import Teams from "./scenes/Teams";
+import TeamBuilder from "./scenes/TeamBuilder";
 
 function App() {
     const {
@@ -45,6 +45,12 @@ function App() {
             <OrbitControls/>
                 <Suspense>
                 <Physics >
+
+
+                    <Box rotation={[0, 0,0]} args={[30, 1, 30]}>
+                        <CuboidCollider rotation={[0, 0,0]} args={[15,.5,15]}/>
+                        <meshBasicMaterial color="grey"/>
+                    </Box>
                     <Burners position={[5,10,10]} account = {account}/>
 
                     <AccRender position={[0,10,10]} address={account.account.address} />
@@ -53,8 +59,7 @@ function App() {
                     {!player && <Button position={[0,5,0]} label="new" onClick={() => setup.systemCalls.new_player(account.account)}/>}
 
                     <SlidingBoard/>
-                    <Pieces position={[-3,0,2]} setup={setup} account={account} piece_ids={piece_ids}/>
-                    <Teams position = {[5,.1,0]} setup={setup} account={account} team_ids={team_ids}/>
+                    <TeamBuilder position = {[2,.25,0]} setup={setup} account={account} piece_ids={piece_ids} team_ids={team_ids}/>
                 </Physics>
                 </Suspense>
             </Canvas>
