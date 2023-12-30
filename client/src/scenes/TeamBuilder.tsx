@@ -23,14 +23,14 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
     const signer = account.account;
     const {add_piece_to_team, create_team} = systemCalls;
 
-    console.log(team_ids)
-
     const [cur_team, set_team] = useState(team_ids[0]);
     const [cur_piece, set_piece] = useState();
     
     let team = getComponentValue(components.Team , cur_team);
+    console.log(team)
     let team_piece_ids: number[] = [];
-    
+
+
     if(team) {
         let pieces_count = team.piece_count;
 
@@ -44,7 +44,8 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
         <>
             <group position={position}>
                 <Button position = {create_position} label={"create team"} onClick={() => create_team(signer)}/>
-                <Button position = {add_position} label={"add " + cur_piece + " to team " + cur_team} onClick = {() => add_piece_to_team(signer, cur_piece, cur_team)}/>
+                {cur_piece && team && <Button position = {add_position} label={"add " + cur_piece + " to team " + team.id}
+                        onClick = {() => add_piece_to_team(signer, cur_piece, team?.id)}/>}
                 <Team position={position} piece_ids={team_piece_ids} components={components}/>
                 <Pieces setup={{components, systemCalls}} account={account}
                         piece_ids={piece_ids} position = {pieces_position}
