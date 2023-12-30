@@ -45,17 +45,17 @@ export function createSystemCalls(
 
 
 
-    const add_piece_to_team = async (signer: Account, piece_id: number, team_id: number) => {
+    const add_piece_to_team = async (signer: Account, piece_id: number, team_id: number, x: number, y: number) => {
         const entityId = getEntityIdFromKeys([
             BigInt(signer.address),
         ]) as Entity;
 
-        let args: [number, number] = [piece_id, team_id];
+        let args: [number, number, number, number] = [piece_id, team_id, x, y];
 
         try {
             const { transaction_hash } = await execute(
                 signer,
-                "challenge",
+                "builder",
                 "add_piece_to_team",
                 args
             );
@@ -78,7 +78,7 @@ export function createSystemCalls(
         try {
             const {transaction_hash} = await execute(
                 signer,
-                "challenge",
+                "builder",
                 "create_team",
                 []
             )

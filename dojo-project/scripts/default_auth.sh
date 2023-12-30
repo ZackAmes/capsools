@@ -8,14 +8,14 @@ export WORLD_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.world.address')
 
 export HUB_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::hub::hub" ).address')
 export GENSHIN_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::genshin::genshin" ).address')
-export CHALLENGE_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::challenge::challenge" ).address')
+export BUILDER_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::builder::builder" ).address')
 
 echo "---------------------------------------------------------------------------"
 echo world : $WORLD_ADDRESS 
 echo " "
 echo hub : $HUB_ADDRESS
 echo genshin : $GENSHIN_ADDRESS
-echo challenge : $CHALLENGE_ADDRESS
+echo challenge : $BUILDER_ADDRESS
 echo "---------------------------------------------------------------------------"
 
 # enable system -> component authorizations
@@ -38,10 +38,10 @@ done
 echo "Genshin authorizations have been successfully set."
 echo "---------------------------------------------------------------------------"
 
-CHALLENGE_COMPONENTS=("Player" "Manager" "Team" "Piece" "Game")
+BUILDER_COMPONENTS=("Player" "Manager" "Team" "Piece" "Game")
 
-for component in ${CHALLENGE_COMPONENTS[@]}; do
-    sozo auth writer $component $CHALLENGE_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+for component in ${BUILDER_COMPONENTS[@]}; do
+    sozo auth writer $component $BUILDER_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
-echo "Challenge authorizations have been successfully set."
+echo "Builder authorizations have been successfully set."
