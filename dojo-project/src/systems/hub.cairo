@@ -1,6 +1,7 @@
 #[starknet::interface]
 trait IHub <TContractState>{
 
+    fn spawn(self: @TContractState);
     fn new_player(self: @TContractState, name:felt252);
 
 }
@@ -10,11 +11,36 @@ trait IHub <TContractState>{
 mod hub {
     use starknet::{ContractAddress, get_caller_address};
     use project::models::player::{Player, PlayerTrait};
-    use project::models::manager::{Manager, ManagerTrait, PlayerCount};
+    use project::models::piece::{Piece, PieceTrait, PieceTypeTrait, PieceStatsTrait};
+    use project::models::manager::{Manager, ManagerTrait, PlayerCount, SetManager};
+    use project::models::game::{Vec2};
+
     use super::IHub;
 
     #[external(v0)]
     impl HubImpl of IHub<ContractState>{
+
+        fn spawn(self: @ContractState) {
+            
+            let world = self.world_dispatcher.read();
+            let mut set_zero = get!(world, 0 , (SetManager));
+
+            assert(set_zero.piece_type_count == 0, 'already spawned');
+            let mut ma = ArrayTrait::new();
+            ma.append( Vec2{x:1, y:0});
+            
+            let type_zero_stats = PieceStatsTrait::new(500, 100, 100);
+            let type_zero = PieceTypeTrait::new(world.uuid(), type_zero_stats);
+            let type_manager = ManagerTrait::piece_type(set_zero.set_id, set_zero.piece_type_count, type_zero.id);
+
+            set_zero.piece_type_count+=1;
+
+            set!(world, (set_zero, type_zero, type_manager));
+
+
+
+
+        }
 
         fn new_player(self: @ContractState, name: felt252) {
 

@@ -1,7 +1,6 @@
 use project::models::game::{Vec2};
 use starknet::OptionTrait;
 
-
 #[derive(Model, Drop, Serde)]
 struct Piece {
     #[key]
@@ -14,60 +13,49 @@ struct PieceData {
    owner: felt252,
    location: felt252,
    position: Vec2,
-   color: Color
+   cur_hp: u32,
+   piece_type: u32
 }
 
-#[derive(Copy, Drop, Serde, Introspect)]
-enum PieceType {
-    Tower,
-    A,
-    B,
-    C
+#[derive(Model, Drop, Serde)]
+struct PieceType {
+    #[key]
+    id: u32,
+    piece_stats: PieceStats
 }
 
-trait PieceTypeTrait {
-    fn get_moves(ref self: PieceType) -> Array<Vec2>;
-}
-
-impl RedImpl of PieceTypeTrait {
-    fn get_moves(ref self: PieceType) -> Array<Vec2> {
-
-        let mut res = ArrayTrait::new();
-        
-        res.append(Vec2 {x:1, y:0});
-        res.append(Vec2 {x:2, y:0});
-
-        res
-    }
-}
-
-impl BlueImpl of PieceTypeTrait {
-    fn get_moves(ref self: PieceType) -> Array<Vec2> {
-        let mut res = ArrayTrait::new();
-        
-        res.append(Vec2 {x:1, y:1});
-        res.append(Vec2 {x:2, y:0});
-
-        res
+#[generate_trait]
+impl PieceTypeImpl of PieceTypeTrait {
+    fn new(id: u32, piece_stats: PieceStats) -> PieceType {
+        PieceType {id, piece_stats}
     }
 }
 
 #[derive(Copy, Drop, Serde, Introspect)]
-enum Color {
-    Red: PieceType,
-    Blue: PieceType
+struct PieceStats{
+    hp: u32,
+    xp: u32,
+    cost: u32,
+    dmg: u32
+//    moves: Span<Vec2>,
+//    attacks: Span<Vec2>
+}
+
+#[generate_trait]
+impl PieceStatsImpl of PieceStatsTrait {
+    fn new(hp: u32, cost: u32, dmg: u32) -> PieceStats{
+        
+        PieceStats {hp, xp:0, cost, dmg}
+    }
 }
 
 
 
 trait PieceTrait {
 
-    fn new(id: u32, owner: felt252,color: Color) -> Piece;
-    fn get_moves(ref self: Piece) -> Array<Vec2>;
+    fn new(id: u32, owner: felt252, cur_hp: u32, piece_type: u32) -> Piece;
 
     fn available(ref self: Piece) -> bool;
-
-    fn get_type(ref self: Piece) -> PieceType;
 
     fn move(ref self: Piece, next: Vec2);
 
@@ -77,46 +65,9 @@ trait PieceTrait {
 
 impl PieceImpl of PieceTrait {
 
-    fn new(id: u32, owner: felt252, color: Color) -> Piece {  
-        let data = PieceData {owner, location: owner, color,  position: Vec2 {x:0, y:0}}; 
+    fn new(id: u32, owner: felt252, cur_hp: u32, piece_type: u32) -> Piece {  
+        let data = PieceData {owner, location: owner, cur_hp,  position: Vec2 {x:0, y:0}, piece_type}; 
         Piece {id, data}
-    }
-
-    fn get_moves(ref self: Piece) -> Array<Vec2> {
-        
-        let mut res = ArrayTrait::new();
-        let piece_type = self.get_type();
-        
-        match piece_type {
-            PieceType::Tower => {
-                res.append( Vec2 {x:1, y:1} );     
-                res.append( Vec2 {x:1, y:0} );                 
-                res.append( Vec2 {x:0, y:1} );                  
-            },
-            PieceType::A => {
-                res.append( Vec2 {x:1, y:0});
-            },
-            PieceType::B => {
-                res.append( Vec2 {x:0, y:1});
-            },
-            PieceType::C => {
-                res.append( Vec2 {x:1, y:1} )
-            }
-        };
-
-        res
-    }
-
-    fn get_type(ref self: Piece) -> PieceType {
-
-        match self.data.color {
-            Color::Red(piece_type) => {
-                return piece_type;
-            },
-            Color::Blue(piece_type) => {
-                return piece_type;
-            }
-        }
     }
 
     fn available(ref self: Piece) -> bool {
