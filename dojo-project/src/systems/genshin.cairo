@@ -10,7 +10,7 @@ mod genshin {
     use super::IGenshin;
 
     use starknet::{ContractAddress, get_caller_address};    
-    use project::models::piece::{Piece, PieceTrait, PieceType};
+    use project::models::piece::{Piece, PieceTrait, PieceType, Color};
     use project::models::player::{Player, PlayerTrait};
     use project::models::manager::{Manager, ManagerTrait};
 
@@ -26,7 +26,8 @@ mod genshin {
             assert(!(player.name == ''), 'new player must init');
             let count = player.counts.piece_count;
             let piece_type = get_piece_type(count);
-            let piece = PieceTrait::new(world.uuid(), caller, piece_type);
+            let color = Color::Red(piece_type);
+            let piece = PieceTrait::new(world.uuid(), caller, color);
             let manager = ManagerTrait::piece(caller, count, piece.id);
             player.counts.piece_count+=1;
 

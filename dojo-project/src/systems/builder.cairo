@@ -68,7 +68,8 @@ mod builder {
 
             assert(team.owner == caller, 'not team owner');
             assert(team.contains(piece_id), 'piece not in team');
-            team.remove_piece(piece_id);
+            //TODO: FIX
+            //team.remove_piece(piece_id);
 
         }
 

@@ -14,7 +14,7 @@ struct PieceData {
    owner: felt252,
    location: felt252,
    position: Vec2,
-   piece_type: PieceType
+   color: Color
 }
 
 #[derive(Copy, Drop, Serde, Introspect)]
@@ -53,14 +53,16 @@ impl BlueImpl of PieceTypeTrait {
 }
 
 #[derive(Copy, Drop, Serde, Introspect)]
-enum Colors {
+enum Color {
     Red: PieceType,
     Blue: PieceType
 }
 
+
+
 trait PieceTrait {
 
-    fn new(id: u32, owner: felt252, piece_type: PieceType) -> Piece;
+    fn new(id: u32, owner: felt252,color: Color) -> Piece;
     fn get_moves(ref self: Piece) -> Array<Vec2>;
 
     fn available(ref self: Piece) -> bool;
@@ -71,13 +73,12 @@ trait PieceTrait {
 
     fn to_game(ref self: Piece, game_id: felt252, init_position: Vec2);
 
-
 }
 
 impl PieceImpl of PieceTrait {
 
-    fn new(id: u32, owner: felt252, piece_type: PieceType) -> Piece {  
-        let data = PieceData {owner, location: owner, position: Vec2 {x:0, y:0}, piece_type}; 
+    fn new(id: u32, owner: felt252, color: Color) -> Piece {  
+        let data = PieceData {owner, location: owner, color,  position: Vec2 {x:0, y:0}}; 
         Piece {id, data}
     }
 
@@ -108,7 +109,14 @@ impl PieceImpl of PieceTrait {
 
     fn get_type(ref self: Piece) -> PieceType {
 
-        self.data.piece_type
+        match self.data.color {
+            Color::Red(piece_type) => {
+                return piece_type;
+            },
+            Color::Blue(piece_type) => {
+                return piece_type;
+            }
+        }
     }
 
     fn available(ref self: Piece) -> bool {
