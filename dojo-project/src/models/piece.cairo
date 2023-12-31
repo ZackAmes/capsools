@@ -14,7 +14,7 @@ struct PieceData {
    owner: felt252,
    location: felt252,
    position: Vec2,
-   piece_type: u8
+   piece_type: PieceType
 }
 
 #[derive(Copy, Drop, Serde, Introspect)]
@@ -25,23 +25,47 @@ enum PieceType {
     C
 }
 
+trait PieceTypeTrait {
+    fn get_moves(ref self: PieceType) -> Array<Vec2>;
+}
 
+impl RedImpl of PieceTypeTrait {
+    fn get_moves(ref self: PieceType) -> Array<Vec2> {
+
+        let mut res = ArrayTrait::new();
+        
+        res.append(Vec2 {x:1, y:0});
+        res.append(Vec2 {x:2, y:0});
+
+        res
+    }
+}
+
+impl BlueImpl of PieceTypeTrait {
+    fn get_moves(ref self: PieceType) -> Array<Vec2> {
+        let mut res = ArrayTrait::new();
+        
+        res.append(Vec2 {x:1, y:1});
+        res.append(Vec2 {x:2, y:0});
+
+        res
+    }
+}
+
+#[derive(Copy, Drop, Serde, Introspect)]
+enum Colors {
+    Red: PieceType,
+    Blue: PieceType
+}
 
 trait PieceTrait {
 
-    fn new(id: u32, owner: felt252, piece_type: u8) -> Piece;
-    fn check_move_valid(ref self: Piece,move: Vec2, next: Vec2) -> bool;
-    fn check_next(ref self: Piece, next: Vec2) -> bool;
-
+    fn new(id: u32, owner: felt252, piece_type: PieceType) -> Piece;
     fn get_moves(ref self: Piece) -> Array<Vec2>;
 
     fn available(ref self: Piece) -> bool;
 
     fn get_type(ref self: Piece) -> PieceType;
-
-    fn owner(ref self: Piece) -> felt252;
-    
-    fn update_location(ref self: Piece, location: felt252);
 
     fn move(ref self: Piece, next: Vec2);
 
@@ -52,55 +76,10 @@ trait PieceTrait {
 
 impl PieceImpl of PieceTrait {
 
-    fn new(id: u32, owner: felt252, piece_type: u8) -> Piece {  
+    fn new(id: u32, owner: felt252, piece_type: PieceType) -> Piece {  
         let data = PieceData {owner, location: owner, position: Vec2 {x:0, y:0}, piece_type}; 
         Piece {id, data}
     }
-
-    fn check_next(ref self: Piece, next:Vec2) -> bool {
-        let mut moves = self.get_moves();
-        let mut valid = false;
-        let position = self.data.position;
-        
-        let mut i=0;
-
-        loop {
-            if(i == moves.len()) {break;};
-
-            let move: Vec2 = moves.pop_front().unwrap();
-            
-            let valid = self.check_move_valid(move, next);
-            if(valid) {break;};
-
-            i+=1;
-        };
-
-        valid
-    }
-
-    fn check_move_valid(ref self: Piece, move: Vec2, next: Vec2) -> bool {
-
-        let position = self.data.position;
-
-        let mut valid: bool = position.x + move.x == next.x && position.x + move.y == next.y;
-
-        if(valid) {
-            return valid;
-        }
-
-        valid = position.x - move.x == next.x && position.x - move.y == next.y;
-        if(valid) {
-            return valid;
-        };    
-
-        valid = position.x + move.x == next.x && position.x - move.y == next.y;
-        if(valid) {
-            return valid;
-        };    
-       
-        valid = position.x - move.x == next.x && position.x + move.y == next.y;
-        valid
-}
 
     fn get_moves(ref self: Piece) -> Array<Vec2> {
         
@@ -129,23 +108,7 @@ impl PieceImpl of PieceTrait {
 
     fn get_type(ref self: Piece) -> PieceType {
 
-        if(self.data.piece_type == 0) {
-            return PieceType::Tower;
-        }
-        if(self.data.piece_type == 1) {
-            return PieceType::A;
-        }
-        if(self.data.piece_type == 2) {
-            return PieceType::B;
-        }
-        else {
-            return PieceType::C;
-        }
-    }
-
-    #[inline(always)]
-    fn owner(ref self: Piece) -> felt252 {
-        return self.data.owner;
+        self.data.piece_type
     }
 
     fn available(ref self: Piece) -> bool {
@@ -165,9 +128,6 @@ impl PieceImpl of PieceTrait {
         
     }
 
-    fn update_location(ref self: Piece, location: felt252) {
-        self.data.location = location;
-    }
 
     fn move(ref self: Piece, next: Vec2) {
 

@@ -24,12 +24,11 @@ mod genshin {
 
             let mut player = get!(world, caller, (Player));
             assert(!(player.name == ''), 'new player must init');
-            let count = player.piece_count();
-        //    let piece_type = get_piece_type(count);
-            let piece_type: u8 = (count % 4).try_into().unwrap() ;
+            let count = player.counts.piece_count;
+            let piece_type = get_piece_type(count);
             let piece = PieceTrait::new(world.uuid(), caller, piece_type);
             let manager = ManagerTrait::piece(caller, count, piece.id);
-            player.increment_pieces();
+            player.counts.piece_count+=1;
 
             set!(world, (player, piece, manager));
 

@@ -26,11 +26,11 @@ mod builder {
             let mut player = get!(world, caller, (Player));
             assert(!(player.name ==''), 'player not created' );
 
-            let count = player.team_count();
+            let count = player.counts.team_count;
 
             let team = TeamTrait::new(world.uuid(), caller);
             let manager = ManagerTrait::team(caller, count, team.id);
-            player.increment_teams();
+            player.counts.team_count +=1;
             
             set!(world, (player, team, manager));
         }
@@ -41,9 +41,11 @@ mod builder {
             let caller = get_caller_address().into();
 
             let mut piece = get!(world, piece_id, (Piece));
-            assert(piece.owner() == caller, 'not piece owner');
+            assert(piece.data.owner == caller, 'not piece owner');
             assert(piece.available(), 'piece not available');
-            assert(x > 2 && x < 11, 'invalid x');
+            //12x12 board, base is middle 6
+            //0,1,2  || 3,4,5,6,7,8 || 9,10,11
+            assert(x > 2 && x < 9, 'invalid x');
             assert(y >=0 && y<2, 'invalid y');
 
 
@@ -51,7 +53,7 @@ mod builder {
             assert(team.owner == caller, 'not team owner');
             team.add_piece(piece_id);
             piece.data.position = Vec2 {x: x.try_into().unwrap(), y: y.try_into().unwrap()};
-            piece.update_location(team_id.into());
+            piece.data.location = team_id.into();
 
             set!(world, (team, piece));
 
