@@ -38,8 +38,6 @@ mod hub {
             set!(world, (set_zero, type_zero, type_manager));
 
 
-
-
         }
 
         fn new_player(self: @ContractState, name: felt252) {

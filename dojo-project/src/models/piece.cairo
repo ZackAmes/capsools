@@ -59,7 +59,7 @@ trait PieceTrait {
 
     fn move(ref self: Piece, next: Vec2);
 
-    fn to_game(ref self: Piece, game_id: felt252, init_position: Vec2);
+    fn add_to(ref self: Piece, id: felt252, init_position: Vec2);
 
 }
 
@@ -74,13 +74,13 @@ impl PieceImpl of PieceTrait {
         return self.data.location == self.data.owner;
     }
 
-    fn to_game(ref self: Piece, game_id: felt252, init_position: Vec2) {
+    fn add_to(ref self: Piece, id: felt252, init_position: Vec2) {
         assert(!self.available(), 'piece not available');
         
 
 
         let mut data = self.data;
-        data.location = game_id;
+        data.location = id;
         data.position = init_position;
 
         self.data = data;
