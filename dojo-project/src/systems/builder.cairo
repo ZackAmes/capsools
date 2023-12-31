@@ -30,6 +30,7 @@ mod builder {
 
             let team = TeamTrait::new(world.uuid(), caller);
             let manager = ManagerTrait::team(caller, count, team.id);
+            
             player.counts.team_count +=1;
             
             set!(world, (player, team, manager));

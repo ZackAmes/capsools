@@ -12,7 +12,7 @@ mod genshin {
     use starknet::{ContractAddress, get_caller_address};    
     use project::models::piece::{Piece, PieceTrait, PieceType};
     use project::models::player::{Player, PlayerTrait};
-    use project::models::manager::{Manager, ManagerTrait};
+    use project::models::manager::{Manager, ManagerTrait, SetManager};
 
     #[external(v0)]
     impl GenshinImpl of IGenshin<ContractState> {
@@ -20,18 +20,22 @@ mod genshin {
         fn mint_piece(self: @ContractState) {
 
             let world = self.world_dispatcher.read();
-          //  let caller = get_caller_address().into();
+            let caller = get_caller_address().into();
+            let set = get!(world, 0, (SetManager));
+            assert(set.piece_type_count > 0, 'must spawn');
 
-         //   let mut player = get!(world, caller, (Player));
-           // assert(!(player.name == ''), 'new player must init');
-           // let count = player.counts.piece_count;
-          //  let piece_type = get_piece_type(count);
-          //  let color = Color::Red(piece_type);
-            //let piece = PieceTrait::new(world.uuid(), caller, color);
-           // let manager = ManagerTrait::piece(caller, count, piece.id);
-            //player.counts.piece_count+=1;
+            let mut player = get!(world, caller, (Player));
+            assert(!(player.name == ''), 'new player must init');
+            let count = player.counts.piece_count;
 
-           // set!(world, (player, piece, manager));
+            let type_id = get!(world, (0,4,0), (Manager)).id.try_into().unwrap();
+            let stats = get!(world, type_id, (PieceType)).piece_stats;
+
+            let piece = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);
+            let manager = ManagerTrait::piece(caller, count, piece.id);
+            player.counts.piece_count +=1;
+
+            set!(world,(piece, manager, player));
 
 
 
