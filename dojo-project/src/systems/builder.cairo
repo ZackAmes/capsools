@@ -15,7 +15,6 @@ mod builder {
     use project::models::piece::{Piece, PieceTrait, PieceType};
     use project::models::team::{Team, TeamTrait, PiecesTrait, Pieces};
     use project::models::manager::{Manager, ManagerTrait};
-    use core::box::{Box, BoxTrait};
 
 
     #[external(v0)]
@@ -29,36 +28,44 @@ mod builder {
             let count = player.counts.team_count;
 
             assert(!(player.name ==''), 'player not created' );
-            assert(count == 0, 'already claimed' );
 
             let mut team = TeamTrait::new(world.uuid(), caller);
 
             let type_id = get!(world, (0,4,0), (Manager)).id.try_into().unwrap();
             let stats = get!(world, type_id, (PieceType)).piece_stats;
-
         
+            let mut offset = 0;
             let mut tower = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);     
-            tower.add_to(team.id.into(), Vec2 {x:5, y:1});
+            tower.add_to(team.id.into(), Vec2 {x:4 + offset, y:1});
+            offset+=1;
 
             let mut piece_one = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);
-            piece_one.add_to(team.id.into(), Vec2 {x:6, y:1});
+            piece_one.add_to(team.id.into(), Vec2 {x:4+ offset, y:1});
+            offset+=1;
 
             let mut piece_two = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);
-            piece_two.add_to(team.id.into(), Vec2 {x:4, y:1});
+            piece_two.add_to(team.id.into(), Vec2 {x:4+ offset, y:1});
+            offset+=1;
 
             let mut piece_three = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);
-            piece_three.add_to(team.id.into(), Vec2 {x:7, y:1});
+            piece_three.add_to(team.id.into(), Vec2 {x:4+ offset, y:1});
+            offset+=1;
 
             let mut piece_four = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);
-            piece_four.add_to(team.id.into(), Vec2 {x:8, y:1});
+            piece_four.add_to(team.id.into(), Vec2 {x:4+ offset, y:1});
+            offset+=1;
 
             let mut piece_five = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);
-            piece_five.add_to(team.id.into(), Vec2 {x:9, y:1});
+            piece_five.add_to(team.id.into(), Vec2 {x:4+ offset, y:1});
 
             let mut team_pieces = PiecesTrait::new_from(tower.id, piece_one.id, piece_two.id, piece_three.id, piece_four.id, piece_five.id);
             
+            player.counts.team_count += 1;
             team.pieces = team_pieces;
-            set!(world, (team, tower, piece_one, piece_two, piece_three, piece_four, piece_five));
+            team.piece_count = 6;
+            set!(world, (player, team, tower, piece_one, piece_two, piece_three, piece_four, piece_five));
+
+
             
             //player.counts.pieces_count +=6;
 
