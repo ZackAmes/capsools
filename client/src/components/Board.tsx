@@ -7,76 +7,75 @@ import { useComponentValue } from "@dojoengine/react";
 import { Entity } from "@dojoengine/recs";
 import { Account } from "starknet";
 import AccRender from "./AccRender";
-
+import { getComponentValue } from "@dojoengine/recs";
+import { RigidBody } from "@react-three/rapier";
+import Piece from "./Piece";
+import update_position from "../utils/update_position";
+import { Ref } from "react";
 interface BoardProps {
     position: [number,number,number]
     game_id:number
     signer: Account
     components: any
-    take_turn: (signer:Account, game_id:number, x:number, y:number) => any
+    piece_ids:any[]
+   // take_turn: (signer:Account, game_id:number, x:number, y:number) => any
 }
 
-const Board: FC<BoardProps> = ({position, game_id, components, take_turn, signer}) => {
-
-    const squareIds: Entity[][] = [];
-    const squareValues = [];
+const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer}) => {
 
     let game = useComponentValue(components.Game, getEntityIdFromKeys([BigInt(game_id)]) as Entity);
 
+    let squareValues: any[] = [];
+
+    let refs:Ref<RapierRigidBody>[] =[];
     //Create Id and Value arrays
-    for(let i=0; i<3; i++){
-        let tempIds = [];
-        let tempSquares = []
-        for(let j=0; j<3; j++){
-            let tempId = getEntityIdFromKeys([BigInt(game_id), BigInt(i), BigInt(j)]) as Entity 
-            let tempSquare = useComponentValue(components.Square, tempId)
-            tempIds.push(tempId)
-            tempSquares.push(tempSquare)
-        }
-        squareIds.push(tempIds);
-        squareValues.push(tempSquares)
+    for(let i=0; i<144; i++){
+        squareValues.push(i);
+        refs.push(useRef<RapierRigidBody>(null!));
     }
 
-    //create refs and squares
-    const refs: RefObject<RapierRigidBody>[] = [];
-    const squares = squareValues.flat().map( (square, index) => {
-        let ref = useRef<RapierRigidBody>(null);
-        refs.push(ref);
-        let x = square?.x;
-        let y = square?.y;
-        let color = (x%2===0 && y%2===0) || (x%2===1 && y%2===1) ? "blue" : "red"
-        let tempPosition: [number, number, number] = [x, 0, y];
-        return (<Square key={squareIds.flat()[index]} ref={ref} 
-                        position={tempPosition} color= {color} 
-                        state={square?.value} onClick={() => take_turn(signer, game_id, x, y)}/>);
+
+    
+
+    let one_piece_ids: number[] = Object.values(game?.team_one.pieces);
+    let two_piece_ids: number[] = Object.values(game?.team_one.pieces);
+    let one_pieces = [];
+    let two_pieces = [];
+
+    //Create Id and Value arrays
+    for(let i=0; i<game?.team_one.piece_count; i++){
+        let tempId = getEntityIdFromKeys([BigInt(one_piece_ids[i])]) as Entity 
+        let tempPiece = useComponentValue(components.Piece, tempId)
+        one_pieces.push(tempPiece)
+    }
+
+    for(let i=0; i<game?.team_two.piece_count; i++){
+        let tempId = getEntityIdFromKeys([BigInt(two_piece_ids[i])]) as Entity 
+        let tempPiece = useComponentValue(components.Piece, tempId)
+        two_pieces.push(tempPiece)
+    }
+
+    piece_ids = one_piece_ids.concat(two_piece_ids);
+    let pieces = piece_ids.map( (piece_id) => {
+        let piece = getComponentValue(components.Piece, piece_id);
+        if(piece){
+            let piece_position: [number, number, number] = update_position(position, [piece.data.position.x, 2.1, piece.data.position.y]);
+            return (<Piece key={piece.id} position={piece_position} type={piece.data.piece_type} onClick={() => console.log(piece?.id)}/>)
+        }    
     })
 
-    //TODO: CLEAN UP
-    const joints = [];
-
-    //create joints                            axis :[x,y,z]  ?????????????????????????????
-    //vertical
-    const joint1 = useFixedJoint(refs[0], refs[1] , [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-    const joint2 = useFixedJoint(refs[1], refs[2] , [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-
-    const joint3 = useFixedJoint(refs[3], refs[4], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-    const joint4 = useFixedJoint(refs[4], refs[5], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-
-
-    const joint5 = useFixedJoint(refs[6], refs[7], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-    const joint6 = useFixedJoint(refs[7], refs[8], [[0,1,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-
-    //horizontal
-    const joint7 = useFixedJoint(refs[0], refs[3] , [[1,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-    const joint8 = useFixedJoint(refs[3], refs[6] , [[1,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-
-    const joint9 = useFixedJoint(refs[1], refs[4], [[1,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-    const joint10 = useFixedJoint(refs[4], refs[7], [[1,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-
-
-    const joint11 = useFixedJoint(refs[2], refs[5], [[1,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-    const joint12 = useFixedJoint(refs[5], refs[8], [[1,0,0], [0,0,0,1], [0,0,0], [0,0,0,1]]);
-
+    //create refs and squares
+    const squares = squareValues.flat().map( (index) => {
+        let ref = useRef<RapierRigidBody>(null);
+        refs.push(ref);
+        let x = index % 12;
+        let y = Math.floor(index/12);
+        let color = x%2==y%2 ? "blue" : "red"
+        let tempPosition: [number, number, number] = [x, 0, y];
+        return (<Square key={index} ref={ref} 
+                        position={tempPosition} color= {color} 
+                        onClick={() => console.log("(" + x + "," + y + ")")}/>);
+    })
 
 
 
@@ -88,6 +87,7 @@ const Board: FC<BoardProps> = ({position, game_id, components, take_turn, signer
                 {game && <AccRender address={"0x" + game.player_one.toString(16)} position={[0, 0, -2]} />}
                 {game && <AccRender address={"0x" + game.player_two.toString(16)} position={[2, 0, -2]} />}
                 {squares}
+                {pieces}
             </group>
         </>
     )

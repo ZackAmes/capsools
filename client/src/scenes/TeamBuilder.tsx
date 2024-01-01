@@ -6,7 +6,7 @@ import Button from "../components/Button";
 
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import update_position from "../utils/update_position";
-import { cursorTo } from "readline";
+import Selector from "../components/Selector";
 
 
 
@@ -25,13 +25,13 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
 
     const signer = account.account;
     const {add_piece_to_team, create_team} = systemCalls;
+    console.log(team_ids);
 
-    let initital_team = team_ids[0];
-    const [cur_team, set_team] = useState(initital_team);
+    const [cur_team, set_team] = useState(0);
     const [cur_piece, set_piece] = useState();
     const [cur_square, set_square] = useState([]);
 
-    let team = getComponentValue(components.Team , cur_team);
+    let team = getComponentValue(components.Team , team_ids[cur_team]);
     console.log(team ? team : "no team")
     let team_piece_ids: Entity[] = [];
 
@@ -55,6 +55,7 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
     let pieces_position = update_position(position, [0,0,3])
     let add_position = update_position(position, [1,5,0])
     let create_position = update_position(position, [1,4,0])
+    let selector_position = update_position(position, [1,6,0]);
 
     const add_piece = (x: number, y:number) => {
         add_piece_to_team(signer, cur_piece, team?.id, x, y);
@@ -63,6 +64,7 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
     return (
         <>
             <group position={position}>
+                <Selector position={selector_position} label={cur_team.toString()} next={()=>set_team(cur_team+1)} prev={()=> set_team(cur_team-1)}/>
                 <Button position = {create_position} label={"create team"} onClick={() => create_team(signer)}/>
                 {cur_piece && team && cur_square && 
                     <Button position = {add_position} label={"add " + cur_piece + " to team " + team.id}

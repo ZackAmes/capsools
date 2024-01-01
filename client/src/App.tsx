@@ -37,8 +37,6 @@ function App() {
     const game_ids = get_ids(setup.components.Manager, signer.address, player_games_count, "game");
     const team_ids = get_ids(setup.components.Manager, signer.address, player_teams_count, "team");
 
-    console.log(piece_ids);
-    console.log(team_ids);
 
 
     return (

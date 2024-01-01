@@ -7,11 +7,10 @@ import Piece from "./Piece";
 interface SquareProps {
     color: string
     position: [number, number, number]
-    state: number 
     onClick: () => any
 }
 
-const Square = forwardRef( ({color, position, state, onClick}: SquareProps, ref:Ref<RapierRigidBody>) => {
+const Square = forwardRef( ({color, position, onClick}: SquareProps, ref:Ref<RapierRigidBody>) => {
     
     return (
         <group position={position}>
@@ -20,7 +19,6 @@ const Square = forwardRef( ({color, position, state, onClick}: SquareProps, ref:
                     <meshBasicMaterial color={color}/>
                 </Box>
             </RigidBody>
-            {state>0 && <Piece position={[0, .5, 0]} type={state}/>}
         </group>
     )
 })

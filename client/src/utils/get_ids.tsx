@@ -27,7 +27,6 @@ function get_ids(Manager:any, address:any, count:number, label: string) {
 
             if(manager) {
                 let id = getEntityIdFromKeys([BigInt(manager.id)]);
-                console.log(manager);
                 ids.push(id);
                 
             }    
