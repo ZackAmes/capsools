@@ -1,11 +1,13 @@
 import { FC, useState } from "react";
-import { getComponentValue } from "@dojoengine/recs";
+import { getComponentValue, Entity } from "@dojoengine/recs";
 import Team from "../components/Team";
 import Pieces from "./Pieces";
 import Button from "../components/Button";
 
+import { getEntityIdFromKeys } from "@dojoengine/utils";
 import update_position from "../utils/update_position";
 import { cursorTo } from "readline";
+
 
 
 interface TeamsProps {
@@ -24,20 +26,31 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
     const signer = account.account;
     const {add_piece_to_team, create_team} = systemCalls;
 
-    const [cur_team, set_team] = useState(team_ids[0]);
+    let initital_team = team_ids[0];
+    const [cur_team, set_team] = useState(initital_team);
     const [cur_piece, set_piece] = useState();
     const [cur_square, set_square] = useState([]);
 
     let team = getComponentValue(components.Team , cur_team);
     console.log(team ? team : "no team")
-    let team_piece_ids: number[] = [];
+    let team_piece_ids: Entity[] = [];
 
+    let pieces = [];
 
     if(team) {
         let pieces_count = team.piece_count;
 
-        let team_piece_ids = [team.piece_one, team.piece_two]
+        let ids_array: number[] = Object.values(team.pieces)
+        console.log(team.pieces);
+
+        for(let i=0; i<pieces_count; i++) {
+            let id = getEntityIdFromKeys([BigInt(ids_array[i])]) as Entity;
+            team_piece_ids.push(id);
+            pieces.push(getComponentValue(components.Piece, id))
+        }
+
     }
+    console.log(pieces);
     
     let pieces_position = update_position(position, [0,0,3])
     let add_position = update_position(position, [1,5,0])
