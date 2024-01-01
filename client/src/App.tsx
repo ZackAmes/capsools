@@ -28,18 +28,25 @@ function App() {
    
     const signer = account.account;
     const playerId = getEntityIdFromKeys([BigInt(signer.address)]) as Entity
-
+    const setId= getEntityIdFromKeys([BigInt(0)]) as Entity
     const player = useComponentValue(setup.components.Player, playerId);
+    const set = useComponentValue(setup.components.SetManager, setId);
+
     const player_pieces_count = player?.counts.piece_count as number;
     const player_games_count = player?.counts.game_count as number;
     const player_teams_count = player?.counts.team_count as number;
 
+    const challenge_count = set?.challenge_count as number;
+    console.log(challenge_count)
 
     const piece_ids = get_ids(setup.components.Manager, signer.address, player_pieces_count, "piece");
     const game_ids = get_ids(setup.components.Manager, signer.address, player_games_count, "game");
     const team_ids = get_ids(setup.components.Manager, signer.address, player_teams_count, "team");
+    const challenge_ids = get_ids(setup.components.Manager, 0, challenge_count, "challenge")
 
     const {mint_piece, new_player, create_challenge, accept_challenge} = setup.systemCalls;
+
+    console.log(challenge_ids);
 
     return (
         <>
@@ -54,7 +61,8 @@ function App() {
                         <meshBasicMaterial color="grey"/>
                     </Box>
 
-                    <Challenge position = {[-5,5,0]} pending_games={game_ids} team_ids = {team_ids} signer={account.account}
+                    <Challenge  position = {[-5,5,0]} pending_games={challenge_ids}  components={setup.components}
+                                team_ids = {team_ids} signer={account.account}
                                 create_challenge={create_challenge} accept_challenge={accept_challenge}/>
 
                     <Burners position={[5,10,10]} account = {account}/>

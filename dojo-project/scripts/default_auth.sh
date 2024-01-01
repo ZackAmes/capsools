@@ -50,7 +50,7 @@ echo "Builder authorizations have been successfully set."
 echo "---------------------------------------------------------------------------"
 
 
-ARENA_COMPONENTS=("Player" "Piece" "Manager" "Team" "Game")
+ARENA_COMPONENTS=("Player" "Piece" "Manager" "SetManager" "Team" "Game")
 
 for component in ${ARENA_COMPONENTS[@]}; do
     sozo auth writer $component $ARENA_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL

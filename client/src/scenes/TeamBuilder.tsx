@@ -25,14 +25,12 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
 
     const signer = account.account;
     const {add_piece_to_team, create_team} = systemCalls;
-    console.log(team_ids);
 
     const [cur_team, set_team] = useState(0);
     const [cur_piece, set_piece] = useState();
     const [cur_square, set_square] = useState([]);
 
     let team = getComponentValue(components.Team , team_ids[cur_team]);
-    console.log(team ? team : "no team")
     let team_piece_ids: Entity[] = [];
 
     let pieces = [];
@@ -41,7 +39,6 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
         let pieces_count = team.piece_count;
 
         let ids_array: number[] = Object.values(team.pieces)
-        console.log(team.pieces);
 
         for(let i=0; i<pieces_count; i++) {
             let id = getEntityIdFromKeys([BigInt(ids_array[i])]) as Entity;
@@ -50,7 +47,6 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
         }
 
     }
-    console.log(pieces);
     
     let pieces_position = update_position(position, [0,0,3])
     let add_position = update_position(position, [1,5,0])

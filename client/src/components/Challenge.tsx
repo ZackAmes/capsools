@@ -4,6 +4,8 @@ import Button from './Button';
 import { Account } from 'starknet';
 import update_position from '../utils/update_position';
 import Selector from './Selector';
+import { getComponentValue } from '@dojoengine/recs';
+import { getEntityIdFromKeys } from '@dojoengine/utils';
 
 interface ChallengeProps {
     pending_games: any[]
@@ -11,18 +13,34 @@ interface ChallengeProps {
     signer: Account
     create_challenge: any
     accept_challenge: any
+    components: any
     position: [number,number,number]
 }
 
-const Challenge: FC<ChallengeProps> = ({pending_games, team_ids, signer, create_challenge, accept_challenge, position}) => {
+const Challenge: FC<ChallengeProps> = ({pending_games, components, team_ids, signer, create_challenge, accept_challenge, position}) => {
 
     let [cur_team, set_team] = useState(0);
-    const potential = pending_games.map( (game_id) => {
+    let team = getComponentValue(components.Team, team_ids[cur_team]);
+
+    const potential = pending_games.map( (game_id, index) => {
+        let game = getComponentValue(components.Game, game_id);
+        let challenger_id = getEntityIdFromKeys([BigInt(game?.data.team_one)]);
+        let challenger_team = getComponentValue(components.Team, challenger_id);
+
+        console.log(game_id)
+        console.log(game)
+        let temp_position = update_position(position, [0, -index, 0]); 
+        let color = index % 2 ?  "purple" : "yellow"
+        let address = challenger_team ? challenger_team.owner.toString(10) : ''
+        let temp_game_id = game? game.id : 0;
+        let team_id = team? team.id : 0;
+        console.log(temp_game_id);
+        console.log(team_id);
         return (
-            <mesh rotation={[0,0,0]} position={position} onClick={() => accept_challenge(signer, game_id, team_ids[cur_team])}>
-                <planeGeometry args={[1,1]} />
-                <meshBasicMaterial color= {"rgb( + " + game_id * 74382 % 255 + ",0,0)"}/>
-            </mesh>
+            <AccRender key={game_id} address={address} 
+                       position={temp_position} 
+                       onClick={() => accept_challenge(signer, temp_game_id, team_id)}
+            />
         )
     })
     
@@ -33,7 +51,7 @@ const Challenge: FC<ChallengeProps> = ({pending_games, team_ids, signer, create_
             <Selector position={selector_position} total={team_ids.length} label={cur_team} next={()=>set_team(cur_team+1)} prev={()=> set_team(cur_team-1)}/>
 
             <Button scale = {.75} color={"blue"} position={button_position} 
-                    label={"CHALLENGE"} onClick={() => create_challenge(signer, 1)}/>
+                    label={"CHALLENGE"} onClick={() => create_challenge(signer, team?.id)}/>
             {potential}
 
         </>

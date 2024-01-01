@@ -100,7 +100,7 @@ export function createSystemCalls(
             const {transaction_hash} = await execute(
                 signer,
                 "arena",
-                "create_challenge",
+                "accept_challenge",
                 [game_id, team_id]
             )
         
