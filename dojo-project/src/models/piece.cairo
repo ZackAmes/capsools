@@ -1,7 +1,7 @@
 use project::models::game::{Vec2};
 use starknet::OptionTrait;
 
-#[derive(Model, Drop, Serde)]
+#[derive(Model, Drop, Serde, Copy)]
 struct Piece {
     #[key]
     id: u32,

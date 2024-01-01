@@ -1,4 +1,4 @@
 mod genshin;
 mod hub;
 mod builder;
-mod challenge;
+mod arena;
