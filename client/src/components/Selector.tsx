@@ -3,7 +3,8 @@ import {Text} from '@react-three/drei';
 
 
 interface SelectorProps {
-    label: string
+    label: number
+    total: number
     color?: string
     position: [number,number,number]
     scale?: number
@@ -11,28 +12,28 @@ interface SelectorProps {
     prev: () => any
 } 
 
-const Selector: FC<SelectorProps> = ({scale=1,color="red", position, label, next, prev}) => {
+const Selector: FC<SelectorProps> = ({scale=1, total, color="red", position, label, next, prev}) => {
     return (
     <>
         <group position = {position}>
-            <mesh scale={scale} rotation={[0,0,0]} position={[3,0,0]} onClick={next}>
+            {label < total -1 && <mesh scale={scale} rotation={[0,0,0]} position={[3,0,0]} onClick={next}>
                 <Text color={color}>
                     {">"}
                 </Text>
                 <meshBasicMaterial/>
-            </mesh>
+            </mesh>}
             <mesh scale={scale} rotation={[0,0,0]} position={[0,0,0]} onClick={() => console.log(label)}>
                 <Text color={color}>
                     {label}
                 </Text>
                 <meshBasicMaterial/>
             </mesh>
-            <mesh scale={scale} rotation={[0,0,0]} position={[-3,0,0]} onClick={prev}>
+            {label > 0 && <mesh scale={scale} rotation={[0,0,0]} position={[-3,0,0]} onClick={prev}>
                 <Text color={color}>
                     {"<"}
                 </Text>
                 <meshBasicMaterial/>
-            </mesh>
+            </mesh>}
         </group>
     </>)
 }

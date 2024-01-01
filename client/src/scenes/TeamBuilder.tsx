@@ -60,11 +60,12 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
     const add_piece = (x: number, y:number) => {
         add_piece_to_team(signer, cur_piece, team?.id, x, y);
     }
+    let total_teams = team_ids.length;
 
     return (
         <>
             <group position={position}>
-                <Selector position={selector_position} label={cur_team.toString()} next={()=>set_team(cur_team+1)} prev={()=> set_team(cur_team-1)}/>
+                <Selector position={selector_position} total={total_teams} label={cur_team} next={()=>set_team(cur_team+1)} prev={()=> set_team(cur_team-1)}/>
                 <Button position = {create_position} label={"create team"} onClick={() => create_team(signer)}/>
                 {cur_piece && team && cur_square && 
                     <Button position = {add_position} label={"add " + cur_piece + " to team " + team.id}

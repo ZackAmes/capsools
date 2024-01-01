@@ -17,6 +17,7 @@ import Button from "./components/Button";
 
 import get_ids from "./utils/get_ids";
 import TeamBuilder from "./scenes/TeamBuilder";
+import GameManager from "./scenes/GameManager";
 
 function App() {
     const {
@@ -51,6 +52,7 @@ function App() {
                         <CuboidCollider rotation={[0, 0,0]} args={[15,.5,15]}/>
                         <meshBasicMaterial color="grey"/>
                     </Box>
+
                     <Burners position={[5,10,10]} account = {account}/>
 
                     <AccRender position={[0,10,10]} address={account.account.address} />
@@ -58,8 +60,10 @@ function App() {
                     {player && <Button position={[0,5,0]} label="mint" onClick={() => setup.systemCalls.mint_piece(account.account)}/>}
                     {!player && <Button position={[0,5,0]} label="new" onClick={() => setup.systemCalls.new_player(account.account)}/>}
 
-                    <SlidingBoard/>
                     <TeamBuilder position = {[2,.25,0]} setup={setup} account={account} piece_ids={piece_ids} team_ids={team_ids}/>
+                    {game_ids.length > 0 && 
+                        <GameManager position={[-5,0,0]} setup={setup} account={account} game_ids={game_ids} />
+                    }
                 </Physics>
                 </Suspense>
             </Canvas>

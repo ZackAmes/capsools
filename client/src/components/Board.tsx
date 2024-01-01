@@ -17,13 +17,12 @@ interface BoardProps {
     game_id:number
     signer: Account
     components: any
-    piece_ids:any[]
+
    // take_turn: (signer:Account, game_id:number, x:number, y:number) => any
 }
 
-const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer}) => {
+const Board: FC<BoardProps> = ({position, game_id, components, signer}) => {
 
-    let game = useComponentValue(components.Game, getEntityIdFromKeys([BigInt(game_id)]) as Entity);
 
     let squareValues: any[] = [];
 
@@ -35,34 +34,9 @@ const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer
     }
 
 
+    let game = useComponentValue(components.Game, getEntityIdFromKeys([BigInt(game_id)]) as Entity);
+
     
-
-    let one_piece_ids: number[] = Object.values(game?.team_one.pieces);
-    let two_piece_ids: number[] = Object.values(game?.team_one.pieces);
-    let one_pieces = [];
-    let two_pieces = [];
-
-    //Create Id and Value arrays
-    for(let i=0; i<game?.team_one.piece_count; i++){
-        let tempId = getEntityIdFromKeys([BigInt(one_piece_ids[i])]) as Entity 
-        let tempPiece = useComponentValue(components.Piece, tempId)
-        one_pieces.push(tempPiece)
-    }
-
-    for(let i=0; i<game?.team_two.piece_count; i++){
-        let tempId = getEntityIdFromKeys([BigInt(two_piece_ids[i])]) as Entity 
-        let tempPiece = useComponentValue(components.Piece, tempId)
-        two_pieces.push(tempPiece)
-    }
-
-    piece_ids = one_piece_ids.concat(two_piece_ids);
-    let pieces = piece_ids.map( (piece_id) => {
-        let piece = getComponentValue(components.Piece, piece_id);
-        if(piece){
-            let piece_position: [number, number, number] = update_position(position, [piece.data.position.x, 2.1, piece.data.position.y]);
-            return (<Piece key={piece.id} position={piece_position} type={piece.data.piece_type} onClick={() => console.log(piece?.id)}/>)
-        }    
-    })
 
     //create refs and squares
     const squares = squareValues.flat().map( (index) => {
@@ -87,7 +61,6 @@ const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer
                 {game && <AccRender address={"0x" + game.player_one.toString(16)} position={[0, 0, -2]} />}
                 {game && <AccRender address={"0x" + game.player_two.toString(16)} position={[2, 0, -2]} />}
                 {squares}
-                {pieces}
             </group>
         </>
     )
