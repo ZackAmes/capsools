@@ -18,25 +18,28 @@ struct GameData {
     team_one: u32,
     team_two: u32,
     turn_count: u32,
-    is_active: bool
+    is_active: bool,
+    ones_turn: bool
 }
 
-trait GameTrait {
-    fn new(id: u32, team_one: u32, team_two: u32) -> Game;
-
-}
-
+#[generate_trait]
 impl GameImpl of GameTrait {
 
-    fn new(id: u32, team_one: u32, team_two: u32) -> Game {
+    fn new(id: u32, team_one: u32) -> Game {
         let data = GameData {
             team_one,
-            team_two,
+            team_two: 0,
             turn_count: 0,
-            is_active: false
+            is_active: false,
+            ones_turn: true
         };
 
         Game {id, data}
+    }
+
+    fn accept(ref self: Game, team_two:u32) {
+        self.data.team_two = team_two;
+        self.data.is_active = true;
     }
 
 

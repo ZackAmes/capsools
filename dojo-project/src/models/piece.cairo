@@ -75,10 +75,8 @@ impl PieceImpl of PieceTrait {
     }
 
     fn add_to(ref self: Piece, id: felt252, init_position: Vec2) {
-        assert(!self.available(), 'piece not available');
+ //       assert(self.available(), 'piece not available');
         
-
-
         let mut data = self.data;
         data.location = id;
         data.position = init_position;

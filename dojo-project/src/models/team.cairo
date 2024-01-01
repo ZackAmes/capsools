@@ -1,7 +1,7 @@
 use project::models::piece::{Piece, PieceTrait};
 use starknet::{ContractAddress};
 
-#[derive(Model, Drop, Serde)]
+#[derive(Model, Drop, Serde, Copy)]
 struct Team {
     #[key]
     id: u32,
@@ -25,18 +25,21 @@ impl PiecesImpl of PiecesTrait {
     fn new() -> Pieces {
         Pieces {tower:0, piece_one:0, piece_two:0, piece_three:0, piece_four:0, piece_five:0}
     }
+
     fn new_from(tower: u32, piece_one: u32, piece_two:u32, piece_three: u32, piece_four: u32, piece_five: u32) -> Pieces {
         Pieces {tower, piece_one, piece_two, piece_three, piece_four, piece_five}
     }
+
     fn get_pieces(ref self: Pieces) -> Array<u32> {
-        let mut res = ArrayTrait::new();
+        let mut res: Array<u32> = ArrayTrait::new();
         res.append(self.tower);
         res.append(self.piece_one);
         res.append(self.piece_three);
         res.append(self.piece_four);
         res.append(self.piece_five);
-        res
+        return res;
     }
+
     fn get_piece_at(ref self: Pieces, index: u8) -> u32 {
         if(index==0){
             return self.tower;    

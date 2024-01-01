@@ -43,15 +43,41 @@ export function defineContractComponents(world: World) {
 	      }
 	    );
 	  })(),
+	  SetManager: (() => {
+	    return defineComponent(
+	      world,
+	      { set_id: RecsType.Number, piece_type_count: RecsType.Number },
+	      {
+	        metadata: {
+	          name: "SetManager",
+	          types: ["u32","u32"],
+	          customTypes: [],
+	        },
+	      }
+	    );
+	  })(),
 	  Piece: (() => {
 	    return defineComponent(
 	      world,
-	      { id: RecsType.Number, data: { owner: RecsType.BigInt, location: RecsType.BigInt, position: { x: RecsType.Number, y: RecsType.Number }, piece_type: RecsType.Number } },
+	      { id: RecsType.Number, data: { owner: RecsType.BigInt, location: RecsType.BigInt, position: { x: RecsType.Number, y: RecsType.Number }, cur_hp: RecsType.Number, piece_type: RecsType.Number } },
 	      {
 	        metadata: {
 	          name: "Piece",
-	          types: ["u32","felt252","felt252","u8","u8","u8"],
+	          types: ["u32","felt252","felt252","u8","u8","u32","u32"],
 	          customTypes: ["PieceData","Vec2"],
+	        },
+	      }
+	    );
+	  })(),
+	  PieceType: (() => {
+	    return defineComponent(
+	      world,
+	      { id: RecsType.Number, piece_stats: { hp: RecsType.Number, xp: RecsType.Number, cost: RecsType.Number, dmg: RecsType.Number } },
+	      {
+	        metadata: {
+	          name: "PieceType",
+	          types: ["u32","u32","u32","u32","u32"],
+	          customTypes: ["PieceStats"],
 	        },
 	      }
 	    );
@@ -72,12 +98,12 @@ export function defineContractComponents(world: World) {
 	  Team: (() => {
 	    return defineComponent(
 	      world,
-	      { id: RecsType.Number, owner: RecsType.BigInt, piece_count: RecsType.Number, piece_one: RecsType.Number, piece_two: RecsType.Number },
+	      { id: RecsType.Number, owner: RecsType.BigInt, piece_count: RecsType.Number, pieces: { tower: RecsType.Number, piece_one: RecsType.Number, piece_two: RecsType.Number, piece_three: RecsType.Number, piece_four: RecsType.Number, piece_five: RecsType.Number } },
 	      {
 	        metadata: {
 	          name: "Team",
-	          types: ["u32","felt252","u8","u32","u32"],
-	          customTypes: [],
+	          types: ["u32","felt252","u8","u32","u32","u32","u32","u32","u32"],
+	          customTypes: ["Pieces"],
 	        },
 	      }
 	    );

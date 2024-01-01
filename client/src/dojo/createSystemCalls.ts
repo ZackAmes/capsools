@@ -79,7 +79,7 @@ export function createSystemCalls(
             const {transaction_hash} = await execute(
                 signer,
                 "builder",
-                "create_team",
+                "starter_team",
                 []
             )
         
