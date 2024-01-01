@@ -35,37 +35,41 @@ const GameManager: FC<GameManagerProps> = ({setup: {components, systemCalls}, ac
     const [cur_piece, set_piece] = useState();
     const [cur_square, set_square] = useState([]);
     let game_id = game_ids ? game_ids[0] : 0;
-    let game = useComponentValue(components.Game, getEntityIdFromKeys([BigInt(0)]) as Entity);
+    let game = useComponentValue(components.Game, getEntityIdFromKeys([BigInt(game_id)]) as Entity);
+    let pieces;
 
+    if(game) {
+        let team_one = getComponentValue(components.Team, getEntityIdFromKeys([BigInt(game?.team_one)]) as Entity);
+        let team_two = getComponentValue(components.Team, getEntityIdFromKeys([BigInt(game?.team_two)]) as Entity);
 
-    let one_piece_ids: number[] = Object.values(game?.team_one.pieces);
-    let two_piece_ids: number[] = Object.values(game?.team_one.pieces);
-    let one_pieces = [];
-    let two_pieces = [];
+        let one_piece_ids: number[] = Object.values(team_one?.pieces);
+        let two_piece_ids: number[] = Object.values(team_two?.pieces);
+        let one_pieces = [];
+        let two_pieces = [];
 
-    //Create Id and Value arrays
-    for(let i=0; i<game?.team_one.piece_count; i++){
-        let tempId = getEntityIdFromKeys([BigInt(one_piece_ids[i])]) as Entity 
-        let tempPiece = useComponentValue(components.Piece, tempId)
-        one_pieces.push(tempPiece)
+        //Create Id and Value arrays
+        for(let i=0; i<game?.team_one.piece_count; i++){
+            let tempId = getEntityIdFromKeys([BigInt(one_piece_ids[i])]) as Entity 
+            let tempPiece = useComponentValue(components.Piece, tempId)
+            one_pieces.push(tempPiece)
+        }
+
+        for(let i=0; i<game?.team_two.piece_count; i++){
+            let tempId = getEntityIdFromKeys([BigInt(two_piece_ids[i])]) as Entity 
+            let tempPiece = useComponentValue(components.Piece, tempId)
+            two_pieces.push(tempPiece)
+        }
+
+        let piece_ids = one_piece_ids.concat(two_piece_ids);
+        let pieces = piece_ids.map( (piece_id) => {
+            let id = getEntityIdFromKeys([BigInt(piece_id)]) as Entity
+            let piece = getComponentValue(components.Piece, id);
+            if(piece){
+                let piece_position: [number, number, number] = update_position(position, [piece.data.position.x, 2.1, piece.data.position.y]);
+                return (<Piece key={piece.id} position={piece_position} type={piece.data.piece_type} onClick={() => console.log(piece?.id)}/>)
+            }    
+        })
     }
-
-    for(let i=0; i<game?.team_two.piece_count; i++){
-        let tempId = getEntityIdFromKeys([BigInt(two_piece_ids[i])]) as Entity 
-        let tempPiece = useComponentValue(components.Piece, tempId)
-        two_pieces.push(tempPiece)
-    }
-
-    let piece_ids = one_piece_ids.concat(two_piece_ids);
-    let pieces = piece_ids.map( (piece_id) => {
-        let id = getEntityIdFromKeys([BigInt(piece_id)]) as Entity
-        let piece = getComponentValue(components.Piece, id);
-        if(piece){
-            let piece_position: [number, number, number] = update_position(position, [piece.data.position.x, 2.1, piece.data.position.y]);
-            return (<Piece key={piece.id} position={piece_position} type={piece.data.piece_type} onClick={() => console.log(piece?.id)}/>)
-        }    
-    })
-
     let total_games = game_ids.length;
     let selector_position = update_position(position, [0,3,0]);
     

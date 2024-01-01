@@ -18,6 +18,7 @@ import Button from "./components/Button";
 import get_ids from "./utils/get_ids";
 import TeamBuilder from "./scenes/TeamBuilder";
 import GameManager from "./scenes/GameManager";
+import Challenge from "./components/Challenge";
 
 function App() {
     const {
@@ -38,7 +39,7 @@ function App() {
     const game_ids = get_ids(setup.components.Manager, signer.address, player_games_count, "game");
     const team_ids = get_ids(setup.components.Manager, signer.address, player_teams_count, "team");
 
-
+    const {mint_piece, new_player, create_challenge, accept_challenge} = setup.systemCalls;
 
     return (
         <>
@@ -53,16 +54,19 @@ function App() {
                         <meshBasicMaterial color="grey"/>
                     </Box>
 
+                    <Challenge position = {[-5,5,0]} pending_games={game_ids} team_ids = {team_ids} signer={account.account}
+                                create_challenge={create_challenge} accept_challenge={accept_challenge}/>
+
                     <Burners position={[5,10,10]} account = {account}/>
 
                     <AccRender position={[0,10,10]} address={account.account.address} />
 
-                    {player && <Button position={[0,5,0]} label="mint" onClick={() => setup.systemCalls.mint_piece(account.account)}/>}
-                    {!player && <Button position={[0,5,0]} label="new" onClick={() => setup.systemCalls.new_player(account.account)}/>}
+                    {player && <Button position={[0,5,0]} label="mint" onClick={() => mint_piece(account.account)}/>}
+                    {!player && <Button position={[0,5,0]} label="new" onClick={() => new_player(account.account)}/>}
 
                     <TeamBuilder position = {[2,.25,0]} setup={setup} account={account} piece_ids={piece_ids} team_ids={team_ids}/>
                     {game_ids.length > 0 && 
-                        <GameManager position={[-5,0,0]} setup={setup} account={account} game_ids={game_ids} />
+                        <GameManager position={[-5,.3,0]} setup={setup} account={account} game_ids={game_ids} />
                     }
                 </Physics>
                 </Suspense>
