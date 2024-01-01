@@ -5,10 +5,12 @@ trait IArena<TContractState> {
 }
 
 #[dojo::contract]
-mod challenge {
+mod arena {
     use project::models::team::{Team, Pieces};
     use project::models::game::{Game, GameTrait, Vec2};
     use project::models::piece::{Piece, PieceImpl, PieceTrait};
+    use project::models::player::{Player};
+    use project::models::manager::{ManagerTrait};
     use starknet::{get_caller_address};
     use super::IArena;
 
@@ -20,13 +22,16 @@ mod challenge {
 
 
             let team = get!(world, team_id, (Team));
+            let mut player = get!(world, caller,(Player));
             assert(team.owner == caller, 'not team owner');
 
             let game = GameTrait::new(world.uuid(), team_id);
+            let manager = ManagerTrait::game(caller, player.counts.game_count, game.id);
+            player.counts.game_count+=1;
 
             self.update_pieces_locations(team.pieces, game.id.into() , false);
 
-            set!(world, (team, game));
+            set!(world, (manager, player, team, game));
         }
 
         fn accept_challenge(self: @ContractState, game_id: u32, team_id: u32){
@@ -37,13 +42,20 @@ mod challenge {
             let team_one = get!(world, game.data.team_one, (Team));
             let team_two = get!(world, team_id, (Team));
 
+
             assert(!(team_one.owner == caller), 'cant challenge self');
             assert(team_two.owner == caller, 'not team owner');
+
+
+            let mut player = get!(world, caller,(Player));
+
+            let manager = ManagerTrait::game(caller, player.counts.game_count, game.id);
+            player.counts.game_count+=1;
 
             game.accept(team_two.id);
             self.update_pieces_locations(team_two.pieces, game.id.into() , true);
 
-            set!(world, (game));
+            set!(world, (game, player, manager));
 
 
         }
@@ -90,6 +102,7 @@ mod challenge {
 
                 piece.add_to(new_location, new_position);
                 set!(world, (piece));
+                index+=1;
             }
         }
     }
