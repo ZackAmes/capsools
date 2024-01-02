@@ -56,7 +56,9 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
 
 
     const add_piece = (x: number, y:number) => {
-        add_piece_to_team(signer, cur_piece, team?.id, x, y);
+        if(team){
+            add_piece_to_team(signer, cur_piece, team.id, x, y);
+        }
     }
     let total_teams = team_ids.length;
 
