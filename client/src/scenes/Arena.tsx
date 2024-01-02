@@ -9,8 +9,6 @@ import { useComponentValue } from "@dojoengine/react";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import update_position from "../utils/update_position";
 import Selector from "../components/Selector";
-import GameManager from "./GameManager";
-import Challenge from "../components/Challenge";
 import AccRender from "../components/AccRender";
 
 import get_ids from "../utils/get_ids";
@@ -48,17 +46,17 @@ const Arena: FC<ArenaProps> = ({setup: {components, systemCalls},challenge_count
             let team_key = game? game.data.team_one : 0
             let challenger_id = getEntityIdFromKeys([BigInt(team_key)]);
             let challenger_team = getComponentValue(components.Team, challenger_id);
-            let temp_position = update_position(position, [0, -index, 0]); 
-            let color = index % 2 ?  "purple" : "yellow"
+            
             let address = challenger_team ? challenger_team.owner.toString(16) : ''
             let temp_game_id = game? game.id : 0;
             let team_id = team? team.id : 0;
             console.log(temp_game_id);
             console.log(team_id);
             index+=1;
+
             return (
                 <AccRender key={game_id} address={address} 
-                        position={temp_position} 
+                        position={[index % 10, 6 + Math.floor(index / 10 ), 0]} 
                         onClick={() => accept_challenge(account.account, temp_game_id, team_id)}
                 />
             )
@@ -69,6 +67,7 @@ const Arena: FC<ArenaProps> = ({setup: {components, systemCalls},challenge_count
 
     let pieces = [];
     let piece_positions = [];
+    
 
     if(team) {
         let pieces_count = team.piece_count;
@@ -88,9 +87,22 @@ const Arena: FC<ArenaProps> = ({setup: {components, systemCalls},challenge_count
     }
 
 
+
     return (
-        <>
-        </>
+        <group position= {position}>
+            <Selector position={[-1,3,-5]} total={game_ids.length} label={"game"} cur={cur_game} next={()=>set_game(cur_game+1)} prev={()=> set_game(cur_game-1)}/>
+            <Selector position={[-1,2,-5]} total={team_ids.length} label={"team"} cur={cur_team} next={()=>set_team(cur_team+1)} prev={()=> set_team(cur_team-1)}/>
+
+
+            {team && <Button scale = {.75} color={"blue"} position={[-5,5,0]} 
+                    label={"CREATE CHALLENGE WITH TEAM: " + cur_team} onClick={() => create_challenge(signer, team?.id)}/>}
+            {team && <Button scale = {.75} color={"blue"} position={[-5,6,0]} 
+                    label={"ACCEPT OPEN CHALLENGE:"} onClick={() => console.log("")}/>}
+            
+            <Board position={[0,0,0]} components={components} game_id={game_ids[cur_game]} signer={signer} take_turn={take_turn}/>
+            
+            {potential}
+        </group>
     )
 }   
 

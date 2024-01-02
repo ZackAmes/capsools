@@ -17,9 +17,8 @@ import Button from "./components/Button";
 
 import get_ids from "./utils/get_ids";
 import TeamBuilder from "./scenes/TeamBuilder";
-import GameManager from "./scenes/GameManager";
-import Challenge from "./components/Challenge";
 import Arena from "./scenes/Arena";
+import Gov from "./scenes/Gov";
 
 function App() {
     const {
@@ -32,14 +31,12 @@ function App() {
     const setId= getEntityIdFromKeys([BigInt(0)]) as Entity
     let player = useComponentValue(setup.components.Player, playerId);
     let counts = player ? player.counts : {piece_count: 0, team_count:0, game_count: 0};
-
+    
     let set = useComponentValue(setup.components.SetManager, setId);
 
     let challenge_count = set?.challenge_count;
 
-    const piece_ids = get_ids(setup.components.Manager, signer.address, counts.piece_count as number, "piece");
-
-    const {mint_piece, new_player, create_challenge, accept_challenge, create_team} = setup.systemCalls;
+    const {mint_piece, new_player, create_challenge, create_starter_team, accept_challenge, create_team} = setup.systemCalls;
     
     return (
         <>
@@ -54,24 +51,19 @@ function App() {
                         <meshBasicMaterial color="grey"/>
                     </Box>
 
-                    {/*team_ids.length > 0 && <Challenge  position = {[-5,5,0]} pending_games={challenge_ids}  components={setup.components}
-                                team_ids = {team_ids} signer={account.account}
-    create_challenge={create_challenge} accept_challenge={accept_challenge}/>*/}
-
                     <Burners position={[0,10,0]} account = {account}/>
 
-                    <AccRender position={[0,10,20]} address={account.account.address} />
+                    <AccRender label = "signer:" position={[1.5,12,0]} address={account.account.address} />
 
                     {!player && <Button background={"black"} scale={10} position={[0,5,0]} label="new" onClick={() => new_player(account.account)}/>}
-                    
                     {
-                    
-                    //<GameManager position={[-3,.3,0]} setup={setup} account={account} game_ids={game_ids} />
+                    counts.team_count == 0 && <Button position = {[5,5,0]} label={"claim starter team"} onClick={() => create_starter_team(signer)}/>
                     }
-                    <Arena setup={setup} account={account} position = {[0,0,0]} counts={counts} challenge_count={challenge_count}/>
+                    <Arena setup={setup} account={account} position = {[-7,1,0]} counts={counts} challenge_count={challenge_count}/>
 
-                    
-                    <TeamBuilder position = {[4,.25,-5]} setup={setup} account={account} counts={counts}/>
+                    <Gov position = {[-10,10,-15]} components={setup.components} systemCalls={setup.systemCalls}
+                        total = {set? set.piece_type_count : 0} signer={account.account} points={player ? player.points : 0}/>
+                    {counts.team_count>0 && <TeamBuilder position = {[4,.25,-5]} setup={setup} account={account} counts={counts}/>}
                     
                 </Physics>
                 </Suspense>

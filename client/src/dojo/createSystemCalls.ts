@@ -42,6 +42,87 @@ export function createSystemCalls(
             console.log(e);
         } 
     };
+    const buff = async (signer: Account, id: number) => {
+        const entityId = getEntityIdFromKeys([
+            BigInt(signer.address),
+        ]) as Entity;
+
+        
+
+        try {
+            const { transaction_hash } = await execute(
+                signer,
+                "gov",
+                "buff",
+                [id]
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await signer.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } 
+    };
+    const nerf = async (signer: Account, id: number) => {
+        const entityId = getEntityIdFromKeys([
+            BigInt(signer.address),
+        ]) as Entity;
+
+        
+
+        try {
+            const { transaction_hash } = await execute(
+                signer,
+                "gov",
+                "nerf",
+                [id]
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await signer.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } 
+    };
+    const add_piece = async (signer: Account) => {
+        const entityId = getEntityIdFromKeys([
+            BigInt(signer.address),
+        ]) as Entity;
+
+        
+
+        try {
+            const { transaction_hash } = await execute(
+                signer,
+                "gov",
+                "add_piece",
+                []
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await signer.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } 
+    };
 
 
 
@@ -146,6 +227,7 @@ export function createSystemCalls(
     }
 
     const take_turn = async(signer: Account, game_id: number, piece_id: number, x: number, y: number) => {
+        console.log()
         console.log(x, y);
         try {
             const {transaction_hash} = await execute(
@@ -248,6 +330,10 @@ export function createSystemCalls(
         create_starter_team,
         create_challenge,
         accept_challenge,
-        take_turn
+        take_turn,
+        buff,
+        nerf,
+        add_piece
+        
     };
 }
