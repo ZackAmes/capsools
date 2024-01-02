@@ -2,7 +2,11 @@ import { defineContractComponents } from "./contractComponents";
 import { world } from "./world";
 import { DojoProvider } from "@dojoengine/core";
 import { Account, num } from "starknet";
+<<<<<<< HEAD
 import manifest from "../../../dojo-project/target/release/manifest.json";
+=======
+import manifest from "../manifest.json";
+>>>>>>> main
 import * as torii from "@dojoengine/torii-client";
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
@@ -14,6 +18,7 @@ export async function setupNetwork() {
         VITE_PUBLIC_NODE_URL,
         VITE_PUBLIC_TORII,
     } = import.meta.env;
+
 
     // Create a new RPCProvider instance.
     const provider = new DojoProvider(

@@ -17,5 +17,10 @@ initializer_class_hash = "0xbeef"
 [tool.dojo.env]
 rpc_url = "https://api.cartridge.gg/x/capsools/katana"
 # Default account for katana with seed = 0
+<<<<<<< HEAD
 account_address = "0x130b3a06c72ddd618b53fc57ef8cf66999f664e9d88eb281c74579d5f8ec58a"
 private_key = "0x4fa15c265c4dc6218c7242ffcd6f26ab157389e9d91e3d19039696e9d6c78f2"
+=======
+account_address = "0x48c84d672b0b09474cc21f268b9bc78a8a4c1231ecc73cebd3dc2e7b743c1aa"
+private_key = "0x4bac0e4d9ac4652cd820c3a43d704693f51e96ce428f4cd1b8d2140d22cb248"
+>>>>>>> main
