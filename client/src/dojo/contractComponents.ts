@@ -7,11 +7,11 @@ export function defineContractComponents(world: World) {
 	  Game: (() => {
 	    return defineComponent(
 	      world,
-	      { id: RecsType.Number, data: { team_one: RecsType.Number, team_two: RecsType.Number, turn_count: RecsType.Number, is_active: RecsType.Boolean } },
+	      { id: RecsType.Number, data: { team_one: RecsType.Number, team_two: RecsType.Number, turn_count: RecsType.Number, is_active: RecsType.Boolean, ones_turn: RecsType.Boolean } },
 	      {
 	        metadata: {
 	          name: "Game",
-	          types: ["u32","u32","u32","u32","bool"],
+	          types: ["u32","u32","u32","u32","bool","bool"],
 	          customTypes: ["GameData"],
 	        },
 	      }
@@ -46,11 +46,11 @@ export function defineContractComponents(world: World) {
 	  SetManager: (() => {
 	    return defineComponent(
 	      world,
-	      { set_id: RecsType.Number, piece_type_count: RecsType.Number },
+	      { set_id: RecsType.Number, piece_type_count: RecsType.Number, challenge_count: RecsType.Number },
 	      {
 	        metadata: {
 	          name: "SetManager",
-	          types: ["u32","u32"],
+	          types: ["u32","u32","u32"],
 	          customTypes: [],
 	        },
 	      }

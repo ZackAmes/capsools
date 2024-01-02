@@ -30,12 +30,29 @@ mod hub {
             ma.append( Vec2{x:1, y:0});
             
             let type_zero_stats = PieceStatsTrait::new(500, 100, 100);
+            let type_one_stats = PieceStatsTrait::new(600, 125, 75);
+            let type_two_stats = PieceStatsTrait::new(750, 200, 200);
+            let type_three_stats = PieceStatsTrait::new(400, 300, 250);
+
             let type_zero = PieceTypeTrait::new(world.uuid(), type_zero_stats);
-            let type_manager = ManagerTrait::piece_type(set_zero.set_id, set_zero.piece_type_count, type_zero.id);
+            let type_one = PieceTypeTrait::new(world.uuid(), type_one_stats);
+            let type_two = PieceTypeTrait::new(world.uuid(), type_two_stats);
+            let type_three = PieceTypeTrait::new(world.uuid(), type_three_stats);
+
+
+            let type_z_manager = ManagerTrait::piece_type(set_zero.set_id, set_zero.piece_type_count, type_zero.id);
+            set_zero.piece_type_count+=1;
+
+            let type_o_manager = ManagerTrait::piece_type(set_zero.set_id, set_zero.piece_type_count, type_one.id);
+            set_zero.piece_type_count+=1;
+            let type_tw_manager = ManagerTrait::piece_type(set_zero.set_id, set_zero.piece_type_count, type_two.id);
+            set_zero.piece_type_count+=1;
+            let type_th_manager = ManagerTrait::piece_type(set_zero.set_id, set_zero.piece_type_count, type_three.id);
 
             set_zero.piece_type_count+=1;
 
-            set!(world, (set_zero, type_zero, type_manager));
+            set!(world, (set_zero, type_zero, type_one, type_two, type_three,
+                                    type_o_manager, type_th_manager, type_tw_manager, type_z_manager));
 
 
         }

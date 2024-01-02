@@ -10,8 +10,10 @@ struct PlayerCount {
 struct SetManager {
     #[key]
     set_id: u32,
-    piece_type_count: u32
+    piece_type_count: u32,
+    challenge_count: u32
 }
+
 
 #[derive(Model, Drop, Serde)]
 struct Manager {
@@ -29,6 +31,7 @@ trait ManagerTrait{
     fn piece(owner: felt252, index: u32, piece_id: u32) -> Manager;
     fn game(owner: felt252, index: u32, game_id: u32) -> Manager;
     fn team(owner: felt252, index: u32, team_id: u32) -> Manager;
+    fn challenge(set_id: u32, index: u32, game_id: u32) -> Manager;
 
     fn piece_type(set_id: u32, index: u32, piece_type_id: u32) -> Manager;
 
@@ -59,6 +62,13 @@ impl ManagerImpl of ManagerTrait {
         let label = 4;
         let owner = set_id.into();
         let id = piece_type_id.into();
+        Manager {owner, label, index, id}
+    }
+
+    fn challenge(set_id: u32, index: u32, game_id: u32) -> Manager {
+        let label = 5;
+        let owner = set_id.into();
+        let id = game_id.into();
         Manager {owner, label, index, id}
     }
 }

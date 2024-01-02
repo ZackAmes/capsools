@@ -28,8 +28,8 @@ const Team: FC<TeamProps> = ({position, components, piece_ids, set_square}) => {
         let x = square%6;
         let color = x%2==y%2 ? "blue" : "black"
         return (
-            <RigidBody>
-                <Box key={index} position = {[x,.5,y]} onClick = {set_square([x,y])}>
+            <RigidBody key={index}>
+                <Box  position = {[x,.5,y]} onClick = {set_square([x,y])}>
                     <meshBasicMaterial color = {color}/>
                 </Box>
             </RigidBody>

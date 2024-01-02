@@ -13,6 +13,7 @@ struct Vec2 {
     y: u8
 }
 
+
 #[derive(Copy, Drop, Serde, Introspect)]
 struct GameData {
     team_one: u32,
