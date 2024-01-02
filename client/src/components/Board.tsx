@@ -11,21 +11,23 @@ import { getComponentValue } from "@dojoengine/recs";
 import { RigidBody } from "@react-three/rapier";
 import Piece from "./Piece";
 import update_position from "../utils/update_position";
-import { Ref } from "react";
+import { Ref , useState} from "react";
 interface BoardProps {
     position: [number,number,number]
     game_id:number
+    piece_ids: number[]
     signer: Account
     components: any
+    
 
    // take_turn: (signer:Account, game_id:number, x:number, y:number) => any
 }
 
-const Board: FC<BoardProps> = ({position, game_id, components, signer}) => {
+const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer}) => {
 
 
     let squareValues: any[] = [];
-
+    let piece_positions: any[] = [];
     let refs:Ref<RapierRigidBody>[] =[];
     //Create Id and Value arrays
     for(let i=0; i<144; i++){
@@ -34,22 +36,58 @@ const Board: FC<BoardProps> = ({position, game_id, components, signer}) => {
     }
 
 
+    let [cur_x, set_x] = useState(0);
+    let [cur_y, set_y] = useState(0);
+    let [cur_is_piece, set_is_piece] = useState(false);
+
+    let set_cur = (x:number, y:number, clicked_is_piece: boolean) => {
+        if(!cur_is_piece){
+            set_x(x);
+            set_y(y);
+            if(clicked_is_piece == true) {
+                set_is_piece(true);
+            }
+        }
+        //else move, or attack
+    }
+
     let game = useComponentValue(components.Game, getEntityIdFromKeys([BigInt(game_id)]) as Entity);
 
-    
 
+    console.log(piece_ids)
+    let pieces = piece_ids.map( (piece_id) => {
+        let piece = getComponentValue(components.Piece, getEntityIdFromKeys([BigInt(piece_id)]) as Entity);
+        if(piece){
+            let piece_position: [number, number, number] = [piece.data.position.x, 2.1, piece.data.position.y];
+            piece_positions.push({x:piece.data.position.x, y:piece.data.position.y})
+            return (<Piece key={piece.id} position={piece_position} type={piece.data.piece_type}/>)
+        }    
+    })
+    
+    
+    console.log(piece_positions)
     //create refs and squares
     const squares = squareValues.flat().map( (index) => {
         let ref = useRef<RapierRigidBody>(null);
         refs.push(ref);
-        let x = index % 12;
-        let y = Math.floor(index/12);
-        let color = x%2==y%2 ? "blue" : "red"
+        let x = (index % 12)+1;
+        let y = (Math.floor(index/12))+1;
+        let clicked = () => set_cur(x,y,false);
+        let position = {x: x, y: y};
+        for(let i=0; i< piece_positions.length; i++) {
+            let piece_position = piece_positions[i];
+            if(x==piece_position.x && y==piece_position.y){
+                clicked = () => set_cur(x,y,true);
+            }
+        }
+        let color = x%2==y%2 ? "black" : "white"
         let tempPosition: [number, number, number] = [x, 0, y];
         return (<Square key={index} ref={ref} 
                         position={tempPosition} color= {color} 
-                        onClick={() => console.log("(" + x + "," + y + ")")}/>);
+                        onClick={clicked}/>);
     })
+
+
 
 
 
@@ -61,6 +99,7 @@ const Board: FC<BoardProps> = ({position, game_id, components, signer}) => {
                 {game && <AccRender address={"0x" + game.player_one.toString(16)} position={[0, 0, -2]} />}
                 {game && <AccRender address={"0x" + game.player_two.toString(16)} position={[2, 0, -2]} />}
                 {squares}
+                {pieces}
             </group>
         </>
     )

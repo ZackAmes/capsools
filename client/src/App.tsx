@@ -37,17 +37,15 @@ function App() {
     const player_teams_count = player?.counts.team_count as number;
 
     const challenge_count = set?.challenge_count as number;
-    console.log(challenge_count)
 
     const piece_ids = get_ids(setup.components.Manager, signer.address, player_pieces_count, "piece");
     const game_ids = get_ids(setup.components.Manager, signer.address, player_games_count, "game");
     const team_ids = get_ids(setup.components.Manager, signer.address, player_teams_count, "team");
     const challenge_ids = get_ids(setup.components.Manager, 0, challenge_count, "challenge")
 
-    const {mint_piece, new_player, create_challenge, accept_challenge} = setup.systemCalls;
+    const {mint_piece, new_player, create_challenge, accept_challenge, create_team} = setup.systemCalls;
 
-    console.log(challenge_ids);
-
+    console.log(game_ids);
     return (
         <>
             <Canvas style={{height:800, width:800}}camera={{rotation:[0,0,0], position:[0,10,20] }}>
@@ -69,18 +67,18 @@ function App() {
 
                     <AccRender position={[0,10,10]} address={account.account.address} />
 
-                    {player && <Button position={[0,5,0]} label="mint" onClick={() => mint_piece(account.account)}/>}
-                    {!player && <Button position={[0,5,0]} label="new" onClick={() => new_player(account.account)}/>}
-
-                    <TeamBuilder position = {[2,.25,0]} setup={setup} account={account} piece_ids={piece_ids} team_ids={team_ids}/>
+                    {!player && <Button scale={10} position={[0,5,0]} label="new" onClick={() => new_player(account.account)}/>}
+                    <Button position = {[5,5,0]} label={"create team"} onClick={() => create_team(signer)}/>
                     {game_ids.length > 0 && 
-                        <GameManager position={[-5,.3,0]} setup={setup} account={account} game_ids={game_ids} />
+                        <GameManager position={[-3,.3,0]} setup={setup} account={account} game_ids={game_ids} />
                     }
                 </Physics>
                 </Suspense>
             </Canvas>
         </>
     );
+   // <TeamBuilder position = {[2,.25,0]} setup={setup} account={account} piece_ids={piece_ids} team_ids={team_ids}/>
+
 }
 
 export default App;
