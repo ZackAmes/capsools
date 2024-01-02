@@ -31,11 +31,20 @@ mod builder {
 
             let mut team = TeamTrait::new(world.uuid(), caller);
 
-            let type_id = get!(world, (0,4,0), (Manager)).id.try_into().unwrap();
+            let mut tower_index = 0;
+            let mut piece_index = 2;
+            if(count % 2 == 1) {
+                tower_index +=1;
+                piece_index +=1;
+            }
+
+            let tower_id = get!(world, (0,4,tower_index), (Manager)).id.try_into().unwrap();
+            let type_id = get!(world, (0,4,piece_index), (Manager)).id.try_into().unwrap();
+
             let stats = get!(world, type_id, (PieceType)).piece_stats;
         
             let mut offset = 0;
-            let mut tower = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);     
+            let mut tower = PieceTrait::new(world.uuid(), caller, stats.hp, tower_id);     
             tower.add_to(team.id.into(), Vec2 {x:4 + offset, y:1});
             offset+=1;
 
