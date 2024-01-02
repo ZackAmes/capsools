@@ -3,6 +3,8 @@ trait IBuilder<TContractState> {
     fn create_team(self: @TContractState);
     fn remove_piece_from_team(self: @TContractState, piece_id: u32, team_id: u32);
     fn starter_team(self: @TContractState);
+    fn add_piece_to_team(self: @TContractState, piece_id: u32, team_id: u32);
+
 }
 
 #[dojo::contract]
@@ -92,6 +94,7 @@ mod builder {
             let caller = get_caller_address().into();
             let mut player = get!(world, caller, (Player));
             assert(!(player.name ==''), 'player not created' );
+            assert(player.counts.team_count <= 10, 'too many teams');
 
             let count = player.counts.team_count;
 
@@ -103,6 +106,20 @@ mod builder {
             set!(world, (player, team, manager));
         }
 
+        fn add_piece_to_team(self: @ContractState, piece_id: u32, team_id: u32){
+            let world = self.world_dispatcher.read();
+
+            let mut piece = get!(world, piece_id, (Piece));
+            assert(piece.available(), 'piece not available');
+            let mut team = get!(world, team_id, (Team));
+            team.add_piece(piece_id);
+            let position = Vec2{x: team.piece_count + 4, y:1};
+            let team_location:felt252 = team_id.into();
+
+            piece.add_to(team_location, position);
+            set!(world, (piece, team));
+        }
+
         fn remove_piece_from_team(self: @ContractState, piece_id: u32, team_id: u32){
             let world = self.world_dispatcher.read();
 
@@ -111,10 +128,16 @@ mod builder {
             let mut team = get!(world, team_id, (Team));
 
             assert(team.owner == caller, 'not team owner');
-            assert(team.contains(piece_id), 'piece not in team');
-            //TODO: FIX
-            //team.remove_piece(piece_id);
 
+            let mut piece = get!(world, piece_id, (Piece));
+            assert(piece.data.owner == caller, 'not piece owner?');
+
+            let location:felt252 = team_id.into();
+            assert(piece.data.location == location, 'piece not in team');
+
+            team.remove_piece(piece_id);
+            piece.add_to(piece.data.owner, Vec2{x:0,y:0});
+            set!(world, (team, piece));
         }
 
         

@@ -30,6 +30,7 @@ const GameManager: FC<GameManagerProps> = ({setup: {components, systemCalls}, ac
     const [cur_game, set_game] = useState(0);
     const [cur_piece, set_piece] = useState();
     const [cur_square, set_square] = useState([]);
+
     let game_id = game_ids ? game_ids[0] : 0;
     console.log(game_id as number)
     let game = useComponentValue(components.Game, game_id);
@@ -42,8 +43,11 @@ const GameManager: FC<GameManagerProps> = ({setup: {components, systemCalls}, ac
         let team_one = getComponentValue(components.Team, getEntityIdFromKeys([BigInt(game.data.team_one)]) as Entity);
         let one_piece_ids:number[] = [];
         let two_piece_ids:number[] = [];
-        let team_two = getComponentValue(components.Team, getEntityIdFromKeys([BigInt(game.data.team_two)]) as Entity);
-        two_piece_ids = team_two ? Object.values(team_two.pieces) : [];
+         
+        if(game.data.team_two != 0) {
+           let team_two = getComponentValue(components.Team, getEntityIdFromKeys([BigInt(game.data.team_two)]) as Entity);
+           two_piece_ids = team_two ? Object.values(team_two.pieces) : [];
+        }
 
         
         one_piece_ids= team_one ? Object.values(team_one.pieces) : [];
@@ -70,7 +74,11 @@ const GameManager: FC<GameManagerProps> = ({setup: {components, systemCalls}, ac
                 <Selector position={selector_position} total={total_games} label={"game"} cur={cur_game} next={()=>set_game(cur_game+1)} prev={()=> set_game(cur_game-1)}/>
                 
 
-                <Board take_turn = {take_turn} game_id={game_ids[cur_game]} piece_ids = {piece_ids} position={position} signer={signer} components={components} />
+                {game_ids.length > 0 &&
+                    <Board take_turn = {take_turn} game_id={game_ids[cur_game]} 
+                            piece_ids = {piece_ids} position={position} signer={signer} components={components} 
+                    />}
+
                 {pieces}
             </group>
         </>

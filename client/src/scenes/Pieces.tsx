@@ -10,9 +10,10 @@ interface PiecesProps {
     piece_ids: any[]
     position: [number, number, number]
     set_piece: any
+    set_is_team: any
 }
 
-const Pieces: FC<PiecesProps> = ({pieceComponent, piece_ids, position, set_piece}) => {
+const Pieces: FC<PiecesProps> = ({pieceComponent, piece_ids, position,set_is_team, set_piece}) => {
 
 
 
@@ -24,7 +25,10 @@ const Pieces: FC<PiecesProps> = ({pieceComponent, piece_ids, position, set_piece
             let id = piece.id
             return (
                 <Piece key={id} position={[index % grid_size, 1.5, Math.floor(index / grid_size)]}
-                 type = {piece.data.piece_type} onClick = {() => set_piece(id)}/>
+                 type = {piece.data.piece_type} onClick = {() => {
+                    set_is_team(false)
+                    set_piece(id)}
+                }/>
             )
         }
 

@@ -14,7 +14,8 @@ struct PieceData {
    location: felt252,
    position: Vec2,
    cur_hp: u32,
-   piece_type: u32
+   piece_type: u32,
+   xp: u32
 }
 
 #[derive(Model, Drop, Serde)]
@@ -34,7 +35,6 @@ impl PieceTypeImpl of PieceTypeTrait {
 #[derive(Copy, Drop, Serde, Introspect)]
 struct PieceStats{
     hp: u32,
-    xp: u32,
     cost: u32,
     dmg: u32
 //    moves: Span<Vec2>,
@@ -45,7 +45,7 @@ struct PieceStats{
 impl PieceStatsImpl of PieceStatsTrait {
     fn new(hp: u32, cost: u32, dmg: u32) -> PieceStats{
         
-        PieceStats {hp, xp:0, cost, dmg}
+        PieceStats {hp, cost, dmg}
     }
 }
 
@@ -66,7 +66,7 @@ trait PieceTrait {
 impl PieceImpl of PieceTrait {
 
     fn new(id: u32, owner: felt252, cur_hp: u32, piece_type: u32) -> Piece {  
-        let data = PieceData {owner, location: owner, cur_hp,  position: Vec2 {x:0, y:0}, piece_type}; 
+        let data = PieceData {owner, location: owner,xp:0, cur_hp,  position: Vec2 {x:0, y:0}, piece_type}; 
         Piece {id, data}
     }
 

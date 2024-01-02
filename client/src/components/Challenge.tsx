@@ -27,7 +27,8 @@ const Challenge: FC<ChallengeProps> = ({pending_games, components, team_ids, sig
 
     const potential = pending_games.map( (game_id, index) => {
         let game = getComponentValue(components.Game, game_id);
-        let challenger_id = getEntityIdFromKeys([BigInt(game?.data.team_one)]);
+        let team_key = game? game.data.team_one : 0
+        let challenger_id = getEntityIdFromKeys([BigInt(team_key)]);
         let challenger_team = getComponentValue(components.Team, challenger_id);
 
         console.log(game_id)
@@ -50,6 +51,7 @@ const Challenge: FC<ChallengeProps> = ({pending_games, components, team_ids, sig
     let team_piece_ids: Entity[] = [];
 
     let pieces = [];
+    let piece_positions = [];
 
     if(team) {
         let pieces_count = team.piece_count;
@@ -57,7 +59,12 @@ const Challenge: FC<ChallengeProps> = ({pending_games, components, team_ids, sig
         let ids_array: number[] = Object.values(team.pieces)
 
         for(let i=0; i<pieces_count; i++) {
-            let id = getEntityIdFromKeys([BigInt(ids_array[i])]) as Entity;
+            let key = ids_array[i] ? ids_array[i] : 0;
+            let id = getEntityIdFromKeys([BigInt(key)]) as Entity;
+            let piece = getComponentValue(components.Piece, id);
+            if(piece){
+                piece_positions.push({x:piece.data.position.x, y:piece.data.position.y, type: piece.data.piece_type, id: piece.id})
+            }
             team_piece_ids.push(id);
         }
 
@@ -79,7 +86,7 @@ const Challenge: FC<ChallengeProps> = ({pending_games, components, team_ids, sig
             {team && <Button scale = {.75} color={"blue"} position={label_position} 
                     label={"ACCEPT CHALLENGE"} onClick={() => console.log("")}/>}
             
-            <Team position={team_position} piece_ids={team_piece_ids} components={components} set_square={( () => console.log("test"))}/>
+            <Team position={team_position} set_is_team={() => {}} piece_positions={piece_positions} piece_ids={team_piece_ids} components={components} set_piece={( () => console.log("test"))}/>
 
             
             {potential}

@@ -19,6 +19,7 @@ import get_ids from "./utils/get_ids";
 import TeamBuilder from "./scenes/TeamBuilder";
 import GameManager from "./scenes/GameManager";
 import Challenge from "./components/Challenge";
+import Arena from "./scenes/Arena";
 
 function App() {
     const {
@@ -29,23 +30,17 @@ function App() {
     const signer = account.account;
     const playerId = getEntityIdFromKeys([BigInt(signer.address)]) as Entity
     const setId= getEntityIdFromKeys([BigInt(0)]) as Entity
-    const player = useComponentValue(setup.components.Player, playerId);
-    const set = useComponentValue(setup.components.SetManager, setId);
+    let player = useComponentValue(setup.components.Player, playerId);
+    let counts = player ? player.counts : {piece_count: 0, team_count:0, game_count: 0};
 
-    const player_pieces_count = player?.counts.piece_count as number;
-    const player_games_count = player?.counts.game_count as number;
-    const player_teams_count = player?.counts.team_count as number;
+    let set = useComponentValue(setup.components.SetManager, setId);
 
-    const challenge_count = set?.challenge_count as number;
+    let challenge_count = set?.challenge_count;
 
-    const piece_ids = get_ids(setup.components.Manager, signer.address, player_pieces_count, "piece");
-    const game_ids = get_ids(setup.components.Manager, signer.address, player_games_count, "game");
-    const team_ids = get_ids(setup.components.Manager, signer.address, player_teams_count, "team");
-    const challenge_ids = get_ids(setup.components.Manager, 0, challenge_count, "challenge")
+    const piece_ids = get_ids(setup.components.Manager, signer.address, counts.piece_count as number, "piece");
 
     const {mint_piece, new_player, create_challenge, accept_challenge, create_team} = setup.systemCalls;
-
-    console.log(game_ids);
+    
     return (
         <>
             <Canvas style={{height:800, width:800}}camera={{rotation:[0,0,0], position:[0,10,20] }}>
@@ -59,9 +54,9 @@ function App() {
                         <meshBasicMaterial color="grey"/>
                     </Box>
 
-                    {team_ids.length > 0 && <Challenge  position = {[-5,5,0]} pending_games={challenge_ids}  components={setup.components}
+                    {/*team_ids.length > 0 && <Challenge  position = {[-5,5,0]} pending_games={challenge_ids}  components={setup.components}
                                 team_ids = {team_ids} signer={account.account}
-                                create_challenge={create_challenge} accept_challenge={accept_challenge}/>}
+    create_challenge={create_challenge} accept_challenge={accept_challenge}/>*/}
 
                     <Burners position={[0,10,0]} account = {account}/>
 
@@ -69,14 +64,15 @@ function App() {
 
                     {!player && <Button background={"black"} scale={10} position={[0,5,0]} label="new" onClick={() => new_player(account.account)}/>}
                     
-                    <Button position = {[5,5,0]} label={"create team"} onClick={() => create_team(signer)}/>
-                    {game_ids.length > 0 && 
-                        <GameManager position={[-3,.3,0]} setup={setup} account={account} game_ids={game_ids} />
+                    {
+                    
+                    //<GameManager position={[-3,.3,0]} setup={setup} account={account} game_ids={game_ids} />
+                    }
+                    <Arena setup={setup} account={account} position = {[0,0,0]} counts={counts} challenge_count={challenge_count}/>
 
-                    }
-                    {team_ids.length > 0 &&
-                        <TeamBuilder position = {[4,.25,-5]} setup={setup} account={account} piece_ids={piece_ids} team_ids={team_ids}/>
-                    }
+                    
+                    <TeamBuilder position = {[4,.25,-5]} setup={setup} account={account} counts={counts}/>
+                    
                 </Physics>
                 </Suspense>
             </Canvas>

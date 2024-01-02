@@ -18,7 +18,7 @@ const getColor = (type: number) => {
     return "blue"
 }
 const Piece: FC<PieceProps> = ({position, type, onClick = () => console.log(type)}) => {
-    console.log(type);
+    
     return (
         <RigidBody scale = {.25} position={position} >
             <Cylinder onClick={onClick}>

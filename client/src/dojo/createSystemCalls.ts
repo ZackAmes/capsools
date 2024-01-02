@@ -45,18 +45,46 @@ export function createSystemCalls(
 
 
 
-    const add_piece_to_team = async (signer: Account, piece_id: number, team_id: number, x: number, y: number) => {
-        const entityId = getEntityIdFromKeys([
+    const add_piece_to_team = async (signer: Account, piece_id: number, team_id: number) => {
+         const entityId = getEntityIdFromKeys([
             BigInt(signer.address),
         ]) as Entity;
 
-        let args: [number, number, number, number] = [piece_id, team_id, x, y];
+        let args: [number, number] = [piece_id, team_id];
 
         try {
             const { transaction_hash } = await execute(
                 signer,
                 "builder",
                 "add_piece_to_team",
+                args
+            );
+
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await signer.waitForTransaction(transaction_hash, {
+                        retryInterval: 100,
+                    })
+                )
+            );
+        } catch (e) {
+            console.log(e);
+        } 
+    };
+
+    const remove_piece_from_team = async (signer: Account, piece_id: number, team_id: number, x: number, y: number) => {
+        const entityId = getEntityIdFromKeys([
+            BigInt(signer.address),
+        ]) as Entity;
+
+        let args: [number, number] = [piece_id, team_id];
+
+        try {
+            const { transaction_hash } = await execute(
+                signer,
+                "builder",
+                "remove_piece_from_team",
                 args
             );
 
@@ -146,6 +174,28 @@ export function createSystemCalls(
             const {transaction_hash} = await execute(
                 signer,
                 "builder",
+                "create_team",
+                []
+            )
+        
+            setComponentsFromEvents(
+                contractComponents,
+                getEvents(
+                    await signer.waitForTransaction(transaction_hash, {
+                        retryInterval: 100
+                    })
+                )
+            )
+        } catch (e) {
+            console.log(e);
+        } 
+    }
+    const create_starter_team = async (signer: Account) => {
+
+        try {
+            const {transaction_hash} = await execute(
+                signer,
+                "builder",
                 "starter_team",
                 []
             )
@@ -193,7 +243,9 @@ export function createSystemCalls(
         new_player,
         mint_piece,
         add_piece_to_team,
+        remove_piece_from_team,
         create_team,
+        create_starter_team,
         create_challenge,
         accept_challenge,
         take_turn

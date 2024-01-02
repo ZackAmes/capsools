@@ -6,6 +6,7 @@ struct Team {
     #[key]
     id: u32,
     owner: felt252,
+    location: felt252,
     piece_count: u8,
     pieces: Pieces
 }
@@ -92,7 +93,7 @@ trait TeamTrait {
     fn new(id: u32, owner: felt252) -> Team;
 
     fn add_piece(ref self: Team, piece_id: u32);
-    fn remove_piece(ref self: Team, index: u8);
+    fn remove_piece(ref self: Team, id: u32);
 
     fn can_add(ref self: Team) -> bool;
     fn contains(ref self: Team, piece_id: u32) -> bool;
@@ -103,7 +104,7 @@ impl TeamImpl of TeamTrait {
 
     fn new(id: u32, owner: felt252) -> Team {
         let pieces = PiecesTrait::new();
-        Team {id, owner, piece_count:0, pieces}
+        Team {id, owner, location:owner, piece_count:0, pieces}
     }
 
     fn add_piece(ref self: Team, piece_id: u32) {
@@ -113,23 +114,29 @@ impl TeamImpl of TeamTrait {
         self.piece_count+=1;
     }
 
-    fn remove_piece(ref self: Team, index: u8) {
+    fn remove_piece(ref self: Team, id: u32) {
 
 
-        let mut pieces = self.pieces;
-        let count = self.piece_count;
+        assert(self.piece_count > 0, 'team empty');
 
-        assert(index < count, 'invalid index');
-        if index == count-1 {
-            pieces.update_piece_at(index, 0);
+        let mut count = self.piece_count;
+        let mut temp_id = self.pieces.get_piece_at(count - 1);
+
+        let mut index = 0;
+        loop {
+            if(index == count) {break;};
+
+            let piece = self.pieces.get_piece_at(index);
+
+            if(piece == id){
+                self.pieces.update_piece_at(index, temp_id);
+                self.pieces.update_piece_at(count-1, 0);
+                self.piece_count -= 1;
+                break;
+            }
+            
+            index+=1;
         }
-        else {
-            let temp = pieces.get_piece_at(count-1);
-            pieces.update_piece_at(count-1, 0);
-            pieces.update_piece_at(index, temp);
-        }
-        self.pieces = pieces;
-        self.piece_count = count - 1;
 
     }
 
