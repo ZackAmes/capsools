@@ -46,43 +46,58 @@ mod builder {
             let stats = get!(world, type_id, (PieceType)).piece_stats;
         
             let mut offset = 0;
-            let mut tower = PieceTrait::new(world.uuid(), caller, stats.hp, tower_id);     
-            tower.add_to(team.id.into(), Vec2 {x:4 + offset, y:1});
+            let mut x:u8 =4;
+            let mut tower = PieceTrait::new(world.uuid(), caller, stats.hp, tower_id);  
+            let manager_t = ManagerTrait::piece(caller, count+offset, tower.id);   
+            tower.add_to(team.id.into(), Vec2 {x, y:1});
             offset+=1;
+            x+=1;
 
             let mut piece_one = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);
-            piece_one.add_to(team.id.into(), Vec2 {x:4+ offset, y:1});
+            let manager_1 = ManagerTrait::piece(caller, count+offset, piece_one.id);   
+
+            piece_one.add_to(team.id.into(), Vec2 {x, y:1});
             offset+=1;
+            x+=1;
+
 
             let mut piece_two = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);
-            piece_two.add_to(team.id.into(), Vec2 {x:4+ offset, y:1});
+             let manager_2 = ManagerTrait::piece(caller, count+offset, piece_two.id);   
+
+            piece_two.add_to(team.id.into(), Vec2 {x, y:1});
             offset+=1;
+            x+=1;
 
             let mut piece_three = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);
-            piece_three.add_to(team.id.into(), Vec2 {x:4+ offset, y:1});
+            let manager_3 = ManagerTrait::piece(caller, count+offset, piece_three.id);   
+            piece_three.add_to(team.id.into(), Vec2 {x, y:1});
             offset+=1;
+            x+=1;
 
             let mut piece_four = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);
-            piece_four.add_to(team.id.into(), Vec2 {x:4+ offset, y:1});
+            let manager_4 = ManagerTrait::piece(caller, count+offset, piece_four.id);   
+            piece_four.add_to(team.id.into(), Vec2 {x, y:1});
             offset+=1;
+            x+=1;
 
             let mut piece_five = PieceTrait::new(world.uuid(), caller, stats.hp, type_id);
-            piece_five.add_to(team.id.into(), Vec2 {x:4+ offset, y:1});
+            let manager_5 = ManagerTrait::piece(caller, count+offset, piece_five.id);   
+            piece_five.add_to(team.id.into(), Vec2 {x, y:1});
 
             let mut team_pieces = PiecesTrait::new_from(tower.id, piece_one.id, piece_two.id, piece_three.id, piece_four.id, piece_five.id);
             
             player.counts.team_count += 1;
+            player.counts.piece_count += 6;
             team.pieces = team_pieces;
             team.piece_count = 6;
-            set!(world, (player, team, tower, piece_one, piece_two, piece_three, piece_four, piece_five));
+            set!(world, (player, team, tower, manager_1, manager_2, manager_3, manager_4, manager_5, manager_t,
+                        piece_one, piece_two, piece_three, piece_four, piece_five));
 
 
             
-            //player.counts.pieces_count +=6;
 
             let manager = ManagerTrait::team(caller, count, team.id);
 
-            //todo piece managers
 
             set!(world, (manager));
 

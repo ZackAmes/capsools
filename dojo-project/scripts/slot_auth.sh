@@ -10,18 +10,20 @@ export HUB_ADDRESS=$(cat ./target/release/manifest.json | jq -r '.contracts[] | 
 export GENSHIN_ADDRESS=$(cat ./target/release/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::genshin::genshin" ).address')
 export BUILDER_ADDRESS=$(cat ./target/release/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::builder::builder" ).address')
 export ARENA_ADDRESS=$(cat ./target/release/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::arena::arena" ).address')
+export GOV_ADDRESS=$(cat ./target/release/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::gov::gov" ).address')
 
 echo "---------------------------------------------------------------------------"
 echo world : $WORLD_ADDRESS 
 echo " "
 echo hub : $HUB_ADDRESS
 echo genshin : $GENSHIN_ADDRESS
-echo challenge : $BUILDER_ADDRESS
+echo builder : $BUILDER_ADDRESS
 echo arena : $ARENA_ADDRESS
+echo gov: $GOV_ADDRESS
 echo "---------------------------------------------------------------------------"
 
 # enable system -> component authorizations
-COMPONENTS=("Player" "Manager" "SetManager" "PlayerCount")
+COMPONENTS=("Player" "Manager" "PlayerCount")
 
 for component in ${COMPONENTS[@]}; do
     sozo auth writer $component $HUB_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
@@ -49,10 +51,21 @@ done
 echo "Builder authorizations have been successfully set."
 echo "---------------------------------------------------------------------------"
 
-ARENA_COMPONENTS=("Player" "Manager""SetManager"  "Team" "Piece" "Game")
+
+ARENA_COMPONENTS=("Player" "Piece" "Manager" "SetManager" "Team" "Game")
 
 for component in ${ARENA_COMPONENTS[@]}; do
     sozo auth writer $component $ARENA_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
-echo "Builder authorizations have been successfully set."
+echo "Arena authorizations have been successfully set."
+echo "---------------------------------------------------------------------------"
+
+
+GOV_COMPONENTS=("Player" "SetManager" "PieceType")
+
+for component in ${GOV_COMPONENTS[@]}; do
+    sozo auth writer $component $GOV_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+done
+
+echo "Gov authorizations have been successfully set."

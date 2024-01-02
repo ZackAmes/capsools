@@ -13,10 +13,10 @@ import Piece from "./Piece";
 import update_position from "../utils/update_position";
 import { Ref , useState} from "react";
 import get_moves from "../utils/get_moves";
+import PieceStats from "./PieceStats";
 interface BoardProps {
     position: [number,number,number]
     game_id:Entity
-    piece_ids: number[]
     signer: Account
     take_turn: any
     components: any
@@ -25,10 +25,10 @@ interface BoardProps {
    // take_turn: (signer:Account, game_id:number, x:number, y:number) => any
 }
 
-const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer, take_turn}) => {
-
+const Board: FC<BoardProps> = ({position, game_id, components, signer, take_turn}) => {
 
     let squareValues: any[] = [];
+    let piece_ids: any[] = [];
     let piece_positions: any[] = [];
     let refs:Ref<RapierRigidBody>[] =[];
     //Create Id and Value arrays
@@ -65,15 +65,32 @@ const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer
         else {
             if(game){
                 console.log(game)
-                take_turn(signer, game.id, cur_id, x, y);
+                take_turn(signer, game.id, id, x, y);
             }    
             set_x(0);
             set_y(0);
         }
         set_is_piece(clicked_is_piece)
+        set_id(id)
 
         //else move, or attack
     }
+    if(game){
+        let team_one = getComponentValue(components.Team, getEntityIdFromKeys([BigInt(game.data.team_one)]) as Entity);
+        let one_piece_ids:number[] = [];
+        let two_piece_ids:number[] = [];
+            
+        if(game.data.team_two != 0) {
+            let team_two = getComponentValue(components.Team, getEntityIdFromKeys([BigInt(game.data.team_two)]) as Entity);
+            two_piece_ids = team_two ? Object.values(team_two.pieces) : [];
+        }
+        one_piece_ids= team_one ? Object.values(team_one.pieces) : [];
+        console.log(two_piece_ids);
+
+        piece_ids = one_piece_ids.concat(two_piece_ids);
+    }
+    
+    
 
 
 
@@ -131,6 +148,7 @@ const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer
         <>
             
             <group position={position}>
+                {cur_id > 0 && <PieceStats position = {[7,0,-3]} id={piece_ids[cur_id]} components={components} />}
                 {squares}
                 {pieces}
             </group>

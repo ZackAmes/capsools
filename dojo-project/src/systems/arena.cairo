@@ -89,34 +89,30 @@ mod arena {
 
         }
 
-            fn take_turn(self: @ContractState, game_id: u32, piece_id: u32, x: u8, y: u8) {
-                let world = self.world_dispatcher.read();
-                let caller = get_caller_address().into();
+        fn take_turn(self: @ContractState, game_id: u32, piece_id: u32, x: u8, y: u8) {
+            let world = self.world_dispatcher.read();
+            let caller = get_caller_address().into();
 
-                let mut game = get!(world, game_id, (Game));
-                assert(game.data.is_active, 'game not active');
-                let team_one = get!(world, game.data.team_one, (Team));
-                if(game.data.ones_turn){
-                    assert(team_one.owner==caller, 'not turn player 1s turn');
-                }
-                let team_two = get!(world, game.data.team_two, (Team));
+            let mut game = get!(world, game_id, (Game));
+            assert(game.data.is_active, 'game not active');
+            let team_one = get!(world, game.data.team_one, (Team));
+            if(game.data.ones_turn){
                 assert(team_one.owner==caller, 'not turn player 1s turn');
-
-                let mut piece = get!(world, piece_id, (Piece));
-
-                let valid: bool = self.check_move(piece.data.position, Vec2{x,y}, piece.data.piece_type);
-                assert(valid, 'invalid move');
-                piece.data.position = Vec2{x,y};
-                game.data.ones_turn = !game.data.ones_turn;
-
-                set!(world, (piece, game));
-
-
-
-
-
-
             }
+            let team_two = get!(world, game.data.team_two, (Team));
+            assert(team_two.owner==caller, 'not turn player 2s turn');
+
+            let mut piece = get!(world, piece_id, (Piece));
+
+            let valid: bool = self.check_next(piece.data.piece_type.try_into().unwrap(), piece.data.position, Vec2{x,y});
+            assert(valid, 'invalid move');
+            piece.data.position = Vec2{x,y};
+            game.data.ones_turn = !game.data.ones_turn;
+
+            set!(world, (piece, game));
+
+
+        }
 
     }
 
@@ -165,33 +161,52 @@ mod arena {
             }
         }
 
-        fn check_move(self: @ContractState, cur: Vec2, next: Vec2, piece_type: u32) -> bool {
-            let mut moves:Array<Vec2> = self.get_unreflected_moves(piece_type);
+        fn check_next(self: @ContractState, piece_type: u8, cur: Vec2, next:Vec2) -> bool {
+        let mut moves = self.get_moves(piece_type.into());
+        let mut valid = false;
+        let position = cur;
+        
+        let mut i=0;
 
-            let mut index = 0;
-            let mut res = false;
-            loop {
-                if(index == moves.len()) {break;};
-                let move = *moves.at(index);
-                assert(move.x == 1, 'test');
-                if(next.x == cur.x + move.x && next.y == cur.y + move.y) {
-                    res = true;
-                    break;
-                }
-                if(next.x == cur.x+move.y) {
-                    if(next.y == cur.y+move.x){
-                        res = true;
-                        break;
-                    }
-                    
-                }
+        loop {
+            if(i == moves.len()) {break;};
 
-                index+=1;
-            };
-            res
+            let move: Vec2 = moves.pop_front().unwrap();
+            
+            let valid = self.check_move_valid(cur, move, next);
+            if(valid) {break;};
+
+            i+=1;
+        };
+
+        valid
+    }
+
+    fn check_move_valid(self: @ContractState, cur: Vec2, move: Vec2, next: Vec2) -> bool {
+
+        let position = cur;
+
+        let mut valid: bool = position.x + move.x == next.x && position.x + move.y == next.y;
+
+        if(valid) {
+            return valid;
         }
 
-        fn get_unreflected_moves(self: @ContractState, piece_type: u32) -> Array<Vec2> {
+        valid = position.x - move.x == next.x && position.x - move.y == next.y;
+        if(valid) {
+            return valid;
+        };    
+
+        valid = position.x + move.x == next.x && position.x - move.y == next.y;
+        if(valid) {
+            return valid;
+        };    
+       
+        valid = position.x - move.x == next.x && position.x + move.y == next.y;
+        valid
+    }
+
+    fn get_moves(self: @ContractState, piece_type: u32) -> Array<Vec2> {
             let mut res = ArrayTrait::new();
             if(piece_type == 0) {
                 res.append(Vec2{x:1,y:0});
