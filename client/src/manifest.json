@@ -947,9 +947,9 @@
   },
   "contracts": [
     {
-      "name": "project::systems::arena::challenge",
-      "address": "0x5573bb69878a19fb89a2bc797fca40215128e86581de050177bea6c5fc4ee15",
-      "class_hash": "0x667ca68cb43472dc74d988d21f1da3cc0344811f9af557e9715feb9b6e0a96e",
+      "name": "project::systems::arena::arena",
+      "address": "0x53f0f25d421eb4dd76933fb6b1e3a4d0b2f4c99f229989709455db14d9551f1",
+      "class_hash": "0x7f2cb918c67196d44190dd51886370a1d84eab427624b99dac2aa8018f45289",
       "abi": [
         {
           "type": "impl",
@@ -1019,6 +1019,30 @@
               ],
               "outputs": [],
               "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "take_turn",
+              "inputs": [
+                {
+                  "name": "game_id",
+                  "type": "core::integer::u32"
+                },
+                {
+                  "name": "piece_id",
+                  "type": "core::integer::u32"
+                },
+                {
+                  "name": "x",
+                  "type": "core::integer::u8"
+                },
+                {
+                  "name": "y",
+                  "type": "core::integer::u8"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
             }
           ]
         },
@@ -1082,7 +1106,7 @@
         },
         {
           "type": "event",
-          "name": "project::systems::arena::challenge::Event",
+          "name": "project::systems::arena::arena::Event",
           "kind": "enum",
           "variants": [
             {
@@ -1100,7 +1124,7 @@
     {
       "name": "project::systems::builder::builder",
       "address": "0x476b1f34c79a06f97f8890332333188d3c69a0476e80e26f0d1569a0d81b688",
-      "class_hash": "0x76b3ec6b5d24aab7827b0ad14d039db97b601facacdc5a92fa773a62432a9dd",
+      "class_hash": "0x28c3dd34db1049f3b97734d6fa11a68b3333c219b3fbc5be49f5b5b3f13afc5",
       "abi": [
         {
           "type": "impl",
@@ -1253,7 +1277,7 @@
     {
       "name": "project::systems::genshin::genshin",
       "address": "0x7cbcc8c93a34541d60991e7cf9ddc9acb397e8b3a1905d9dae79bb66ee4d9a7",
-      "class_hash": "0x72587de607aa583cd94b7dace1ddb0a19fbb108ff384f30ed9ae8cc6753d03b",
+      "class_hash": "0x1b8bc03b01fd9125904b20931c31156fd2c607a2d1b524b0ac88c761efb0c7e",
       "abi": [
         {
           "type": "impl",
@@ -1383,7 +1407,7 @@
     {
       "name": "project::systems::hub::hub",
       "address": "0x4ae6f3eaf4a5e60ce95ebd512465dd6b6c414aee4b8bb88e88ac55a0bf2931",
-      "class_hash": "0xd1818fb7d5d575a0570a969a154d79f95943145f92ea194d2b8f125759682c",
+      "class_hash": "0x32f5990651940a80bd4870ff81239b4ebe777ffb5891343e2d3e84a1ffd4001",
       "abi": [
         {
           "type": "impl",
@@ -2077,9 +2101,14 @@
           "name": "piece_type_count",
           "type": "u32",
           "key": false
+        },
+        {
+          "name": "challenge_count",
+          "type": "u32",
+          "key": false
         }
       ],
-      "class_hash": "0x34ad505fa3d2a2bf29ce727381f2ed516a3e359e72716e7ceb623021e4b7266",
+      "class_hash": "0x1b2dae2ae93e265bcf45d83be19ed657220b3c2669afcfa53961cd7bb0a52de",
       "abi": [
         {
           "type": "function",
