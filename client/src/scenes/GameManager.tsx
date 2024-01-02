@@ -25,7 +25,7 @@ interface GameManagerProps {
 const GameManager: FC<GameManagerProps> = ({setup: {components, systemCalls}, account, game_ids, position}) => {
 
     const signer = account.account;
-    const {add_piece_to_team, create_team} = systemCalls;
+    const {add_piece_to_team, create_team, take_turn} = systemCalls;
 
     const [cur_game, set_game] = useState(0);
     const [cur_piece, set_piece] = useState();
@@ -61,16 +61,16 @@ const GameManager: FC<GameManagerProps> = ({setup: {components, systemCalls}, ac
         })
     }
     let total_games = game_ids.length;
-    let selector_position = update_position(position, [0,3,0]);
+    let selector_position = update_position(position, [6,3,0]);
     
 
     return (
         <>
             <group position={position}>
-                <Selector position={selector_position} total={total_games} label={cur_game} next={()=>set_game(cur_game+1)} prev={()=> set_game(cur_game-1)}/>
+                <Selector position={selector_position} total={total_games} label={"game"} cur={cur_game} next={()=>set_game(cur_game+1)} prev={()=> set_game(cur_game-1)}/>
                 
 
-                <Board game_id={game_ids[cur_game]} piece_ids = {piece_ids} position={position} signer={signer} components={components} />
+                <Board take_turn = {take_turn} game_id={game_ids[cur_game]} piece_ids = {piece_ids} position={position} signer={signer} components={components} />
                 {pieces}
             </group>
         </>

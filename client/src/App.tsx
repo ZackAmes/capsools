@@ -59,18 +59,23 @@ function App() {
                         <meshBasicMaterial color="grey"/>
                     </Box>
 
-                    <Challenge  position = {[-5,5,0]} pending_games={challenge_ids}  components={setup.components}
+                    {team_ids.length > 0 && <Challenge  position = {[-5,5,0]} pending_games={challenge_ids}  components={setup.components}
                                 team_ids = {team_ids} signer={account.account}
-                                create_challenge={create_challenge} accept_challenge={accept_challenge}/>
+                                create_challenge={create_challenge} accept_challenge={accept_challenge}/>}
 
-                    <Burners position={[5,10,10]} account = {account}/>
+                    <Burners position={[0,10,0]} account = {account}/>
 
-                    <AccRender position={[0,10,10]} address={account.account.address} />
+                    <AccRender position={[0,10,20]} address={account.account.address} />
 
-                    {!player && <Button scale={10} position={[0,5,0]} label="new" onClick={() => new_player(account.account)}/>}
+                    {!player && <Button background={"black"} scale={10} position={[0,5,0]} label="new" onClick={() => new_player(account.account)}/>}
+                    
                     <Button position = {[5,5,0]} label={"create team"} onClick={() => create_team(signer)}/>
                     {game_ids.length > 0 && 
                         <GameManager position={[-3,.3,0]} setup={setup} account={account} game_ids={game_ids} />
+
+                    }
+                    {team_ids.length > 0 &&
+                        <TeamBuilder position = {[4,.25,-5]} setup={setup} account={account} piece_ids={piece_ids} team_ids={team_ids}/>
                     }
                 </Physics>
                 </Suspense>

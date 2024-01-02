@@ -15,16 +15,17 @@ import { Ref , useState} from "react";
 import get_moves from "../utils/get_moves";
 interface BoardProps {
     position: [number,number,number]
-    game_id:number
+    game_id:Entity
     piece_ids: number[]
     signer: Account
+    take_turn: any
     components: any
     
 
    // take_turn: (signer:Account, game_id:number, x:number, y:number) => any
 }
 
-const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer}) => {
+const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer, take_turn}) => {
 
 
     let squareValues: any[] = [];
@@ -36,10 +37,11 @@ const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer
         refs.push(useRef<RapierRigidBody>(null!));
     }
 
-
+    let game = useComponentValue(components.Game, game_id);
     let [cur_x, set_x] = useState(0);
     let [cur_y, set_y] = useState(0);
     let [cur_is_piece, set_is_piece] = useState(false);
+    let [cur_id, set_id] = useState(0);
     let initial_moves:[number, number][] = [[0,0]]
     let [cur_moves, set_moves] = useState(initial_moves);
     
@@ -54,18 +56,25 @@ const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer
         }
         set_x(x);
         set_y(y);
+        set_moves([]);
+        set_is_piece(false);
+
         if(clicked_is_piece){
             set_moves(get_moves(id))
         }
         else {
-            set_moves([]);
+            if(game){
+                console.log(game)
+                take_turn(signer, game.id, cur_id, x, y);
+            }    
+            set_x(0);
+            set_y(0);
         }
         set_is_piece(clicked_is_piece)
 
         //else move, or attack
     }
 
-    let game = useComponentValue(components.Game, getEntityIdFromKeys([BigInt(game_id)]) as Entity);
 
 
     console.log(piece_ids)
@@ -104,6 +113,7 @@ const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer
         for(let i=0; i<cur_moves.length; i++) {
             if(cur_x + cur_moves[i][0] == x && cur_y + cur_moves[i][1] == y) {
                 color = "green"
+                clicked=() => set_cur(x,y,false)
             }
         }
         let tempPosition: [number, number, number] = [x, 0, y];
@@ -121,8 +131,6 @@ const Board: FC<BoardProps> = ({position, game_id, piece_ids, components, signer
         <>
             
             <group position={position}>
-                {game && <AccRender address={"0x" + game.player_one.toString(16)} position={[0, 0, -2]} />}
-                {game && <AccRender address={"0x" + game.player_two.toString(16)} position={[2, 0, -2]} />}
                 {squares}
                 {pieces}
             </group>
