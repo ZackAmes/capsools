@@ -1,62 +1,81 @@
-import { Box, Sphere } from "@react-three/drei";
-import { usePrismaticJoint, RigidBody, RapierRigidBody } from "@react-three/rapier";
-import { useRef } from "react";
-import { CuboidCollider } from "@react-three/rapier";
-
-
-
+import { usePrismaticJoint, RapierRigidBody } from "@react-three/rapier";
+import { useRef} from "react";
+import Square from "../components/Square";
 
 
 const SlidingBoard = () => {
-    let bodyA = useRef<RapierRigidBody>(null!);
-    let bodyB = useRef<RapierRigidBody>(null!);
-    let bodyC = useRef<RapierRigidBody>(null!);
 
-    const joint1 = usePrismaticJoint(bodyA, bodyB, [
-      // Position of the joint in bodyA's local space
-      [1, .5, .5],
-      // Position of the joint in bodyB's local space
-      [0, .5, .5],
-      // Axis of the joint, expressed in the local-space of
-      // the rigid-bodies it is attached to. Cannot be [0,0,0].
-      [0, 1, 0],
-      [0,.5]
-    ]);
+    let side_len = 8;
+    let square_refs = [];
+    for(let i=0; i<side_len**2; i++) {
+          let ref = useRef<RapierRigidBody>(null!);
+          square_refs.push(ref);
+    }
 
-    const joint2 = usePrismaticJoint(bodyB, bodyC, [
-        [1,.5,.5],
-        [0,.5,.5],
-        [0,1,0],
-        [0,.5]
-    ])
+    //make joints horizonally and vertically
+    // horizontal: [x], [x+1] for x < side_len - 1
+    // vertical: [y], [y+1], for y < side_len -1
+    // x = index % side_len
+    // y = Math.floor(index / side_len)
+    // index = x + (y * side_len) 
+
+    let joints = [];
+    for(let i=0; i<square_refs.length; i++) { 
+      let x = i % side_len;
+      let y = Math.floor(i / side_len);
+
+      //horizontal joints
+      if(x < side_len - 1){
+        let joint = usePrismaticJoint(square_refs[i], square_refs[i+1], [
+          // Position of the joint in bodyA's local space
+          //center of left square's right face
+          [1,.5,.5],
+          // Position of the joint in bodyB's local space
+          //center of right square's left face
+          [0,.5,.5],
+          // Axis of the joint, expressed in the local-space of
+          // the rigid-bodies it is attached to. Cannot be [0,0,0].
+          //y-axis
+          [0,1,0],
+          //distance it can slide (0 to .5)
+          [0,.5]
+        ])
+        joints.push(joint);
+      }
+      if(y < side_len - 1) {
+        let joint = usePrismaticJoint(square_refs[i], square_refs[i+side_len], [
+          // Position of the joint in bodyA's local space
+          //center of north square's south face
+          [.5,.5,1],
+          // Position of the joint in bodyB's local space
+          //center of south square's north face
+          [.5,.5,0],
+          // Axis of the joint, expressed in the local-space of
+          // the rigid-bodies it is attached to. Cannot be [0,0,0].
+          //y-axis
+          [0,1,0],
+          //distance it can slide (0 to .5)
+          [0,.5]
+        ])
+      }
+      
+    }
     
+    let squares = square_refs.map((ref, index) => {
+      let x = index % side_len;
+      let y = Math.floor(index / side_len);
+
+      let color = x%2==y%2 ? "red" : "blue"
+      return (
+        <Square ref={ref} position={[x, 3, y]} color={color} onClick={() => console.log(index)} depth={1}/>
+      )
+    })
     
     return (
         <>
-         <group>
-
-
-        <RigidBody position={[0,3,0]}ref={bodyA}>
-          <Box>
-            <meshBasicMaterial color={"black"}/>
-          </Box>
-        </RigidBody>
-        <RigidBody position={[1,3,0]}ref={bodyB}>
-            <Box>
-                <meshBasicMaterial color={"red"}/>
-            </Box>
-        </RigidBody>
-
-        <RigidBody position={[2,3,0]}ref={bodyC}>
-            <Box>
-                <meshBasicMaterial color={"black"}/>
-            </Box>
-        </RigidBody>
-        <RigidBody>
-            <Sphere>
-                <meshBasicMaterial color="blue" />
-            </Sphere>
-        </RigidBody>
+      <group>
+        {squares}
+        
       </group>
 
       </>

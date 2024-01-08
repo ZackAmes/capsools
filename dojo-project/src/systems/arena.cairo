@@ -7,7 +7,7 @@ trait IArena<TContractState> {
 
 #[dojo::contract]
 mod arena {
-    use project::models::team::{Team, Pieces};
+    use project::models::team::{Team,TeamTrait, Pieces};
     use project::models::game::{Game, GameTrait, Vec2};
     use project::models::piece::{Piece, PieceImpl, PieceTrait};
     use project::models::player::{Player};
@@ -22,11 +22,13 @@ mod arena {
             let caller = get_caller_address().into();
             let mut set_manager = get!(world, 0, (SetManager));
 
-            let team = get!(world, team_id, (Team));
+            let mut team = get!(world, team_id, (Team));
             let mut player = get!(world, caller,(Player));
             assert(team.owner == caller, 'not team owner');
+            assert(team.available(), 'team not available');
 
             let game = GameTrait::new(world.uuid(), team_id);
+            team.location = game.id.into();
             let game_manager = ManagerTrait::game(caller, player.counts.game_count, game.id);
             let challenge_manager = ManagerTrait::challenge(0, set_manager.challenge_count, game.id);
             player.counts.game_count+=1;
@@ -66,57 +68,57 @@ mod arena {
             
 
             let team_one = get!(world, game.data.team_one, (Team));
-            let team_two = get!(world, team_id, (Team));
+            let mut team_two = get!(world, team_id, (Team));
 
 
             assert(!(team_one.owner == caller), 'cant accept own challenge');
             assert(team_two.owner == caller, 'not team owner');
-
+            assert(team_two.available(), 'team not available');
 
             let mut player = get!(world, caller,(Player));
 
             let manager = ManagerTrait::game(caller, player.counts.game_count, game.id);
             
             player.counts.game_count+=1;
+
             set_manager.challenge_count -=1;
+
             challenge_manager.id = challenge_tomove.id;
             challenge_tomove.id = 0;
+
             game.accept(team_two.id);
+            team_two.location = game.id.into();
             self.update_pieces_locations(team_two.pieces, game.id.into() , true);
 
-            set!(world, (game, player, manager, set_manager, challenge_manager, challenge_tomove));
+            set!(world, (game, team_two, player, manager, set_manager, challenge_manager, challenge_tomove));
 
 
         }
 
-            fn take_turn(self: @ContractState, game_id: u32, piece_id: u32, x: u8, y: u8) {
-                let world = self.world_dispatcher.read();
-                let caller = get_caller_address().into();
+        fn take_turn(self: @ContractState, game_id: u32, piece_id: u32, x: u8, y: u8) {
+            let world = self.world_dispatcher.read();
+            let caller = get_caller_address().into();
 
-                let mut game = get!(world, game_id, (Game));
-                assert(game.data.is_active, 'game not active');
-                let team_one = get!(world, game.data.team_one, (Team));
-                if(game.data.ones_turn){
-                    assert(team_one.owner==caller, 'not turn player 1s turn');
-                }
-                let team_two = get!(world, game.data.team_two, (Team));
+            let mut game = get!(world, game_id, (Game));
+            assert(game.data.is_active, 'game not active');
+            let team_one = get!(world, game.data.team_one, (Team));
+            if(game.data.ones_turn){
                 assert(team_one.owner==caller, 'not turn player 1s turn');
-
-                let mut piece = get!(world, piece_id, (Piece));
-
-                let valid: bool = self.check_move(piece.data.position, Vec2{x,y}, piece.data.piece_type);
-                assert(valid, 'invalid move');
-                piece.data.position = Vec2{x,y};
-                game.data.ones_turn = !game.data.ones_turn;
-
-                set!(world, (piece, game));
-
-
-
-
-
-
             }
+            let team_two = get!(world, game.data.team_two, (Team));
+            assert(team_two.owner==caller, 'not turn player 2s turn');
+
+            let mut piece = get!(world, piece_id, (Piece));
+
+            let valid: bool = self.check_next(piece.data.piece_type.try_into().unwrap(), piece.data.position, Vec2{x,y});
+            assert(valid, 'invalid move');
+            piece.data.position = Vec2{x,y};
+            game.data.ones_turn = !game.data.ones_turn;
+
+            set!(world, (piece, game));
+
+
+        }
 
     }
 
@@ -165,58 +167,144 @@ mod arena {
             }
         }
 
-        fn check_move(self: @ContractState, cur: Vec2, next: Vec2, piece_type: u32) -> bool {
-            let mut moves:Array<Vec2> = self.get_unreflected_moves(piece_type);
+        fn check_next(self: @ContractState, piece_type: u8, cur: Vec2, next:Vec2) -> bool {
+            let mut moves = self.get_moves(piece_type.into());
+            let mut valid = false;
+            let position = cur;
+            
+            let mut i=0;
 
-            let mut index = 0;
-            let mut res = false;
             loop {
-                if(index == moves.len()) {break;};
-                let move = *moves.at(index);
-                assert(move.x == 1, 'test');
-                if(next.x == cur.x + move.x && next.y == cur.y + move.y) {
-                    res = true;
-                    break;
-                }
-                if(next.x == cur.x+move.y) {
-                    if(next.y == cur.y+move.x){
-                        res = true;
-                        break;
-                    }
-                    
-                }
+                if(i == moves.len()) {break;};
 
-                index+=1;
+                let move: Vec2 = moves.pop_front().unwrap();
+                
+                let valid = self.check_move_valid(cur, move, next);
+                if(valid) {break;};
+
+                i+=1;
             };
-            res
+
+            valid
         }
 
-        fn get_unreflected_moves(self: @ContractState, piece_type: u32) -> Array<Vec2> {
-            let mut res = ArrayTrait::new();
-            if(piece_type == 0) {
-                res.append(Vec2{x:1,y:0});
-                res.append(Vec2{x:1,y:1});
-                res.append(Vec2{x:0,y:1});
-            }
-            if(piece_type == 1) {
-                res.append(Vec2{x:1,y:0});
-                res.append(Vec2{x:1,y:1});
-                res.append(Vec2{x:0,y:1});
+        fn check_move_valid(self: @ContractState, cur: Vec2, move: Vec2, next: Vec2) -> bool {
 
-            }
-            if(piece_type == 2) {
-                res.append(Vec2{x:1,y:0});
-                res.append(Vec2{x:2,y:0});
-                res.append(Vec2{x:0,y:1});
-                res.append(Vec2{x:0,y:2});
+            let position = cur;
 
-            }
-            if(piece_type == 3) {
-                res.append(Vec2{x:1,y:1});
-                res.append(Vec2{x:2,y:2});
+            let mut valid: bool = position.x + move.x == next.x && position.x + move.y == next.y;
 
+            if(valid) {
+                return valid;
             }
-            res
+
+            valid = position.x - move.x == next.x && position.x - move.y == next.y;
+            if(valid) {
+                return valid;
+            };    
+
+            valid = position.x + move.x == next.x && position.x - move.y == next.y;
+            if(valid) {
+                return valid;
+            };    
+        
+            valid = position.x - move.x == next.x && position.x + move.y == next.y;
+            valid
         }
+
+        fn get_moves(self: @ContractState, piece_type: u32) -> Array<Vec2> {
+                let mut res = ArrayTrait::new();
+                if(piece_type == 0) {
+                    res.append(Vec2{x:1,y:0});
+                    res.append(Vec2{x:1,y:1});
+                    res.append(Vec2{x:0,y:1});
+                }
+                if(piece_type == 1) {
+                    res.append(Vec2{x:1,y:0});
+                    res.append(Vec2{x:1,y:1});
+                    res.append(Vec2{x:0,y:1});
+
+                }
+                if(piece_type == 2) {
+                    res.append(Vec2{x:1,y:0});
+                    res.append(Vec2{x:2,y:0});
+                    res.append(Vec2{x:0,y:1});
+                    res.append(Vec2{x:0,y:2});
+
+                }
+                if(piece_type == 3) {
+                    res.append(Vec2{x:1,y:1});
+                    res.append(Vec2{x:2,y:2});
+
+                }
+                res
+            }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
+
+    use super::{arena, IArenaDispatcher, IArenaDispatcherTrait};
+
+    use project::tests::tests::{spawn_set_and_players};
+
+    use project::models::team::{team};
+    use project::models::team::{Team, TeamTrait};
+
+    use project::models::manager::{set_manager, manager, player_count};
+    use project::models::manager::{SetManager, Manager, PlayerCount};
+
+    use project::models::piece::{piece, piece_type};
+    use project::models::piece::{Piece, PieceType, PieceStats};
+
+    use project::models::player::{player};
+    use project::models::player::{Player};
+
+    use project::models::game::{game};
+    use project::models::game::{Game};
+
+    #[test]
+    #[available_gas(300000000000)]
+    fn test_challenge() {
+        // caller
+        let p1 = starknet::contract_address_const::<0x1>();
+
+        let p2 = starknet::contract_address_const::<0x2>();
+
+        // models
+        let (world, hub, builder, genshin, gov, arena) = spawn_set_and_players(p1, p2);
+
+        starknet::testing::set_contract_address(p1);
+        let team_id = get!(world, (p1, 3, 0), Manager).id;
+        arena.create_challenge(team_id.try_into().unwrap());
+        let team_one = get!(world, team_id, Team);
+        assert(!team_one.available(), 'team should not be available');
+        let set = get!(world, 0, SetManager);
+        let player = get!(world, p1, Player);
+        assert(set.challenge_count == 1, 'should be 1 challenge');
+        assert(player.counts.game_count == 1, 'player should have 1 game');
+        let challenge = get!(world, (0, 5, 0), Manager);
+        let player_game_id = get!(world, (p1,2,0), Manager).id;
+        let game = get!(world, challenge.id, Game);
+        assert(!game.data.is_active, 'game should not be active');
+
+        assert(challenge.id == player_game_id, 'player and challenge no match');
+
+        starknet::testing::set_contract_address(p2);
+        let team_id = get!(world, (p2,3,0), Manager).id;
+        arena.accept_challenge(challenge.id.try_into().unwrap(), team_id.try_into().unwrap());
+        let team_two = get!(world, team_id, Team);
+        assert(!team_two.available(), 'team should not be available');
+
+        let game = get!(world, challenge.id, Game);
+        assert(game.data.team_one == team_one.id, 'wrong team one');
+        assert(game.data.team_two == team_two.id, 'wrong team two');
+        assert(game.data.is_active, 'game should be active');
+        let set = get!(world, 0, SetManager);
+        assert(set.challenge_count == 0, 'challenge should be removed');
+
     }
 }
