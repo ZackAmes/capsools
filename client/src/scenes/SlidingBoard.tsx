@@ -70,7 +70,6 @@ const SlidingBoard = () => {
       return (
         <group position={[x,3,y]}>
 
-          <Attractor range={.5} strength={2} />
           <Square ref={ref} position={[0,0,0]} color={color} onClick={() => console.log(index)} depth={1}/>
           
         </group>

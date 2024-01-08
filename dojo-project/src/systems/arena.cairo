@@ -102,12 +102,14 @@ mod arena {
             let mut game = get!(world, game_id, (Game));
             assert(game.data.is_active, 'game not active');
             let team_one = get!(world, game.data.team_one, (Team));
+            let team_two = get!(world, game.data.team_two, (Team));
+
             if(game.data.ones_turn){
                 assert(team_one.owner==caller, 'not turn player 1s turn');
             }
-            let team_two = get!(world, game.data.team_two, (Team));
-            assert(team_two.owner==caller, 'not turn player 2s turn');
-
+            else{
+                assert(team_two.owner==caller, 'not turn player 2s turn');
+            }
             let mut piece = get!(world, piece_id, (Piece));
 
             let valid: bool = self.check_next(piece.data.piece_type.try_into().unwrap(), piece.data.position, Vec2{x,y});
@@ -190,25 +192,11 @@ mod arena {
 
         fn check_move_valid(self: @ContractState, cur: Vec2, move: Vec2, next: Vec2) -> bool {
 
-            let position = cur;
+            let mut valid = false;
 
-            let mut valid: bool = position.x + move.x == next.x && position.x + move.y == next.y;
-
-            if(valid) {
-                return valid;
-            }
-
-            valid = position.x - move.x == next.x && position.x - move.y == next.y;
-            if(valid) {
-                return valid;
-            };    
-
-            valid = position.x + move.x == next.x && position.x - move.y == next.y;
-            if(valid) {
-                return valid;
-            };    
+            let to_check = Vec2 {x: cur.x + move.x, y: cur.y + move.y};
+            valid = to_check == next;
         
-            valid = position.x - move.x == next.x && position.x + move.y == next.y;
             valid
         }
 
@@ -244,6 +232,7 @@ mod arena {
 
 #[cfg(test)]
 mod tests {
+    use starknet::ContractAddress;
 
     use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
@@ -264,7 +253,28 @@ mod tests {
     use project::models::player::{Player};
 
     use project::models::game::{game};
-    use project::models::game::{Game};
+    use project::models::game::{Game, Vec2};
+
+    fn setup_game(world: IWorldDispatcher, arena: IArenaDispatcher, p1: ContractAddress, p2: ContractAddress) -> u32 {
+        let player = get!(world, p1, Player);
+        let op = get!(world, p2, Player);
+        assert(player.counts.team_count > 0, 'p1 should have team');
+        assert(op.counts.team_count > 0, 'p2 should have team');
+        
+        starknet::testing::set_contract_address(p1);
+        let team_id = get!(world, (p1, 3, 0), Manager).id;
+        arena.create_challenge(team_id.try_into().unwrap());
+
+        let challenge = get!(world, (0, 5, 0), Manager);
+
+        starknet::testing::set_contract_address(p2);
+        let team_id = get!(world, (p2,3,0), Manager).id;
+        arena.accept_challenge(challenge.id.try_into().unwrap(), team_id.try_into().unwrap());
+        let game = get!(world, challenge.id, Game);
+        assert(game.data.is_active, 'game should be active');
+        game.id
+
+    } 
 
     #[test]
     #[available_gas(300000000000)]
@@ -305,6 +315,38 @@ mod tests {
         assert(game.data.is_active, 'game should be active');
         let set = get!(world, 0, SetManager);
         assert(set.challenge_count == 0, 'challenge should be removed');
+
+    }
+
+
+    #[test]
+    #[available_gas(300000000000)]
+    fn test_game() {
+
+        let p1 = starknet::contract_address_const::<0x1>();
+
+        let p2 = starknet::contract_address_const::<0x2>();
+
+        // models
+        let (world, hub, builder, genshin, gov, arena) = spawn_set_and_players(p1, p2);
+        let game_id = setup_game(world, arena, p1, p2);
+
+        let game = get!(world, game_id, Game);
+        assert(game.data.is_active, 'game should be active');
+        let team_one = get!(world, game.data.team_one, Team);
+        let team_two = get!(world, game.data.team_two, Team);
+        assert(team_one.owner ==   p1.into(), 'team one owner should be p1');
+        assert(team_two.owner == p2.into(), 'team two owner should be p2');
+        
+        starknet::testing::set_contract_address(p1);
+        let one_tower = get!(world, team_one.pieces.tower, Piece);
+        let new = Vec2 {x: one_tower.data.position.x, y: one_tower.data.position.y + 1};
+        let old_x = one_tower.data.position.x;
+        let old_y = one_tower.data.position.y;
+        let new_x = new.x;
+        let new_y = new.y;
+        println!("moving from {old_x},{old_y} to {new_x},{new_y}");
+        arena.take_turn(game_id, one_tower.id, new.x, new.y);
 
     }
 }
