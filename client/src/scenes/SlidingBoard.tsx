@@ -1,6 +1,7 @@
 import { usePrismaticJoint, RapierRigidBody } from "@react-three/rapier";
 import { useRef} from "react";
 import Square from "../components/Square";
+import { Attractor } from "@react-three/rapier-addons";
 
 
 const SlidingBoard = () => {
@@ -67,7 +68,12 @@ const SlidingBoard = () => {
 
       let color = x%2==y%2 ? "red" : "blue"
       return (
-        <Square ref={ref} position={[x, 3, y]} color={color} onClick={() => console.log(index)} depth={1}/>
+        <group position={[x,3,y]}>
+
+          <Attractor range={.5} strength={2} />
+          <Square ref={ref} position={[0,0,0]} color={color} onClick={() => console.log(index)} depth={1}/>
+          
+        </group>
       )
     })
     
