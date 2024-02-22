@@ -15,7 +15,7 @@ mod arena {
     use starknet::{get_caller_address};
     use super::IArena;
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl ArenaImpl of IArena<ContractState> {
         fn create_challenge(self: @ContractState, team_id: u32){
             let world = self.world_dispatcher.read();

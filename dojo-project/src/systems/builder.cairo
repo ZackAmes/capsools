@@ -19,7 +19,7 @@ mod builder {
     use project::models::manager::{Manager, ManagerTrait};
 
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl BuilderImpl of IBuilder<ContractState>{
 
         fn starter_team(self: @ContractState) {

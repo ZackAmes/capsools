@@ -14,7 +14,7 @@ mod genshin {
     use project::models::player::{Player, PlayerTrait};
     use project::models::manager::{Manager, ManagerTrait, SetManager};
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl GenshinImpl of IGenshin<ContractState> {
 
         fn mint_piece(self: @ContractState) {
