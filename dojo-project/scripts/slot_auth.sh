@@ -10,24 +10,16 @@ export HUB_ADDRESS=$(cat ./target/release/manifest.json | jq -r '.contracts[] | 
 export GENSHIN_ADDRESS=$(cat ./target/release/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::genshin::genshin" ).address')
 export BUILDER_ADDRESS=$(cat ./target/release/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::builder::builder" ).address')
 export ARENA_ADDRESS=$(cat ./target/release/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::arena::arena" ).address')
-<<<<<<< HEAD
 export GOV_ADDRESS=$(cat ./target/release/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::gov::gov" ).address')
-=======
->>>>>>> main
 
 echo "---------------------------------------------------------------------------"
 echo world : $WORLD_ADDRESS 
 echo " "
 echo hub : $HUB_ADDRESS
 echo genshin : $GENSHIN_ADDRESS
-<<<<<<< HEAD
 echo builder : $BUILDER_ADDRESS
 echo arena : $ARENA_ADDRESS
 echo gov: $GOV_ADDRESS
-=======
-echo challenge : $BUILDER_ADDRESS
-echo arena : $ARENA_ADDRESS
->>>>>>> main
 echo "---------------------------------------------------------------------------"
 
 # enable system -> component authorizations
@@ -59,18 +51,13 @@ done
 echo "Builder authorizations have been successfully set."
 echo "---------------------------------------------------------------------------"
 
-<<<<<<< HEAD
 
 ARENA_COMPONENTS=("Player" "Piece" "Manager" "SetManager" "Team" "Game")
-=======
-ARENA_COMPONENTS=("Player" "Manager""SetManager"  "Team" "Piece" "Game")
->>>>>>> main
 
 for component in ${ARENA_COMPONENTS[@]}; do
     sozo auth writer $component $ARENA_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
-<<<<<<< HEAD
 echo "Arena authorizations have been successfully set."
 echo "---------------------------------------------------------------------------"
 
@@ -82,6 +69,3 @@ for component in ${GOV_COMPONENTS[@]}; do
 done
 
 echo "Gov authorizations have been successfully set."
-=======
-echo "Builder authorizations have been successfully set."
->>>>>>> main

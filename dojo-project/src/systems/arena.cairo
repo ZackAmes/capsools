@@ -7,11 +7,7 @@ trait IArena<TContractState> {
 
 #[dojo::contract]
 mod arena {
-<<<<<<< HEAD
     use project::models::team::{Team,TeamTrait, Pieces};
-=======
-    use project::models::team::{Team, Pieces};
->>>>>>> main
     use project::models::game::{Game, GameTrait, Vec2};
     use project::models::piece::{Piece, PieceImpl, PieceTrait};
     use project::models::player::{Player};
@@ -26,20 +22,13 @@ mod arena {
             let caller = get_caller_address().into();
             let mut set_manager = get!(world, 0, (SetManager));
 
-<<<<<<< HEAD
             let mut team = get!(world, team_id, (Team));
-=======
-            let team = get!(world, team_id, (Team));
->>>>>>> main
             let mut player = get!(world, caller,(Player));
             assert(team.owner == caller, 'not team owner');
             assert(team.available(), 'team not available');
 
             let game = GameTrait::new(world.uuid(), team_id);
-<<<<<<< HEAD
             team.location = game.id.into();
-=======
->>>>>>> main
             let game_manager = ManagerTrait::game(caller, player.counts.game_count, game.id);
             let challenge_manager = ManagerTrait::challenge(0, set_manager.challenge_count, game.id);
             player.counts.game_count+=1;
@@ -56,7 +45,6 @@ mod arena {
 
             let mut game = get!(world, game_id, (Game));
             let mut set_manager = get!(world, 0, (SetManager));
-<<<<<<< HEAD
 
             assert(set_manager.challenge_count>0, 'no challenges');
             let mut i = 0;
@@ -82,33 +70,6 @@ mod arena {
             let team_one = get!(world, game.data.team_one, (Team));
             let mut team_two = get!(world, team_id, (Team));
 
-=======
-
-            assert(set_manager.challenge_count>0, 'no challenges');
-            let mut i = 0;
-            let mut challenge_manager = ManagerTrait::challenge(0,0,0);
-            loop {
-                if(i == set_manager.challenge_count) {break;};
-                let temp_manager = get!(world, (0,5,i), (Manager));
-
-
-                if( temp_manager.id == game.id.into() ) {
-                    challenge_manager = temp_manager;                   
-                    break;
-                };
-                i+=1;
-            };
-
-            assert(challenge_manager.id == game.id.into(), 'invalid challenge');
-
-            let last_index = set_manager.challenge_count-1;
-            let mut challenge_tomove = get!(world, (0,5,last_index), (Manager));
-            
-
-            let team_one = get!(world, game.data.team_one, (Team));
-            let team_two = get!(world, team_id, (Team));
-
->>>>>>> main
 
             assert(!(team_one.owner == caller), 'cant accept own challenge');
             assert(team_two.owner == caller, 'not team owner');
@@ -138,16 +99,11 @@ mod arena {
             team_two.location = game.id.into();
             self.update_pieces_locations(team_two.pieces, game.id.into() , true);
 
-<<<<<<< HEAD
             set!(world, (game, team_two, player, manager, set_manager, challenge_manager, challenge_tomove));
-=======
-            set!(world, (game, player, manager, set_manager, challenge_manager, challenge_tomove));
->>>>>>> main
 
 
         }
 
-<<<<<<< HEAD
         fn take_turn(self: @ContractState, game_id: u32, piece_id: u32, x: u8, y: u8) {
             let world = self.world_dispatcher.read();
             let caller = get_caller_address().into();
@@ -174,18 +130,6 @@ mod arena {
 
 
         }
-=======
-            fn take_turn(self: @ContractState, game_id: u32, piece_id: u32, x: u8, y: u8) {
-                let world = self.world_dispatcher.read();
-                let caller = get_caller_address().into();
-
-            let mut game = get!(world, game_id, (Game));
-            assert(game.data.is_active, 'game not active');
-            let team_one = get!(world, game.data.team_one, (Team));
-            if(game.data.ones_turn){
-                assert(team_one.owner==caller, 'not turn player 1s turn');
-            }
->>>>>>> main
 
     }
 
@@ -234,7 +178,6 @@ mod arena {
             }
         }
 
-<<<<<<< HEAD
         fn check_next(self: @ContractState, piece_type: u8, cur: Vec2, next:Vec2) -> bool {
             let mut moves = self.get_moves(piece_type.into());
             let mut valid = false;
@@ -414,75 +357,5 @@ mod tests {
         println!("moving from {old_x},{old_y} to {new_x},{new_y}");
         arena.take_turn(game_id, one_tower.id, new.x, new.y);
 
-=======
-        fn check_move(self: @ContractState, cur: Vec2, next: Vec2, piece_type: u32) -> bool {
-            let mut moves:Array<Vec2> = self.get_unreflected_moves(piece_type);
-
-        loop {
-            if(i == moves.len()) {break;};
-
-            let move: Vec2 = moves.pop_front().unwrap();
-            
-            let valid = self.check_move_valid(cur, move, next);
-            if(valid) {break;};
-
-            i+=1;
-        };
-
-        valid
-    }
-
-    fn check_move_valid(self: @ContractState, cur: Vec2, move: Vec2, next: Vec2) -> bool {
-
-        let position = cur;
-
-        let mut valid: bool = position.x + move.x == next.x && position.x + move.y == next.y;
-
-        if(valid) {
-            return valid;
-        }
-
-        valid = position.x - move.x == next.x && position.x - move.y == next.y;
-        if(valid) {
-            return valid;
-        };    
-
-        valid = position.x + move.x == next.x && position.x - move.y == next.y;
-        if(valid) {
-            return valid;
-        };    
-       
-        valid = position.x - move.x == next.x && position.x + move.y == next.y;
-        valid
-    }
-
-    fn get_moves(self: @ContractState, piece_type: u32) -> Array<Vec2> {
-            let mut res = ArrayTrait::new();
-            if(piece_type == 0) {
-                res.append(Vec2{x:1,y:0});
-                res.append(Vec2{x:1,y:1});
-                res.append(Vec2{x:0,y:1});
-            }
-            if(piece_type == 1) {
-                res.append(Vec2{x:1,y:0});
-                res.append(Vec2{x:1,y:1});
-                res.append(Vec2{x:0,y:1});
-
-            }
-            if(piece_type == 2) {
-                res.append(Vec2{x:1,y:0});
-                res.append(Vec2{x:2,y:0});
-                res.append(Vec2{x:0,y:1});
-                res.append(Vec2{x:0,y:2});
-
-            }
-            if(piece_type == 3) {
-                res.append(Vec2{x:1,y:1});
-                res.append(Vec2{x:2,y:2});
-
-            }
-            res
-        }
->>>>>>> main
     }
 }

@@ -10,10 +10,7 @@ export HUB_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | sele
 export GENSHIN_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::genshin::genshin" ).address')
 export BUILDER_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::builder::builder" ).address')
 export ARENA_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::arena::arena" ).address')
-<<<<<<< HEAD
 export GOV_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::gov::gov" ).address')
-=======
->>>>>>> main
 
 echo "---------------------------------------------------------------------------"
 echo world : $WORLD_ADDRESS 
@@ -22,10 +19,7 @@ echo hub : $HUB_ADDRESS
 echo genshin : $GENSHIN_ADDRESS
 echo builder : $BUILDER_ADDRESS
 echo arena : $ARENA_ADDRESS
-<<<<<<< HEAD
 echo gov: $GOV_ADDRESS
-=======
->>>>>>> main
 echo "---------------------------------------------------------------------------"
 
 # enable system -> component authorizations
@@ -64,7 +58,6 @@ for component in ${ARENA_COMPONENTS[@]}; do
     sozo auth writer $component $ARENA_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
-<<<<<<< HEAD
 echo "Arena authorizations have been successfully set."
 echo "---------------------------------------------------------------------------"
 
@@ -76,6 +69,3 @@ for component in ${GOV_COMPONENTS[@]}; do
 done
 
 echo "Gov authorizations have been successfully set."
-=======
-echo "Arena authorizations have been successfully set."
->>>>>>> main

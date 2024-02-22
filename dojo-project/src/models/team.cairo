@@ -106,13 +106,10 @@ impl TeamImpl of TeamTrait {
     fn new(id: u32, owner: felt252) -> Team {
         let pieces = PiecesTrait::new();
         Team {id, owner, location:owner, piece_count:0, pieces}
-<<<<<<< HEAD
     }
 
     fn available(self: Team) -> bool {
         self.location == self.owner
-=======
->>>>>>> main
     }
 
     fn add_piece(ref self: Team, piece_id: u32) {
