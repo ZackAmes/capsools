@@ -1,7 +1,7 @@
-import {FC} from 'react';
+import { FC } from 'react';
 import { blo } from 'blo';
 import { useLoader } from '@react-three/fiber';
-import {TextureLoader} from 'three';
+import { TextureLoader } from 'three';
 import { Text } from '@react-three/drei';
 
 interface AccRenderProps {

@@ -2,7 +2,6 @@
 
 import { Account } from "starknet";
 import { DojoProvider } from "@dojoengine/core";
-import { Direction } from "../../utils";
 
 export type IWorld = Awaited<ReturnType<typeof setupWorld>>;
 
@@ -23,7 +22,7 @@ export async function setupWorld(provider: DojoProvider) {
                 throw error;
             }
         };
-        
+
         return { spawn };
     }
     return {
