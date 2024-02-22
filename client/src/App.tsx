@@ -14,6 +14,11 @@ import Burners from "./components/Burners";
 import AccRender from "./components/AccRender";
 import Button from "./components/Button";
 
+import get_ids from "./utils/get_ids";
+import TeamBuilder from "./scenes/TeamBuilder";
+import GameManager from "./scenes/GameManager";
+import Challenge from "./components/Challenge";
+
 function App() {
     const {
         setup: {
@@ -50,6 +55,8 @@ function App() {
             </Canvas>
         </>
     );
+   // <TeamBuilder position = {[2,.25,0]} setup={setup} account={account} piece_ids={piece_ids} team_ids={team_ids}/>
+
 }
 
 export default App;

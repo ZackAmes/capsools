@@ -19,6 +19,7 @@ interface BoardProps {
     game_id:Entity
     signer: Account
     take_turn: any
+    take_turn: any
     components: any
     
 
@@ -97,12 +98,19 @@ const Board: FC<BoardProps> = ({position, game_id, components, signer, take_turn
     console.log(piece_ids)
     let pieces = piece_ids.map( (piece_id) => {
         let piece = getComponentValue(components.Piece, getEntityIdFromKeys([BigInt(piece_id)]) as Entity);
+        let piece = getComponentValue(components.Piece, getEntityIdFromKeys([BigInt(piece_id)]) as Entity);
         if(piece){
+            let piece_position: [number, number, number] = [piece.data.position.x, 2.1, piece.data.position.y];
+            piece_positions.push({x:piece.data.position.x, y:piece.data.position.y, type: piece.data.piece_type, id: piece.id})
+            return (<Piece key={piece.id} position={piece_position} type={piece.data.piece_type}/>)
             let piece_position: [number, number, number] = [piece.data.position.x, 2.1, piece.data.position.y];
             piece_positions.push({x:piece.data.position.x, y:piece.data.position.y, type: piece.data.piece_type, id: piece.id})
             return (<Piece key={piece.id} position={piece_position} type={piece.data.piece_type}/>)
         }    
     })
+    
+    
+    console.log(piece_positions)
     
     
     console.log(piece_positions)
@@ -133,11 +141,37 @@ const Board: FC<BoardProps> = ({position, game_id, components, signer, take_turn
                 clicked=() => set_cur(x,y,false)
             }
         }
+        let x = (index % 12)+1;
+        let y = (Math.floor(index/12))+1;
+        let clicked = () => set_cur(x,y,false);
+        let position = {x: x, y: y};
+        for(let i=0; i< piece_positions.length; i++) {
+            let piece_position = piece_positions[i];
+            if(x==piece_position.x && y==piece_position.y){
+                if(cur_x == x && cur_y == y && cur_is_piece == true) {
+                    clicked = () => set_cur(0,0,false);
+                }
+                clicked = () => set_cur(x,y,true, piece_position.type);
+            }
+        }
+        let color = x%2==y%2 ? "black" : "white"
+        if(cur_x == x && cur_y == y && cur_is_piece == true) {
+            color = "blue"
+        }
+        for(let i=0; i<cur_moves.length; i++) {
+            if(cur_x + cur_moves[i][0] == x && cur_y + cur_moves[i][1] == y) {
+                color = "green"
+                clicked=() => set_cur(x,y,false)
+            }
+        }
         let tempPosition: [number, number, number] = [x, 0, y];
         return (<Square key={index} ref={ref} 
                         position={tempPosition} color= {color} 
                         onClick={clicked}/>);
+                        onClick={clicked}/>);
     })
+
+    
 
     
 

@@ -28,8 +28,12 @@ mod genshin {
             assert(!(player.name == ''), 'new player must init');
             let count = player.counts.piece_count;
 
+<<<<<<< HEAD
             let type_index = count % set.piece_type_count;
 
+=======
+            let type_index = count % 4;
+>>>>>>> main
             let type_id = get!(world, (0,4,type_index), (Manager)).id.try_into().unwrap();
             let stats = get!(world, type_id, (PieceType)).piece_stats;
 

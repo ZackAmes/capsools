@@ -51,7 +51,11 @@ const Team: FC<TeamProps> = ({position, components, piece_ids, piece_positions,s
         
         return (
             <RigidBody key={index}>
+<<<<<<< HEAD
                 <Box  position = {[x,.5,y]} onClick = {clicked}>
+=======
+                <Box  position = {[x,.5,y]} onClick = {set_square([x,y])}>
+>>>>>>> main
                     <meshBasicMaterial color = {color}/>
                 </Box>
             </RigidBody>

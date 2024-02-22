@@ -25,7 +25,11 @@ interface TeamsProps {
 const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account, counts, position}) => {
 
     const signer = account.account;
+<<<<<<< HEAD
     const {add_piece_to_team, create_team, mint_piece, create_starter_team, remove_piece_from_team} = systemCalls;
+=======
+    const {add_piece_to_team, create_team, mint_piece} = systemCalls;
+>>>>>>> main
 
     const [cur_team, set_team] = useState(0);
     const [cur_piece, set_piece] = useState(0);
@@ -37,6 +41,10 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
 
     let team = useComponentValue(components.Team , team_ids[cur_team]);
 
+<<<<<<< HEAD
+=======
+    let team = getComponentValue(components.Team , team_ids[cur_team]);
+>>>>>>> main
     let team_piece_ids: Entity[] = [];
 
     let available_ids = [];
@@ -52,6 +60,7 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
     }
     if(team) {
 
+<<<<<<< HEAD
         piece_keys = Object.values(team.pieces) 
         
 
@@ -88,10 +97,36 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
 
 
     console.log(piece_positions)
+=======
+        let ids_array: number[] = Object.values(team.pieces)
+
+        for(let i=0; i<pieces_count; i++) {
+            let id = getEntityIdFromKeys([BigInt(ids_array[i])]) as Entity;
+            team_piece_ids.push(id);
+        }
+
+    }
+    
+    let pieces_position = update_position(position, [0,0,3])
+    let add_position = update_position(position, [1,5,0])
+    let create_position = update_position(position, [1,4,0])
+    let mint_position = update_position(position, [1,5,0])
+
+    let selector_position = update_position(position, [1,6,0]);
+
+
+    const add_piece = (x: number, y:number) => {
+        if(team){
+            add_piece_to_team(signer, cur_piece, team.id, x, y);
+        }
+    }
+    let total_teams = team_ids.length;
+>>>>>>> main
 
     return (
         <>
             <group position={position}>
+<<<<<<< HEAD
                 <Selector position={[1,6,0]} total={total_teams} label ="team" cur={cur_team} next={()=>set_team(cur_team+1)} prev={()=> set_team(cur_team-1)}/>
                 <Button position = {[1,7,0]} label={"create empty team"} onClick={() => create_team(signer)}/>
                 <Button position = {[1,4,0]} label={"create starter team"} onClick={() => create_starter_team(signer)}/>
@@ -102,6 +137,17 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {components, systemCalls}, account,
                             onClick = {button_clicked}/>
                 <Team position={[0,0,0]} piece_ids={team_piece_ids} components={components} 
                         piece_positions= {piece_positions} set_piece={set_piece} set_is_team={set_is_team}/>
+=======
+                <Selector position={selector_position} total={total_teams} label ="team" cur={cur_team} next={()=>set_team(cur_team+1)} prev={()=> set_team(cur_team-1)}/>
+               
+                <Button position = {mint_position} label={"mint piece"} onClick={() => mint_piece(signer)}/>
+
+                {/*cur_piece && team && cur_square && 
+                    <Button position = {add_position} label={"add " + cur_piece + " to team " + team.id}
+                            onClick = {() => add_piece(cur_square[0], cur_square[1])}/>
+                */}
+                <Team position={position} piece_ids={team_piece_ids} components={components} set_square={( () => console.log("test"))}/>
+>>>>>>> main
                 <Pieces pieceComponent={components.Piece}
                         piece_ids={available_ids} position = {[0,0,3]}
                         set_piece = {set_piece} set_is_team={set_is_team}/>

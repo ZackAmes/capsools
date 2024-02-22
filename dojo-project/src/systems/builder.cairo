@@ -46,10 +46,15 @@ mod builder {
             let stats = get!(world, type_id, (PieceType)).piece_stats;
         
             let mut offset = 0;
+<<<<<<< HEAD
             let mut x:u8 =4;
             let mut tower = PieceTrait::new(world.uuid(), caller, stats.hp, tower_id);  
             let manager_t = ManagerTrait::piece(caller, count+offset, tower.id);   
             tower.add_to(team.id.into(), Vec2 {x, y:1});
+=======
+            let mut tower = PieceTrait::new(world.uuid(), caller, stats.hp, tower_id);     
+            tower.add_to(team.id.into(), Vec2 {x:4 + offset, y:1});
+>>>>>>> main
             offset+=1;
             x+=1;
 
@@ -125,6 +130,7 @@ mod builder {
             let world = self.world_dispatcher.read();
 
             let mut piece = get!(world, piece_id, (Piece));
+<<<<<<< HEAD
             let caller = get_caller_address().into();
 
             assert(caller == piece.data.owner, 'not piece owner');
@@ -134,6 +140,12 @@ mod builder {
 
             team.add_piece(piece_id);
             let position = Vec2{x: team.piece_count + 3, y:1};
+=======
+            assert(piece.available(), 'piece not available');
+            let mut team = get!(world, team_id, (Team));
+            team.add_piece(piece_id);
+            let position = Vec2{x: team.piece_count + 4, y:1};
+>>>>>>> main
             let team_location:felt252 = team_id.into();
 
             piece.add_to(team_location, position);
@@ -148,7 +160,10 @@ mod builder {
             let mut team = get!(world, team_id, (Team));
 
             assert(team.owner == caller, 'not team owner');
+<<<<<<< HEAD
             assert(team.available(), 'team not available');
+=======
+>>>>>>> main
 
             let mut piece = get!(world, piece_id, (Piece));
             assert(piece.data.owner == caller, 'not piece owner?');
