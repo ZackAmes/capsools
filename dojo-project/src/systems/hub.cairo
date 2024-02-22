@@ -17,7 +17,7 @@ mod hub {
 
     use super::IHub;
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl HubImpl of IHub<ContractState>{
 
         fn spawn(self: @ContractState) {
@@ -63,7 +63,7 @@ mod hub {
 
             let world = self.world_dispatcher.read();
 
-            let world_address = world.executor().into();
+            let world_address = 0;
 
             let caller = get_caller_address().into();
             let mut player = get!(world, caller, (Player));

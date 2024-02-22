@@ -1,13 +1,9 @@
 import { FC, useState } from "react";
 import { getComponentValue, Entity } from "@dojoengine/recs";
 import Board from "../components/Board";
-import Pieces from "./Pieces";
-import Piece from "../components/Piece";
 import Button from "../components/Button";
 
-import { useComponentValue } from "@dojoengine/react";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
-import update_position from "../utils/update_position";
 import Selector from "../components/Selector";
 import AccRender from "../components/AccRender";
 

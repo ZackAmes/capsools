@@ -59,11 +59,11 @@ export function defineContractComponents(world: World) {
 	  Piece: (() => {
 	    return defineComponent(
 	      world,
-	      { id: RecsType.Number, data: { owner: RecsType.BigInt, location: RecsType.BigInt, position: { x: RecsType.Number, y: RecsType.Number }, cur_hp: RecsType.Number, piece_type: RecsType.Number, xp: RecsType.Number } },
+	      { id: RecsType.Number, data: { owner: RecsType.BigInt, location: RecsType.BigInt, position: { x: RecsType.Number, y: RecsType.Number }, cur_hp: RecsType.Number, piece_type: RecsType.Number } },
 	      {
 	        metadata: {
 	          name: "Piece",
-	          types: ["u32","felt252","felt252","u8","u8","u32","u32","u32"],
+	          types: ["u32","felt252","felt252","u8","u8","u32","u32"],
 	          customTypes: ["PieceData","Vec2"],
 	        },
 	      }
@@ -72,11 +72,11 @@ export function defineContractComponents(world: World) {
 	  PieceType: (() => {
 	    return defineComponent(
 	      world,
-	      { id: RecsType.Number, piece_stats: { hp: RecsType.Number, cost: RecsType.Number, dmg: RecsType.Number } },
+	      { id: RecsType.Number, piece_stats: { hp: RecsType.Number, xp: RecsType.Number, cost: RecsType.Number, dmg: RecsType.Number } },
 	      {
 	        metadata: {
 	          name: "PieceType",
-	          types: ["u32","u32","u32","u32"],
+	          types: ["u32","u32","u32","u32","u32"],
 	          customTypes: ["PieceStats"],
 	        },
 	      }
@@ -98,11 +98,11 @@ export function defineContractComponents(world: World) {
 	  Team: (() => {
 	    return defineComponent(
 	      world,
-	      { id: RecsType.Number, owner: RecsType.BigInt, location: RecsType.BigInt, piece_count: RecsType.Number, pieces: { tower: RecsType.Number, piece_one: RecsType.Number, piece_two: RecsType.Number, piece_three: RecsType.Number, piece_four: RecsType.Number, piece_five: RecsType.Number } },
+	      { id: RecsType.Number, owner: RecsType.BigInt, piece_count: RecsType.Number, pieces: { tower: RecsType.Number, piece_one: RecsType.Number, piece_two: RecsType.Number, piece_three: RecsType.Number, piece_four: RecsType.Number, piece_five: RecsType.Number } },
 	      {
 	        metadata: {
 	          name: "Team",
-	          types: ["u32","felt252","felt252","u8","u32","u32","u32","u32","u32","u32"],
+	          types: ["u32","felt252","u8","u32","u32","u32","u32","u32","u32"],
 	          customTypes: ["Pieces"],
 	        },
 	      }

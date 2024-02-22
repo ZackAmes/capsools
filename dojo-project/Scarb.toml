@@ -1,5 +1,5 @@
 [package]
-cairo-version = "2.4.0"
+cairo-version = "2.5.0"
 name = "project"
 version = "0.1.0"
 
@@ -7,7 +7,7 @@ version = "0.1.0"
 sierra-replace-ids = true
 
 [dependencies]
-dojo = { git = "https://github.com/dojoengine/dojo", version = "0.4.2" }
+dojo = { git = "https://github.com/dojoengine/dojo", tag = "v0.6.0-alpha.0" }
 
 [[target.dojo]]
 
@@ -17,5 +17,10 @@ initializer_class_hash = "0xbeef"
 [tool.dojo.env]
 rpc_url = "https://api.cartridge.gg/x/capsools/katana"
 # Default account for katana with seed = 0
-account_address = "0x6e372696f2f64d8e5607a47b979f266986f1e4b101a4294814cdb141b56ba58"
-private_key = "0x1de99fbfeda7d6c54781766601f64584417083788b4619da64046e5ff3c6031"
+<<<<<<< HEAD
+account_address = "0xb3ff441a68610b30fd5e2abbf3a1548eb6ba6f3559f2862bf2dc757e5828ca"
+private_key = "0x2bbf4f9fd0bbb2e60b0316c1fe0b76cf7a4d0198bd493ced9b8df2a3a24d68a"
+=======
+account_address = "0x5006399928dad095cc39818cae15dc022592d47d883701e7814c9db19e96efc"
+private_key = "0x736adbbcdac7cc600f89051db1abbc16b9996b46f6b58a9752a11c1028a8ec8"
+>>>>>>> main

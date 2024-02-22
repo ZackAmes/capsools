@@ -13,7 +13,7 @@ mod gov {
     use project::models::manager::{SetManager};
     use project::models::piece::{PieceStatsTrait, PieceType};
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl GovImpl of IGov<ContractState> {
         fn buff(self: @ContractState, type_id: u32) {
 

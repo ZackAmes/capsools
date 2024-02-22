@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { RigidBody } from "@react-three/rapier";
 import { Cylinder } from "@react-three/drei";
 import { Entity, getComponentValue } from "@dojoengine/recs";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
@@ -8,6 +7,7 @@ import Selector from "../components/Selector";
 import Button from "../components/Button";
 import { Account } from "starknet";
 import { Text } from "@react-three/drei";
+
 interface GovProps {
     position: [number, number, number]
     components: any
@@ -27,6 +27,7 @@ const getColor = (type: number) => {
     }
     return "rgb(" + (type + 17) * 243 % 255 +",50,50)"
 }
+
 const Gov: FC<GovProps> = ({points, total, signer, systemCalls, components, position, onClick = () => console.log()}) => {
 
     let {buff, nerf, add_piece} = systemCalls;

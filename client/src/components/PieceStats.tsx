@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { RigidBody } from "@react-three/rapier";
 import { Cylinder } from "@react-three/drei";
 import { Text } from "@react-three/drei";
 import { Entity, getComponentValue } from "@dojoengine/recs";

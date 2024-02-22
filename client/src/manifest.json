@@ -949,7 +949,7 @@
     {
       "name": "project::systems::arena::arena",
       "address": "0x53f0f25d421eb4dd76933fb6b1e3a4d0b2f4c99f229989709455db14d9551f1",
-      "class_hash": "0x5c167df75da0a299d070cc9d213cd699235686fc7ec5173424d4af34a4f5210",
+      "class_hash": "0x7f2cb918c67196d44190dd51886370a1d84eab427624b99dac2aa8018f45289",
       "abi": [
         {
           "type": "impl",
@@ -1124,7 +1124,7 @@
     {
       "name": "project::systems::builder::builder",
       "address": "0x476b1f34c79a06f97f8890332333188d3c69a0476e80e26f0d1569a0d81b688",
-      "class_hash": "0x79bb5de0aed39864ddb50b0d32d856f195d08d34139305f50db537f495e9e81",
+      "class_hash": "0x28c3dd34db1049f3b97734d6fa11a68b3333c219b3fbc5be49f5b5b3f13afc5",
       "abi": [
         {
           "type": "impl",
@@ -1194,22 +1194,6 @@
               "type": "function",
               "name": "starter_team",
               "inputs": [],
-              "outputs": [],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "add_piece_to_team",
-              "inputs": [
-                {
-                  "name": "piece_id",
-                  "type": "core::integer::u32"
-                },
-                {
-                  "name": "team_id",
-                  "type": "core::integer::u32"
-                }
-              ],
               "outputs": [],
               "state_mutability": "view"
             }
@@ -1293,7 +1277,7 @@
     {
       "name": "project::systems::genshin::genshin",
       "address": "0x7cbcc8c93a34541d60991e7cf9ddc9acb397e8b3a1905d9dae79bb66ee4d9a7",
-      "class_hash": "0x7fa6678eb0a6c897b53ef6228c8011a72b59bdaf35d0bd4194ce0b04e654e94",
+      "class_hash": "0x1b8bc03b01fd9125904b20931c31156fd2c607a2d1b524b0ac88c761efb0c7e",
       "abi": [
         {
           "type": "impl",
@@ -1421,163 +1405,9 @@
       "computed": []
     },
     {
-      "name": "project::systems::gov::gov",
-      "address": "0x3554e74af8492a999726b978c0f92ebc85be15491cc11441e5a34fd579a7312",
-      "class_hash": "0x6571214e39e5c6ec5bf307cc8e3b2953055c2584429f51e120990aeee11c5fe",
-      "abi": [
-        {
-          "type": "impl",
-          "name": "WorldProviderImpl",
-          "interface_name": "dojo::world::IWorldProvider"
-        },
-        {
-          "type": "struct",
-          "name": "dojo::world::IWorldDispatcher",
-          "members": [
-            {
-              "name": "contract_address",
-              "type": "core::starknet::contract_address::ContractAddress"
-            }
-          ]
-        },
-        {
-          "type": "interface",
-          "name": "dojo::world::IWorldProvider",
-          "items": [
-            {
-              "type": "function",
-              "name": "world",
-              "inputs": [],
-              "outputs": [
-                {
-                  "type": "dojo::world::IWorldDispatcher"
-                }
-              ],
-              "state_mutability": "view"
-            }
-          ]
-        },
-        {
-          "type": "impl",
-          "name": "GovImpl",
-          "interface_name": "project::systems::gov::IGov"
-        },
-        {
-          "type": "interface",
-          "name": "project::systems::gov::IGov",
-          "items": [
-            {
-              "type": "function",
-              "name": "buff",
-              "inputs": [
-                {
-                  "name": "type_id",
-                  "type": "core::integer::u32"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "nerf",
-              "inputs": [
-                {
-                  "name": "type_id",
-                  "type": "core::integer::u32"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "view"
-            },
-            {
-              "type": "function",
-              "name": "add_piece",
-              "inputs": [],
-              "outputs": [],
-              "state_mutability": "view"
-            }
-          ]
-        },
-        {
-          "type": "impl",
-          "name": "UpgradableImpl",
-          "interface_name": "dojo::components::upgradeable::IUpgradeable"
-        },
-        {
-          "type": "interface",
-          "name": "dojo::components::upgradeable::IUpgradeable",
-          "items": [
-            {
-              "type": "function",
-              "name": "upgrade",
-              "inputs": [
-                {
-                  "name": "new_class_hash",
-                  "type": "core::starknet::class_hash::ClassHash"
-                }
-              ],
-              "outputs": [],
-              "state_mutability": "external"
-            }
-          ]
-        },
-        {
-          "type": "function",
-          "name": "dojo_resource",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::felt252"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "event",
-          "name": "dojo::components::upgradeable::upgradeable::Upgraded",
-          "kind": "struct",
-          "members": [
-            {
-              "name": "class_hash",
-              "type": "core::starknet::class_hash::ClassHash",
-              "kind": "data"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "dojo::components::upgradeable::upgradeable::Event",
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "Upgraded",
-              "type": "dojo::components::upgradeable::upgradeable::Upgraded",
-              "kind": "nested"
-            }
-          ]
-        },
-        {
-          "type": "event",
-          "name": "project::systems::gov::gov::Event",
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "UpgradeableEvent",
-              "type": "dojo::components::upgradeable::upgradeable::Event",
-              "kind": "nested"
-            }
-          ]
-        }
-      ],
-      "reads": [],
-      "writes": [],
-      "computed": []
-    },
-    {
       "name": "project::systems::hub::hub",
       "address": "0x4ae6f3eaf4a5e60ce95ebd512465dd6b6c414aee4b8bb88e88ac55a0bf2931",
-      "class_hash": "0x24b4122cb2e1747cec73656302a45ea61ed189016eaedcace6873e41ef18f42",
+      "class_hash": "0x32f5990651940a80bd4870ff81239b4ebe777ffb5891343e2d3e84a1ffd4001",
       "abi": [
         {
           "type": "impl",
@@ -2455,7 +2285,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x242ffd6b039b167ea605f694e501e73561c3c88764cb0a36c9383bc5b997edb",
+      "class_hash": "0x40763ca577de27655a81578bb408a14222030b74f8fb89ccf5fc5d5c6259286",
       "abi": [
         {
           "type": "function",
@@ -2632,7 +2462,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x5467918194d3f77c1ac3d66934a9716778776916775f6b9aa86eb285f590ef2",
+      "class_hash": "0x62f0fc6768ce98e88f79bb9343cc8c22869458ad16c4f1ea9513e07195245a7",
       "abi": [
         {
           "type": "function",
@@ -2996,11 +2826,6 @@
           "key": false
         },
         {
-          "name": "location",
-          "type": "felt252",
-          "key": false
-        },
-        {
           "name": "piece_count",
           "type": "u8",
           "key": false
@@ -3011,7 +2836,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x6f4e7bdccc3ddbf7050eb66d0a578ffc53ffe7124178dd4553c10a6f210b391",
+      "class_hash": "0x484568ba7090b014b96a85655ca49c0402336e7e2c3c37aeef348f151e315bb",
       "abi": [
         {
           "type": "function",

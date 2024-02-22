@@ -91,12 +91,13 @@ impl PiecesImpl of PiecesTrait {
 
 trait TeamTrait {
     fn new(id: u32, owner: felt252) -> Team;
+    fn available(self: Team) -> bool;
 
     fn add_piece(ref self: Team, piece_id: u32);
     fn remove_piece(ref self: Team, id: u32);
 
-    fn can_add(ref self: Team) -> bool;
-    fn contains(ref self: Team, piece_id: u32) -> bool;
+    fn can_add(self: Team) -> bool;
+    fn contains(self: Team, piece_id: u32) -> bool;
 
 }
 
@@ -105,6 +106,13 @@ impl TeamImpl of TeamTrait {
     fn new(id: u32, owner: felt252) -> Team {
         let pieces = PiecesTrait::new();
         Team {id, owner, location:owner, piece_count:0, pieces}
+<<<<<<< HEAD
+    }
+
+    fn available(self: Team) -> bool {
+        self.location == self.owner
+=======
+>>>>>>> main
     }
 
     fn add_piece(ref self: Team, piece_id: u32) {
@@ -140,11 +148,11 @@ impl TeamImpl of TeamTrait {
 
     }
 
-    fn can_add(ref self: Team) -> bool {
-        self.piece_count < 5
+    fn can_add(self: Team) -> bool {
+        self.piece_count < 6
     }
 
-    fn contains(ref self: Team, piece_id: u32) -> bool {
+    fn contains(self: Team, piece_id: u32) -> bool {
         assert(piece_id != 0, 'piece id cannot be 0');
         self.pieces.piece_one == piece_id || self.pieces.piece_two == piece_id
         
