@@ -80,18 +80,6 @@ mod arena {
             let manager = ManagerTrait::game(caller, player.counts.game_count, game.id);
             
             player.counts.game_count+=1;
-
-            set_manager.challenge_count -=1;
-
-            challenge_manager.id = challenge_tomove.id;
-            challenge_tomove.id = 0;
-
-
-            let mut player = get!(world, caller,(Player));
-
-            let manager = ManagerTrait::game(caller, player.counts.game_count, game.id);
-            
-            player.counts.game_count+=1;
             set_manager.challenge_count -=1;
             challenge_manager.id = challenge_tomove.id;
             challenge_tomove.id = 0;
@@ -181,7 +169,6 @@ mod arena {
         fn check_next(self: @ContractState, piece_type: u8, cur: Vec2, next:Vec2) -> bool {
             let mut moves = self.get_moves(piece_type.into());
             let mut valid = false;
-            let position = cur;
             
             let mut i=0;
 
