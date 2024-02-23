@@ -7,11 +7,11 @@ import { getEntityIdFromKeys } from "@dojoengine/utils";
 import Selector from "../components/Selector";
 import AccRender from "../components/AccRender";
 
-import get_ids from "../utils/get_ids";
+import {get_ids} from "../utils/index";
 
 interface ArenaProps {
     setup: {
-        components: any,
+        contractComponents: any,
         systemCalls: any
     }
     account: any
@@ -20,28 +20,29 @@ interface ArenaProps {
     position: [number, number, number]
 }
 
-const Arena: FC<ArenaProps> = ({setup: {components, systemCalls},challenge_count, account, counts, position}) => {
+const Arena: FC<ArenaProps> = ({setup: {contractComponents, systemCalls},challenge_count, account, counts, position}) => {
 
+    let {Manager, Game, Team, Piece} = contractComponents;
     let {accept_challenge, create_challenge, take_turn} = systemCalls;
     let signer = account.account;
 
-    const game_ids = get_ids(components.Manager, signer.address, counts.game_count as number, "game");
-    const team_ids = get_ids(components.Manager, signer.address, counts.team_count as number, "team");
-    const challenge_ids: Entity[] = get_ids(components.Manager, 0, challenge_count, "challenge");
+    const game_ids = get_ids(Manager, signer.address, counts.game_count as number, "game");
+    const team_ids = get_ids(Manager, signer.address, counts.team_count as number, "team");
+    const challenge_ids: Entity[] = get_ids(Manager, 0, challenge_count, "challenge");
 
     let [cur_game, set_game] = useState(0);
     let [cur_team, set_team] = useState(0);
 
-    let team = getComponentValue(components.Team, team_ids[cur_team]);
+    let team = getComponentValue(Team, team_ids[cur_team]);
 
     const potential = challenge_ids.map( (game_id) => {
-        let game = getComponentValue(components.Game, game_id);
+        let game = getComponentValue(Game, game_id);
         let is_challenger = game_ids.includes(game_id);
         let index=0;
         if(!is_challenger){
             let team_key = game? game.data.team_one : 0
             let challenger_id = getEntityIdFromKeys([BigInt(team_key)]);
-            let challenger_team = getComponentValue(components.Team, challenger_id);
+            let challenger_team = getComponentValue(Team, challenger_id);
             
             let address = challenger_team ? challenger_team.owner.toString(16) : ''
             let temp_game_id = game? game.id : 0;
@@ -73,7 +74,7 @@ const Arena: FC<ArenaProps> = ({setup: {components, systemCalls},challenge_count
         for(let i=0; i<pieces_count; i++) {
             let key = ids_array[i] ? ids_array[i] : 0;
             let id = getEntityIdFromKeys([BigInt(key)]) as Entity;
-            let piece = getComponentValue(components.Piece, id);
+            let piece = getComponentValue(Piece, id);
             if(piece){
                 piece_positions.push({x:piece.data.position.x, y:piece.data.position.y, type: piece.data.piece_type, id: piece.id})
             }
@@ -95,7 +96,7 @@ const Arena: FC<ArenaProps> = ({setup: {components, systemCalls},challenge_count
             {team && <Button scale = {.75} color={"blue"} position={[-5,6,0]} 
                     label={"ACCEPT OPEN CHALLENGE:"} onClick={() => console.log("")}/>}
             
-            <Board position={[0,0,0]} components={components} game_id={game_ids[cur_game]} signer={signer} take_turn={take_turn}/>
+            <Board position={[0,0,0]} components={contractComponents} game_id={game_ids[cur_game]} signer={signer} take_turn={take_turn}/>
             
             {potential}
         </group>

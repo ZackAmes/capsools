@@ -1,7 +1,6 @@
 import { usePrismaticJoint, RapierRigidBody } from "@react-three/rapier";
 import { useRef} from "react";
 import Square from "../components/Square";
-import { Attractor } from "@react-three/rapier-addons";
 
 
 const SlidingBoard = () => {

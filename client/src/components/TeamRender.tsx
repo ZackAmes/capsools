@@ -6,7 +6,7 @@ import { getComponentValue } from '@dojoengine/recs';
 
 import Piece from './Piece';
 
-interface TeamProps {
+interface TeamRenderProps {
     position: [number,number,number]
     piece_ids: any[]
     components: any
@@ -15,7 +15,7 @@ interface TeamProps {
     piece_positions: any[]
 }
 
-const Team: FC<TeamProps> = ({position, components, piece_ids, piece_positions,set_is_team,  set_piece}) => {
+const TeamRender: FC<TeamRenderProps> = ({position, components, piece_ids, piece_positions,set_is_team,  set_piece}) => {
 
     let clicked = () => {
 
@@ -51,11 +51,7 @@ const Team: FC<TeamProps> = ({position, components, piece_ids, piece_positions,s
         
         return (
             <RigidBody key={index}>
-<<<<<<< HEAD
                 <Box  position = {[x,.5,y]} onClick = {clicked}>
-=======
-                <Box  position = {[x,.5,y]} onClick = {set_square([x,y])}>
->>>>>>> main
                     <meshBasicMaterial color = {color}/>
                 </Box>
             </RigidBody>
@@ -71,4 +67,4 @@ const Team: FC<TeamProps> = ({position, components, piece_ids, piece_positions,s
     )
 }
 
-export default Team;
+export default TeamRender;
