@@ -195,10 +195,39 @@ mod arena {
             let to_check = Vec2 {x: cur.x + move.x, y: cur.y + move.y};
             let (check_x, check_y) = to_check.vals();
             let (next_x, next_y) = next.vals();
+
+            println!("checking vec {check_x} , {check_y} = {next_x}, {next_y}");
+            valid = check_x == next_x && check_y == next_y; 
+        
+            if(valid) { return valid; };
+
+            let to_check = Vec2 {x: cur.x - move.x, y: cur.y + move.y};
+            let (check_x, check_y) = to_check.vals();
+            let (next_x, next_y) = next.vals();
+
+            println!("checking vec {check_x} , {check_y} = {next_x}, {next_y}");
+            valid = check_x == next_x && check_y == next_y; 
+        
+            if(valid) { return valid; };
+
+            let to_check = Vec2 {x: cur.x + move.x, y: cur.y - move.y};
+            let (check_x, check_y) = to_check.vals();
+            let (next_x, next_y) = next.vals();
+
+            println!("checking vec {check_x} , {check_y} = {next_x}, {next_y}");
+            valid = check_x == next_x && check_y == next_y; 
+        
+            if(valid) { return valid; };
+
+            let to_check = Vec2 {x: cur.x - move.x, y: cur.y - move.y};
+            let (check_x, check_y) = to_check.vals();
+            let (next_x, next_y) = next.vals();
+
             println!("checking vec {check_x} , {check_y} = {next_x}, {next_y}");
             valid = check_x == next_x && check_y == next_y; 
         
             valid
+
         }
 
         fn get_moves(self: @ContractState, piece_type: u32) -> Array<Vec2> {
@@ -341,13 +370,16 @@ mod tests {
         
         starknet::testing::set_contract_address(p1);
         let one_tower = get!(world, team_one.pieces.tower, Piece);
-        let new = Vec2 {x: one_tower.data.position.x, y: one_tower.data.position.y + 1};
+        let new = Vec2 {x: one_tower.data.position.x - 1 , y: one_tower.data.position.y};
         let old_x = one_tower.data.position.x;
         let old_y = one_tower.data.position.y;
         let new_x = new.x;
         let new_y = new.y;
         println!("moving from {old_x},{old_y} to {new_x},{new_y}");
         arena.take_turn(game_id, one_tower.id, new.x, new.y);
+        let one_tower = get!(world, team_one.pieces.tower, Piece);
+        assert(one_tower.data.position.x == 3, 'piece should have moved');
+
 
     }
 }
