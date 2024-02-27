@@ -179,7 +179,7 @@ mod arena {
                 let (move_x, move_y) = move.vals();
                 println!("checking move {move_x} , {move_y}");
 
-                let valid = self.check_move_valid(cur, move, next);
+                valid = self.check_move_valid(cur, move, next);
                 if(valid) {break;};
 
                 i+=1;
@@ -195,7 +195,7 @@ mod arena {
             let to_check = Vec2 {x: cur.x + move.x, y: cur.y + move.y};
             let (check_x, check_y) = to_check.vals();
             let (next_x, next_y) = next.vals();
-            println!("checking vec {check_x} , {check_y}");
+            println!("checking vec {check_x} , {check_y} = {next_x}, {next_y}");
             valid = check_x == next_x && check_y == next_y; 
         
             valid
