@@ -57,19 +57,19 @@ mod tests {
 
         // deploy systems contract
         let builder_address = world
-            .deploy_contract('salt', builder::TEST_CLASS_HASH.try_into().unwrap());
+            .deploy_contract('salt1', builder::TEST_CLASS_HASH.try_into().unwrap());
         
         let hub_address = world
-            .deploy_contract('salt', hub::TEST_CLASS_HASH.try_into().unwrap());
+            .deploy_contract('salt2', hub::TEST_CLASS_HASH.try_into().unwrap());
 
         let genshin_address = world
-            .deploy_contract('salt', genshin::TEST_CLASS_HASH.try_into().unwrap());
+            .deploy_contract('salt3', genshin::TEST_CLASS_HASH.try_into().unwrap());
 
         let arena_address = world
-            .deploy_contract('salt', arena::TEST_CLASS_HASH.try_into().unwrap());
+            .deploy_contract('salt4', arena::TEST_CLASS_HASH.try_into().unwrap());
 
         let gov_address = world
-            .deploy_contract('salt', gov::TEST_CLASS_HASH.try_into().unwrap());
+            .deploy_contract('salt5', gov::TEST_CLASS_HASH.try_into().unwrap());
 
         let builder = IBuilderDispatcher { contract_address: builder_address };
         let hub = IHubDispatcher {contract_address: hub_address};

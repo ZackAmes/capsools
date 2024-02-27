@@ -13,6 +13,14 @@ struct Vec2 {
     y: u8
 }
 
+#[generate_trait]
+impl Vec2Impl of Vec2Trait {
+    
+    fn vals(self: Vec2) -> (u8, u8) {
+        (self.x, self.y)
+    }
+
+}
 
 #[derive(Copy, Drop, Serde, Introspect)]
 struct GameData {

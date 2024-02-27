@@ -8,7 +8,7 @@ trait IArena<TContractState> {
 #[dojo::contract]
 mod arena {
     use project::models::team::{Team,TeamTrait, Pieces};
-    use project::models::game::{Game, GameTrait, Vec2};
+    use project::models::game::{Game, GameTrait, Vec2, Vec2Trait};
     use project::models::piece::{Piece, PieceImpl, PieceTrait};
     use project::models::player::{Player};
     use project::models::manager::{Manager, ManagerTrait, SetManager};
@@ -176,7 +176,9 @@ mod arena {
                 if(i == moves.len()) {break;};
 
                 let move: Vec2 = moves.pop_front().unwrap();
-                
+                let (move_x, move_y) = move.vals();
+                println!("checking move {move_x} , {move_y}");
+
                 let valid = self.check_move_valid(cur, move, next);
                 if(valid) {break;};
 
@@ -191,7 +193,10 @@ mod arena {
             let mut valid = false;
 
             let to_check = Vec2 {x: cur.x + move.x, y: cur.y + move.y};
-            valid = to_check == next;
+            let (check_x, check_y) = to_check.vals();
+            let (next_x, next_y) = next.vals();
+            println!("checking vec {check_x} , {check_y}");
+            valid = check_x == next_x && check_y == next_y; 
         
             valid
         }
@@ -281,7 +286,7 @@ mod tests {
         let p2 = starknet::contract_address_const::<0x2>();
 
         // models
-        let (world, hub, builder, genshin, gov, arena) = spawn_set_and_players(p1, p2);
+        let (world, _hub, _builder, _genshin, _gov, arena) = spawn_set_and_players(p1, p2);
 
         starknet::testing::set_contract_address(p1);
         let team_id = get!(world, (p1, 3, 0), Manager).id;
@@ -324,7 +329,7 @@ mod tests {
         let p2 = starknet::contract_address_const::<0x2>();
 
         // models
-        let (world, hub, builder, genshin, gov, arena) = spawn_set_and_players(p1, p2);
+        let (world, _hub, _builder, _genshin, _gov, arena) = spawn_set_and_players(p1, p2);
         let game_id = setup_game(world, arena, p1, p2);
 
         let game = get!(world, game_id, Game);
