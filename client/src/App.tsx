@@ -61,10 +61,8 @@ function App() {
                         {!player && <Button background={"black"} scale={10} position={[0,5,0]} label="new" onClick={() => new_player(account.account)}/>}
                         
                         <Arena setup={setup} account={account} position = {[-7,1,0]} counts={counts} challenge_count={challenge_count}/>
-                        <TeamBuilder position = {[2,.25,0]} setup={setup} account={account} counts={counts}/>
 
-                        <SlidingBoard/>
-                        {counts.team_count>0 && <TeamBuilder position = {[4,.25,-5]} setup={setup} account={account} counts={counts}/>}
+                        <TeamBuilder position = {[4,.25,-5]} setup={setup} account={account} counts={counts}/>
                     </Physics>
                 </Suspense>
             </Canvas>

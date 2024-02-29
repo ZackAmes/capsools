@@ -26,7 +26,7 @@ echo "--------------------------------------------------------------------------
 COMPONENTS=("Player" "Manager" "PlayerCount")
 
 for component in ${COMPONENTS[@]}; do
-    sozo auth writer $component $HUB_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth writer $component,$HUB_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
 echo "Hub authorizations have been successfully set."
@@ -36,7 +36,7 @@ echo "--------------------------------------------------------------------------
 GENSHIN_COMPONENTS=("Player" "Manager" "Piece")
 
 for component in ${GENSHIN_COMPONENTS[@]}; do
-    sozo auth writer $component $GENSHIN_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth writer $component,$GENSHIN_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
 echo "Genshin authorizations have been successfully set."
@@ -45,7 +45,7 @@ echo "--------------------------------------------------------------------------
 BUILDER_COMPONENTS=("Player" "Manager" "Team" "Piece" "Game")
 
 for component in ${BUILDER_COMPONENTS[@]}; do
-    sozo auth writer $component $BUILDER_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth writer $component,$BUILDER_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
 echo "Builder authorizations have been successfully set."
@@ -55,7 +55,7 @@ echo "--------------------------------------------------------------------------
 ARENA_COMPONENTS=("Player" "Piece" "Manager" "SetManager" "Team" "Game")
 
 for component in ${ARENA_COMPONENTS[@]}; do
-    sozo auth writer $component $ARENA_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth writer $component,$ARENA_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
 echo "Arena authorizations have been successfully set."
@@ -65,7 +65,7 @@ echo "--------------------------------------------------------------------------
 GOV_COMPONENTS=("Player" "SetManager" "PieceType")
 
 for component in ${GOV_COMPONENTS[@]}; do
-    sozo auth writer $component $GOV_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth writer $component,$GOV_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
 echo "Gov authorizations have been successfully set."

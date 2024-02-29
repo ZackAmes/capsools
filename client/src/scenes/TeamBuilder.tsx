@@ -24,7 +24,7 @@ interface TeamsProps {
 const TeamBuilder: FC<TeamsProps> = ({setup: {contractComponents, systemCalls}, account, counts, position}) => {
 
     const signer = account.account;
-    const {add_piece_to_team, create_team, mint_piece, create_starter_team, remove_piece_from_team} = systemCalls;
+    const {add_piece_to_team, create_team, mint_piece, starter_team, remove_piece_from_team} = systemCalls;
 
     const [cur_team, set_team] = useState(0);
     const [cur_piece, set_piece] = useState(0);
@@ -93,7 +93,7 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {contractComponents, systemCalls}, 
             <group position={position}>
                 <Selector position={[1,6,0]} total={total_teams} label ="team" cur={cur_team} next={()=>set_team(cur_team+1)} prev={()=> set_team(cur_team-1)}/>
                 <Button position = {[1,7,0]} label={"create empty team"} onClick={() => create_team(signer)}/>
-                <Button position = {[1,4,0]} label={"create starter team"} onClick={() => create_starter_team(signer)}/>
+                <Button position = {[1,4,0]} label={"create starter team"} onClick={() => starter_team(signer)}/>
 
                 <Button position = {[-7,5,0]} label={"mint piece"} onClick={() => mint_piece(signer)}/>
 
