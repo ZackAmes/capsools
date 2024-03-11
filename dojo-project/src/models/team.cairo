@@ -92,6 +92,7 @@ impl PiecesImpl of PiecesTrait {
 trait TeamTrait {
     fn new(id: u32, owner: felt252) -> Team;
     fn available(self: Team) -> bool;
+    fn valid(self: Team) -> bool;
 
     fn add_piece(ref self: Team, piece_id: u32);
     fn remove_piece(ref self: Team, id: u32);
@@ -110,6 +111,10 @@ impl TeamImpl of TeamTrait {
 
     fn available(self: Team) -> bool {
         self.location == self.owner
+    }
+
+    fn valid(self: Team) -> bool {
+        self.piece_count > 0
     }
 
     fn add_piece(ref self: Team, piece_id: u32) {

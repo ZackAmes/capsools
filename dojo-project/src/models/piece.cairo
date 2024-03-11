@@ -1,6 +1,15 @@
 use project::models::game::{Vec2};
 use starknet::OptionTrait;
 
+#[derive(Copy, Drop, Serde, Introspect)]
+enum Color {
+    Red,
+    Green,
+    Blue,
+    White,
+    Black
+}
+
 #[derive(Model, Drop, Serde, Copy)]
 struct Piece {
     #[key]
@@ -15,7 +24,7 @@ struct PieceData {
    position: Vec2,
    cur_hp: u32,
    piece_type: u32,
-   xp: u32
+   xp: u32,
 }
 
 #[derive(Model, Drop, Serde)]
@@ -34,18 +43,21 @@ impl PieceTypeImpl of PieceTypeTrait {
 
 #[derive(Copy, Drop, Serde, Introspect)]
 struct PieceStats{
-    hp: u32,
+    base_hp: u32,
     cost: u32,
-    dmg: u32
+    dmg: u32,
+    is_tower: bool,
+    color: Color
+
 //    moves: Span<Vec2>,
 //    attacks: Span<Vec2>
 }
 
 #[generate_trait]
 impl PieceStatsImpl of PieceStatsTrait {
-    fn new(hp: u32, cost: u32, dmg: u32) -> PieceStats{
+    fn new(base_hp: u32, cost: u32, dmg: u32, is_tower: bool, color: Color) -> PieceStats{
         
-        PieceStats {hp, cost, dmg}
+        PieceStats {base_hp, cost, dmg, is_tower, color}
     }
 }
 
@@ -75,7 +87,7 @@ impl PieceImpl of PieceTrait {
     }
 
     fn add_to(ref self: Piece, id: felt252, init_position: Vec2) {
- //       assert(self.available(), 'piece not available');
+        assert(self.available(), 'piece not available');
         
         let mut data = self.data;
         data.location = id;
@@ -85,13 +97,9 @@ impl PieceImpl of PieceTrait {
         
     }
 
-
     fn move(ref self: Piece, next: Vec2) {
 
-
-
     }
-
     
 }
 

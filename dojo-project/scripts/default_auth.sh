@@ -4,7 +4,7 @@ pushd $(dirname "$0")/..
 
 export RPC_URL="http://localhost:5050";
 
-export WORLD_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.world.address')
+export WORLD_ADDRESS=$(cat ./manifests/deployments/KATANA.toml | jq -r '.world.address')
 
 export HUB_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::hub::hub" ).address')
 export GENSHIN_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::genshin::genshin" ).address')
@@ -26,7 +26,7 @@ echo "--------------------------------------------------------------------------
 COMPONENTS=("Player" "Manager" "PlayerCount")
 
 for component in ${COMPONENTS[@]}; do
-    sozo auth writer $component,$HUB_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth grant $component,$HUB_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
 echo "Hub authorizations have been successfully set."
@@ -36,7 +36,7 @@ echo "--------------------------------------------------------------------------
 GENSHIN_COMPONENTS=("Player" "Manager" "Piece")
 
 for component in ${GENSHIN_COMPONENTS[@]}; do
-    sozo auth writer $component,$GENSHIN_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth grant $component,$GENSHIN_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
 done
 
 echo "Genshin authorizations have been successfully set."

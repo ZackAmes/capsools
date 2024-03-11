@@ -25,6 +25,7 @@ mod arena {
             let mut team = get!(world, team_id, (Team));
             let mut player = get!(world, caller,(Player));
             assert(team.owner == caller, 'not team owner');
+            assert(team.valid(), 'team not valid');
             assert(team.available(), 'team not available');
 
             let game = GameTrait::new(world.uuid(), team_id);
@@ -73,6 +74,7 @@ mod arena {
 
             assert(!(team_one.owner == caller), 'cant accept own challenge');
             assert(team_two.owner == caller, 'not team owner');
+            assert(team_two.valid(), 'team not valid');
             assert(team_two.available(), 'team not available');
 
             let mut player = get!(world, caller,(Player));

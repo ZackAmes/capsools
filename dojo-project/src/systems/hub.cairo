@@ -11,7 +11,7 @@ trait IHub <TContractState>{
 mod hub {
     use starknet::{ContractAddress, get_caller_address};
     use project::models::player::{Player, PlayerTrait};
-    use project::models::piece::{Piece, PieceTrait, PieceTypeTrait, PieceStatsTrait};
+    use project::models::piece::{Piece, PieceTrait, PieceTypeTrait, PieceStatsTrait, Color};
     use project::models::manager::{Manager, ManagerTrait, PlayerCount, SetManager};
     use project::models::game::{Vec2};
 
@@ -29,10 +29,10 @@ mod hub {
             let mut ma = ArrayTrait::new();
             ma.append( Vec2{x:1, y:0});
             
-            let type_zero_stats = PieceStatsTrait::new(500, 100, 100);
-            let type_one_stats = PieceStatsTrait::new(600, 125, 75);
-            let type_two_stats = PieceStatsTrait::new(750, 200, 200);
-            let type_three_stats = PieceStatsTrait::new(400, 300, 250);
+            let type_zero_stats = PieceStatsTrait::new(500, 100, 100, true, Color::Black);
+            let type_one_stats = PieceStatsTrait::new(600, 125, 75, false, Color::Blue);
+            let type_two_stats = PieceStatsTrait::new(750, 200, 200, false, Color::Green);
+            let type_three_stats = PieceStatsTrait::new(400, 300, 250, false, Color::Red);
 
             let type_zero = PieceTypeTrait::new(world.uuid(), type_zero_stats);
             let type_one = PieceTypeTrait::new(world.uuid(), type_one_stats);
