@@ -4,7 +4,7 @@ pushd $(dirname "$0")/..
 
 export RPC_URL="http://localhost:5050";
 
-export WORLD_ADDRESS=$(cat ./manifests/deployments/KATANA.toml | jq -r '.world.address')
+export WORLD_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.world.address')
 
 export HUB_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::hub::hub" ).address')
 export GENSHIN_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::genshin::genshin" ).address')
@@ -26,7 +26,7 @@ echo "--------------------------------------------------------------------------
 COMPONENTS=("Player" "Manager" "PlayerCount")
 
 for component in ${COMPONENTS[@]}; do
-    sozo auth grant $component,$HUB_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth grant --world $WORLD_ADDRESS --rpc-url $RPC_URL writer $component,$HUB_ADDRESS 
 done
 
 echo "Hub authorizations have been successfully set."
@@ -36,7 +36,7 @@ echo "--------------------------------------------------------------------------
 GENSHIN_COMPONENTS=("Player" "Manager" "Piece")
 
 for component in ${GENSHIN_COMPONENTS[@]}; do
-    sozo auth grant $component,$GENSHIN_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth grant --world $WORLD_ADDRESS --rpc-url $RPC_URL writer $component,$GENSHIN_ADDRESS 
 done
 
 echo "Genshin authorizations have been successfully set."
@@ -45,7 +45,7 @@ echo "--------------------------------------------------------------------------
 BUILDER_COMPONENTS=("Player" "Manager" "Team" "Piece" "Game")
 
 for component in ${BUILDER_COMPONENTS[@]}; do
-    sozo auth writer $component,$BUILDER_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth grant --world $WORLD_ADDRESS --rpc-url $RPC_URL writer $component,$BUILDER_ADDRESS
 done
 
 echo "Builder authorizations have been successfully set."
@@ -55,7 +55,7 @@ echo "--------------------------------------------------------------------------
 ARENA_COMPONENTS=("Player" "Piece" "Manager" "SetManager" "Team" "Game")
 
 for component in ${ARENA_COMPONENTS[@]}; do
-    sozo auth writer $component,$ARENA_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth grant  --world $WORLD_ADDRESS --rpc-url $RPC_URL writer $component,$ARENA_ADDRESS
 done
 
 echo "Arena authorizations have been successfully set."
@@ -65,7 +65,7 @@ echo "--------------------------------------------------------------------------
 GOV_COMPONENTS=("Player" "SetManager" "PieceType")
 
 for component in ${GOV_COMPONENTS[@]}; do
-    sozo auth writer $component,$GOV_ADDRESS --world $WORLD_ADDRESS --rpc-url $RPC_URL
+    sozo auth grant  --world $WORLD_ADDRESS --rpc-url $RPC_URL writer $component,$GOV_ADDRESS
 done
 
 echo "Gov authorizations have been successfully set."
