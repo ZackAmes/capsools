@@ -1,4 +1,4 @@
-use project::models::piece::{Piece, PieceTrait};
+use project::models::piece::{Piece, PieceTrait, Color};
 use starknet::{ContractAddress};
 
 #[derive(Model, Drop, Serde, Copy)]
@@ -8,7 +8,8 @@ struct Team {
     owner: felt252,
     location: felt252,
     piece_count: u8,
-    pieces: Pieces
+    pieces: Pieces,
+    color: Color
 }
 
 #[derive(Copy, Drop, Serde, Introspect)]
@@ -94,11 +95,11 @@ trait TeamTrait {
     fn available(self: Team) -> bool;
     fn valid(self: Team) -> bool;
 
-    fn add_piece(ref self: Team, piece_id: u32);
+    fn add_piece(ref self: Team, piece: Piece);
     fn remove_piece(ref self: Team, id: u32);
 
-    fn can_add(self: Team) -> bool;
-    fn contains(self: Team, piece_id: u32) -> bool;
+    fn can_add(self: Team, piece: Piece) -> bool;
+    fn contains_id(self: Team, piece_id: u32) -> bool;
 
 }
 
@@ -106,7 +107,7 @@ impl TeamImpl of TeamTrait {
 
     fn new(id: u32, owner: felt252) -> Team {
         let pieces = PiecesTrait::new();
-        Team {id, owner, location:owner, piece_count:0, pieces}
+        Team {id, owner, location:owner, piece_count:0, pieces, color: Color::None}
     }
 
     fn available(self: Team) -> bool {
@@ -117,17 +118,16 @@ impl TeamImpl of TeamTrait {
         self.piece_count > 0
     }
 
-    fn add_piece(ref self: Team, piece_id: u32) {
-        assert(self.can_add(), 'team full');
+    fn add_piece(ref self: Team, piece: Piece) {
+        assert(self.can_add(piece), 'cannot add');
         
-        self.pieces.update_piece_at(self.piece_count, piece_id);
+        self.pieces.update_piece_at(self.piece_count, piece.id);
         self.piece_count+=1;
     }
 
     fn remove_piece(ref self: Team, id: u32) {
 
-
-        assert(self.piece_count > 0, 'team empty');
+        assert(self.piece_count > 0, 'team empty');        
 
         let mut count = self.piece_count;
         let mut temp_id = self.pieces.get_piece_at(count - 1);
@@ -150,11 +150,11 @@ impl TeamImpl of TeamTrait {
 
     }
 
-    fn can_add(self: Team) -> bool {
-        self.piece_count < 6
+    fn can_add(self: Team, piece: Piece) -> bool {
+        self.piece_count < 6 && self.color == piece.data.base_stats.color
     }
 
-    fn contains(self: Team, piece_id: u32) -> bool {
+    fn contains_id(self: Team, piece_id: u32) -> bool {
         assert(piece_id != 0, 'piece id cannot be 0');
         self.pieces.piece_one == piece_id || self.pieces.piece_two == piece_id
         

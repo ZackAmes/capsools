@@ -29,15 +29,15 @@ mod hub {
             let mut ma = ArrayTrait::new();
             ma.append( Vec2{x:1, y:0});
             
-            let type_zero_stats = PieceStatsTrait::new(500, 100, 100, true, Color::Black);
-            let type_one_stats = PieceStatsTrait::new(600, 125, 75, false, Color::Blue);
-            let type_two_stats = PieceStatsTrait::new(750, 200, 200, false, Color::Green);
-            let type_three_stats = PieceStatsTrait::new(400, 300, 250, false, Color::Red);
+            let type_zero_stats = PieceStatsTrait::new(world.uuid(), 500, 100, 100, true, Color::Black);
+            let type_one_stats = PieceStatsTrait::new(world.uuid(),600, 125, 75, false, Color::Blue);
+            let type_two_stats = PieceStatsTrait::new(world.uuid(),750, 200, 200, false, Color::Green);
+            let type_three_stats = PieceStatsTrait::new(world.uuid(),400, 300, 250, false, Color::Red);
 
-            let type_zero = PieceTypeTrait::new(world.uuid(), type_zero_stats);
-            let type_one = PieceTypeTrait::new(world.uuid(), type_one_stats);
-            let type_two = PieceTypeTrait::new(world.uuid(), type_two_stats);
-            let type_three = PieceTypeTrait::new(world.uuid(), type_three_stats);
+            let type_zero = PieceTypeTrait::new(type_zero_stats);
+            let type_one = PieceTypeTrait::new(type_one_stats);
+            let type_two = PieceTypeTrait::new(type_two_stats);
+            let type_three = PieceTypeTrait::new(type_three_stats);
 
 
             let type_z_manager = ManagerTrait::piece_type(set_zero.set_id, set_zero.piece_type_count, type_zero.id);

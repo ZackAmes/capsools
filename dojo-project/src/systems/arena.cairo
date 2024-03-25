@@ -111,7 +111,7 @@ mod arena {
             }
             let mut piece = get!(world, piece_id, (Piece));
 
-            let valid: bool = self.check_next(piece.data.piece_type.try_into().unwrap(), piece.data.position, Vec2{x,y});
+            let valid: bool = self.check_next(piece.data.base_stats.type_id, piece.data.position, Vec2{x,y});
             assert(valid, 'invalid move');
             piece.data.position = Vec2{x,y};
             game.data.ones_turn = !game.data.ones_turn;
@@ -168,7 +168,7 @@ mod arena {
             }
         }
 
-        fn check_next(self: @ContractState, piece_type: u8, cur: Vec2, next:Vec2) -> bool {
+        fn check_next(self: @ContractState, piece_type: u32, cur: Vec2, next:Vec2) -> bool {
             let mut moves = self.get_moves(piece_type.into());
             let mut valid = false;
             

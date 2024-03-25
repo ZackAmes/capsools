@@ -1,13 +1,14 @@
 use project::models::game::{Vec2};
 use starknet::OptionTrait;
 
-#[derive(Copy, Drop, Serde, Introspect)]
+#[derive(Copy, Drop, Serde, Introspect, PartialEq)]
 enum Color {
     Red,
     Green,
     Blue,
     White,
-    Black
+    Black,
+    None
 }
 
 #[derive(Model, Drop, Serde, Copy)]
@@ -23,7 +24,7 @@ struct PieceData {
    location: felt252,
    position: Vec2,
    cur_hp: u32,
-   piece_type: u32,
+   base_stats: PieceStats,
    xp: u32,
 }
 
@@ -36,13 +37,15 @@ struct PieceType {
 
 #[generate_trait]
 impl PieceTypeImpl of PieceTypeTrait {
-    fn new(id: u32, piece_stats: PieceStats) -> PieceType {
-        PieceType {id, piece_stats}
+    fn new(piece_stats: PieceStats) -> PieceType {
+        PieceType {id: piece_stats.type_id, piece_stats}
     }
 }
 
 #[derive(Copy, Drop, Serde, Introspect)]
 struct PieceStats{
+    name: felt252,
+    type_id: u32,
     base_hp: u32,
     cost: u32,
     dmg: u32,
@@ -55,9 +58,9 @@ struct PieceStats{
 
 #[generate_trait]
 impl PieceStatsImpl of PieceStatsTrait {
-    fn new(base_hp: u32, cost: u32, dmg: u32, is_tower: bool, color: Color) -> PieceStats{
+    fn new(type_id:u32, base_hp: u32, cost: u32, dmg: u32, is_tower: bool, color: Color) -> PieceStats{
         
-        PieceStats {base_hp, cost, dmg, is_tower, color}
+        PieceStats {type_id, name: 'placeholder', base_hp, cost, dmg, is_tower, color}
     }
 }
 
@@ -65,7 +68,7 @@ impl PieceStatsImpl of PieceStatsTrait {
 
 trait PieceTrait {
 
-    fn new(id: u32, owner: felt252, cur_hp: u32, piece_type: u32) -> Piece;
+    fn new(id: u32, owner: felt252, cur_hp: u32, base_stats: PieceStats) -> Piece;
 
     fn available(ref self: Piece) -> bool;
 
@@ -77,8 +80,8 @@ trait PieceTrait {
 
 impl PieceImpl of PieceTrait {
 
-    fn new(id: u32, owner: felt252, cur_hp: u32, piece_type: u32) -> Piece {  
-        let data = PieceData {owner, location: owner,xp:0, cur_hp,  position: Vec2 {x:0, y:0}, piece_type}; 
+    fn new(id: u32, owner: felt252, cur_hp: u32, base_stats: PieceStats) -> Piece {  
+        let data = PieceData {owner, location: owner,xp:0, cur_hp,  position: Vec2 {x:0, y:0}, base_stats}; 
         Piece {id, data}
     }
 

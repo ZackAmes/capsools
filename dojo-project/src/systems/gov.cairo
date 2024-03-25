@@ -11,7 +11,7 @@ mod gov {
     use super::IGov;
     use project::models::player::{Player};
     use project::models::manager::{SetManager};
-    use project::models::piece::{PieceStatsTrait, PieceType, Color};
+    use project::models::piece::{PieceStatsTrait, PieceTypeTrait, PieceType, Color};
 
     #[abi(embed_v0)]
     impl GovImpl of IGov<ContractState> {
@@ -66,9 +66,9 @@ mod gov {
             assert(player.points > 1000, 'not enough points');
             player.points -= 1000;
 
-            let piece_stats = PieceStatsTrait::new(1000,1000,1000, false, Color::Red);
+            let piece_stats = PieceStatsTrait::new(set.piece_type_count, 1000,1000,1000, false, Color::Red);
 
-            let new_type = PieceType {id: set.piece_type_count, piece_stats};
+            let new_type = PieceTypeTrait::new(piece_stats);
             set.piece_type_count+=1;
 
             set!(world, (set, new_type, player));

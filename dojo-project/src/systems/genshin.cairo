@@ -30,10 +30,10 @@ mod genshin {
 
             let type_index = count % set.piece_type_count;
 
-            let type_id = get!(world, (0,4,type_index), (Manager)).id.try_into().unwrap();
+            let type_id = get!(world, (0,4,type_index), (Manager)).id;
             let stats = get!(world, type_id, (PieceType)).piece_stats;
 
-            let piece = PieceTrait::new(world.uuid(), caller, stats.base_hp, type_id);
+            let piece = PieceTrait::new(world.uuid(), caller, stats.base_hp, stats);
             let manager = ManagerTrait::piece(caller, count, piece.id);
             player.counts.piece_count +=1;
             player.points += 100;
