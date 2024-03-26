@@ -1,0 +1,7 @@
+kind = "DojoContract"
+class_hash = "0x6e7ffadbadc9f2137d8cbadc8947eb934b454cba14f2a94075a247ab61274bd"
+abi = "abis/base/contracts/genshin.json"
+reads = []
+writes = []
+computed = []
+name = "project::systems::genshin::genshin"

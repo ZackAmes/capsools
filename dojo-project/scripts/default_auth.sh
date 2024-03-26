@@ -4,13 +4,13 @@ pushd $(dirname "$0")/..
 
 export RPC_URL="http://localhost:5050";
 
-export WORLD_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.world.address')
+export WORLD_ADDRESS=$(cat ./manifests/deployments/KATANA.json | jq -r '.world.address')
 
-export HUB_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::hub::hub" ).address')
-export GENSHIN_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::genshin::genshin" ).address')
-export BUILDER_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::builder::builder" ).address')
-export ARENA_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::arena::arena" ).address')
-export GOV_ADDRESS=$(cat ./target/dev/manifest.json | jq -r '.contracts[] | select(.name == "project::systems::gov::gov" ).address')
+export HUB_ADDRESS=$(cat ./manifests/deployments/KATANA.json | jq -r '.contracts[] | select(.name == "project::systems::hub::hub" ).address')
+export GENSHIN_ADDRESS=$(cat ./manifests/deployments/KATANA.json | jq -r '.contracts[] | select(.name == "project::systems::genshin::genshin" ).address')
+export BUILDER_ADDRESS=$(cat ./manifests/deployments/KATANA.json | jq -r '.contracts[] | select(.name == "project::systems::builder::builder" ).address')
+export ARENA_ADDRESS=$(cat ./manifests/deployments/KATANA.json | jq -r '.contracts[] | select(.name == "project::systems::arena::arena" ).address')
+export GOV_ADDRESS=$(cat ./manifests/deployments/KATANA.json | jq -r '.contracts[] | select(.name == "project::systems::gov::gov" ).address')
 
 echo "---------------------------------------------------------------------------"
 echo world : $WORLD_ADDRESS 

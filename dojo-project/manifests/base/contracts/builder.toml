@@ -1,0 +1,7 @@
+kind = "DojoContract"
+class_hash = "0x265ee922d1516dac367c1812ef6f61d1c6d78e9cf1ad630a285b3c3fd129770"
+abi = "abis/base/contracts/builder.json"
+reads = []
+writes = []
+computed = []
+name = "project::systems::builder::builder"

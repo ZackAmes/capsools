@@ -1,0 +1,228 @@
+[world]
+kind = "Contract"
+class_hash = "0x799bc4e9da10bfb3dd88e6f223c9cfbf7745435cd14f5d69675ea448e578cd"
+address = "0x54812eeca05faf2373eedd7f8cf59696f518dc5c3a44bd1ff96d8aa2b6c2cf5"
+transaction_hash = "0x56604857255baa42637cdbb3a3d4d84ff216b02a2fc2ab36528598a197dfdca"
+block_number = 3
+seed = "project"
+name = "dojo::world::world"
+
+[base]
+kind = "Class"
+class_hash = "0x679177a2cb757694ac4f326d01052ff0963eac0bc2a17116a2b87badcdf6f76"
+name = "dojo::base::base"
+
+[[contracts]]
+kind = "DojoContract"
+address = "0x2f36d22bb102fd81fafcda20966a9d6a948c275c6558ddd6608d802ea44d250"
+class_hash = "0x43f31940c65b370f5610dd9ea487bae2346357da8d860d1f0f2ca6c0e32effc"
+abi = "abis/deployments/KATANA/contracts/arena.json"
+reads = []
+writes = []
+computed = []
+name = "project::systems::arena::arena"
+
+[[contracts]]
+kind = "DojoContract"
+address = "0x7e8f6a63e90acda0d59a6776c3cbce4fc8e1b6b56d310f479d60726a1a2435f"
+class_hash = "0x265ee922d1516dac367c1812ef6f61d1c6d78e9cf1ad630a285b3c3fd129770"
+abi = "abis/deployments/KATANA/contracts/builder.json"
+reads = []
+writes = []
+computed = []
+name = "project::systems::builder::builder"
+
+[[contracts]]
+kind = "DojoContract"
+address = "0x64c0f7a5f97877cb09c360f6d83b994b87cc74575d593476e15314c8c45735e"
+class_hash = "0x6e7ffadbadc9f2137d8cbadc8947eb934b454cba14f2a94075a247ab61274bd"
+abi = "abis/deployments/KATANA/contracts/genshin.json"
+reads = []
+writes = []
+computed = []
+name = "project::systems::genshin::genshin"
+
+[[contracts]]
+kind = "DojoContract"
+address = "0x7747208a428f40bded15c2f8ea30a73febe44a931b9302e602715194333df98"
+class_hash = "0x56cd466df468198612417865089c0d02e2564ec633cb84083813a626995487d"
+abi = "abis/deployments/KATANA/contracts/gov.json"
+reads = []
+writes = []
+computed = []
+name = "project::systems::gov::gov"
+
+[[contracts]]
+kind = "DojoContract"
+address = "0x7701f6358a26c9b220e7a4082ec80ef4e8333fc3ed5bfe3b6ea7c818cdacf09"
+class_hash = "0x783fc92aa9aeb9e014e14f1589728d5524bc2389acfec380e4fe194060ced90"
+abi = "abis/deployments/KATANA/contracts/hub.json"
+reads = []
+writes = []
+computed = []
+name = "project::systems::hub::hub"
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x2cee661c5ed9e9bcabfc41c758e8ca2aeb83b04ad9b1e7c067acc51c76e4e89"
+name = "project::models::game::game"
+
+[[models.members]]
+name = "id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "data"
+type = "GameData"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x29bf7e0a2a0c4a509aed9df1bf8fb271fafff16c20a9eb802c1b254069cc547"
+name = "project::models::manager::manager"
+
+[[models.members]]
+name = "owner"
+type = "felt252"
+key = true
+
+[[models.members]]
+name = "label"
+type = "u8"
+key = true
+
+[[models.members]]
+name = "index"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "id"
+type = "felt252"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x464143f7f33434964abc2c52aafa024eaa19af00ddfa80dd241a4e8b991c556"
+name = "project::models::piece::piece"
+
+[[models.members]]
+name = "id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "data"
+type = "PieceData"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x667175337f8ef61e16a7f95b54e4b5a38ed18669027888e34599b174559e52a"
+name = "project::models::piece::piece_type"
+
+[[models.members]]
+name = "id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "piece_stats"
+type = "PieceStats"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x3290de09760c940635a89e859524c68d60691955cc7ddfaed95d229d11b0b76"
+name = "project::models::player::player"
+
+[[models.members]]
+name = "address"
+type = "felt252"
+key = true
+
+[[models.members]]
+name = "name"
+type = "felt252"
+key = false
+
+[[models.members]]
+name = "counts"
+type = "Counts"
+key = false
+
+[[models.members]]
+name = "points"
+type = "u32"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x2ee8a8471ff2407510a65a23079967382c38602646c2e887ec36d4890796a7f"
+name = "project::models::manager::player_count"
+
+[[models.members]]
+name = "world"
+type = "felt252"
+key = true
+
+[[models.members]]
+name = "count"
+type = "u32"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x509da51b503cd9d223ff0aba9c6662091c34faf9c84fc445e7191c617cab351"
+name = "project::models::manager::set_manager"
+
+[[models.members]]
+name = "set_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "piece_type_count"
+type = "u32"
+key = false
+
+[[models.members]]
+name = "challenge_count"
+type = "u32"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x48483d078ac463323d1a310a56b24c4e20cab9eb0f69456abd974c2f45e0d1a"
+name = "project::models::team::team"
+
+[[models.members]]
+name = "id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "owner"
+type = "felt252"
+key = false
+
+[[models.members]]
+name = "location"
+type = "felt252"
+key = false
+
+[[models.members]]
+name = "piece_count"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "pieces"
+type = "Pieces"
+key = false
+
+[[models.members]]
+name = "color"
+type = "Color"
+key = false
