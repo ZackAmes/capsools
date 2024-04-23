@@ -1,0 +1,25 @@
+kind = "DojoModel"
+class_hash = "0x3290de09760c940635a89e859524c68d60691955cc7ddfaed95d229d11b0b76"
+original_class_hash = "0x3290de09760c940635a89e859524c68d60691955cc7ddfaed95d229d11b0b76"
+abi = "manifests/dev/abis/base/models/project_models_player_player.json"
+name = "project::models::player::player"
+
+[[members]]
+name = "address"
+type = "felt252"
+key = true
+
+[[members]]
+name = "name"
+type = "felt252"
+key = false
+
+[[members]]
+name = "counts"
+type = "Counts"
+key = false
+
+[[members]]
+name = "points"
+type = "u32"
+key = false

@@ -1,0 +1,9 @@
+kind = "DojoContract"
+class_hash = "0x43f31940c65b370f5610dd9ea487bae2346357da8d860d1f0f2ca6c0e32effc"
+original_class_hash = "0x43f31940c65b370f5610dd9ea487bae2346357da8d860d1f0f2ca6c0e32effc"
+base_class_hash = "0x0"
+abi = "manifests/dev/abis/base/contracts/project_systems_arena_arena.json"
+reads = []
+writes = []
+computed = []
+name = "project::systems::arena::arena"

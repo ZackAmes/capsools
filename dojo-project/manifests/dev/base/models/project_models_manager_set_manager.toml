@@ -1,0 +1,20 @@
+kind = "DojoModel"
+class_hash = "0x509da51b503cd9d223ff0aba9c6662091c34faf9c84fc445e7191c617cab351"
+original_class_hash = "0x509da51b503cd9d223ff0aba9c6662091c34faf9c84fc445e7191c617cab351"
+abi = "manifests/dev/abis/base/models/project_models_manager_set_manager.json"
+name = "project::models::manager::set_manager"
+
+[[members]]
+name = "set_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "piece_type_count"
+type = "u32"
+key = false
+
+[[members]]
+name = "challenge_count"
+type = "u32"
+key = false

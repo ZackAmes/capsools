@@ -1,0 +1,15 @@
+kind = "DojoModel"
+class_hash = "0x464143f7f33434964abc2c52aafa024eaa19af00ddfa80dd241a4e8b991c556"
+original_class_hash = "0x464143f7f33434964abc2c52aafa024eaa19af00ddfa80dd241a4e8b991c556"
+abi = "manifests/dev/abis/base/models/project_models_piece_piece.json"
+name = "project::models::piece::piece"
+
+[[members]]
+name = "id"
+type = "u32"
+key = true
+
+[[members]]
+name = "data"
+type = "PieceData"
+key = false
