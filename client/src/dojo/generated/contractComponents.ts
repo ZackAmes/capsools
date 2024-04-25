@@ -61,12 +61,12 @@ export function defineContractComponents(world: World) {
     Piece: (() => {
       return defineComponent(
         world,
-        { id: RecsType.Number, data: { owner: RecsType.BigInt, location: RecsType.BigInt, position: { x: RecsType.Number, y: RecsType.Number }, cur_hp: RecsType.Number, piece_type: RecsType.Number, xp: RecsType.Number } },
+        { id: RecsType.Number, data: { owner: RecsType.BigInt, location: RecsType.BigInt, position: { x: RecsType.Number, y: RecsType.Number }, cur_hp: RecsType.Number, base_stats: { name: RecsType.BigInt, type_id: RecsType.Number, base_hp: RecsType.Number, cost: RecsType.Number, dmg: RecsType.Number, is_tower: RecsType.Boolean, color: RecsType.String }, xp: RecsType.Number } },
         {
           metadata: {
             name: "Piece",
-            types: ["u32","felt252","felt252","u8","u8","u32","u32","u32"],
-            customTypes: ["PieceData","Vec2"],
+            types: ["u32","felt252","felt252","u8","u8","u32","felt252","u32","u32","u32","u32","bool","enum","u32"],
+            customTypes: ["PieceData","Vec2","PieceStats","Color"],
           },
         }
       );
@@ -74,12 +74,12 @@ export function defineContractComponents(world: World) {
     PieceType: (() => {
       return defineComponent(
         world,
-        { id: RecsType.Number, piece_stats: { hp: RecsType.Number, cost: RecsType.Number, dmg: RecsType.Number } },
+        { id: RecsType.Number, piece_stats: { name: RecsType.BigInt, type_id: RecsType.Number, base_hp: RecsType.Number, cost: RecsType.Number, dmg: RecsType.Number, is_tower: RecsType.Boolean, color: RecsType.String } },
         {
           metadata: {
             name: "PieceType",
-            types: ["u32","u32","u32","u32"],
-            customTypes: ["PieceStats"],
+            types: ["u32","felt252","u32","u32","u32","u32","bool","enum"],
+            customTypes: ["PieceStats","Color"],
           },
         }
       );
@@ -100,12 +100,12 @@ export function defineContractComponents(world: World) {
     Team: (() => {
       return defineComponent(
         world,
-        { id: RecsType.Number, owner: RecsType.BigInt, location: RecsType.BigInt, piece_count: RecsType.Number, pieces: { tower: RecsType.Number, piece_one: RecsType.Number, piece_two: RecsType.Number, piece_three: RecsType.Number, piece_four: RecsType.Number, piece_five: RecsType.Number } },
+        { id: RecsType.Number, owner: RecsType.BigInt, location: RecsType.BigInt, piece_count: RecsType.Number, pieces: { tower: RecsType.Number, piece_one: RecsType.Number, piece_two: RecsType.Number, piece_three: RecsType.Number, piece_four: RecsType.Number, piece_five: RecsType.Number }, color: RecsType.Number },
         {
           metadata: {
             name: "Team",
-            types: ["u32","felt252","felt252","u8","u32","u32","u32","u32","u32","u32"],
-            customTypes: ["Pieces"],
+            types: ["u32","felt252","felt252","u8","u32","u32","u32","u32","u32","u32","enum"],
+            customTypes: ["Pieces","Color"],
           },
         }
       );

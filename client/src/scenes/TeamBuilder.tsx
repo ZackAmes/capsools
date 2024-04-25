@@ -62,7 +62,7 @@ const TeamBuilder: FC<TeamsProps> = ({setup: {contractComponents, systemCalls}, 
                 let id = getEntityIdFromKeys([BigInt(key)]) as Entity;
                 let piece = getComponentValue(Piece, id);
                 if(piece){
-                    piece_positions.push({x:piece.data.position.x, y:piece.data.position.y, type: piece.data.piece_type, id: piece.id})
+                    piece_positions.push({x:piece.data.position.x, y:piece.data.position.y, type: piece.data.base_stats.type_id, id: piece.id, color: piece.data.base_stats.color})
                     team_piece_ids.push(id);
                 }    
             }

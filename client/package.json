@@ -9,16 +9,16 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "codegen": "graphql-codegen",
-    "create-components": "npx @dojoengine/core ../dojo-project/target/dev/manifest.json src/dojo/generated/contractComponents.ts http://localhost:5050 0x4bdd57e4f4f7b6b7a75c3aef1bfa8985cee9c534ddeb1fd7c4b768eac8b89b6"
+    "create-components": "npx @dojoengine/core ../dojo-project/manifests/dev/manifest.json src/dojo/generated/contractComponents.ts http://localhost:5050 0x54812eeca05faf2373eedd7f8cf59696f518dc5c3a44bd1ff96d8aa2b6c2cf5"
   },
   "dependencies": {
-    "@dojoengine/core": "^0.5.0",
-    "@dojoengine/create-burner": "^0.5.0",
-    "@dojoengine/react": "^0.5.0",
+    "@dojoengine/core": "^0.6.125",
+    "@dojoengine/create-burner": "^0.6.125",
+    "@dojoengine/react": "^0.6.125",
     "@dojoengine/recs": "0.1.35",
-    "@dojoengine/state": "^0.5.0",
-    "@dojoengine/torii-client": "^0.5.0",
-    "@dojoengine/utils": "^0.5.0",
+    "@dojoengine/state": "^0.6.125",
+    "@dojoengine/torii-client": "^0.6.1",
+    "@dojoengine/utils": "^0.6.125",
     "@latticexyz/react": "^2.0.0-next.11",
     "@latticexyz/utils": "^2.0.0-next.11",
     "@react-three/drei": "^9.97.5",
