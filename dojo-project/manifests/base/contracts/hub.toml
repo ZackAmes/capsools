@@ -1,7 +1,0 @@
-kind = "DojoContract"
-class_hash = "0x783fc92aa9aeb9e014e14f1589728d5524bc2389acfec380e4fe194060ced90"
-abi = "abis/base/contracts/hub.json"
-reads = []
-writes = []
-computed = []
-name = "project::systems::hub::hub"

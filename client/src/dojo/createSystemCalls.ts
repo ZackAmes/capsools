@@ -1,6 +1,8 @@
-import { Account } from "starknet";
+import { AccountInterface } from "starknet";
 import { Entity, getComponentValue } from "@dojoengine/recs";
+import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
+import { Direction, updatePositionWithDirection } from "../utils";
 import {
     getEntityIdFromKeys,
     getEvents,
@@ -14,37 +16,35 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>;
 export function createSystemCalls(
     { client }: { client: IWorld },
     contractComponents: ContractComponents,
-    { Player, Manager }: ClientComponents
+    { Position, Moves }: ClientComponents
 ) {
-    const new_player = async (account: Account) => {
+    const spawn = async (account: AccountInterface) => {
+        const entityId = getEntityIdFromKeys([
+            BigInt(account.address),
+        ]) as Entity;
+
+        const positionId = uuid();
+        Position.addOverride(positionId, {
+            entity: entityId,
+            value: { player: BigInt(entityId), vec: { x: 10, y: 10 } },
+        });
+
+        const movesId = uuid();
+        Moves.addOverride(movesId, {
+            entity: entityId,
+            value: {
+                player: BigInt(entityId),
+                remaining: 100,
+                last_direction: 0,
+            },
+        });
 
         try {
-            const { transaction_hash } = await client.hub.new_player({
-                account
-            });
-
-            setComponentsFromEvents(
-                //@ts-ignore
-                contractComponents,
-                getEvents(
-                    await account.waitForTransaction(transaction_hash, {
-                        retryInterval: 100,
-                    })
-                )
-            );
-        } catch (e) {
-            console.log(e);
-        } 
-    };
-    const mint_piece = async (account: Account) => {
-
-        try {
-            const { transaction_hash } = await client.genshin.mint_piece({
+            const { transaction_hash } = await client.actions.spawn({
                 account,
             });
 
             setComponentsFromEvents(
-                //@ts-ignore
                 contractComponents,
                 getEvents(
                     await account.waitForTransaction(transaction_hash, {
@@ -54,17 +54,48 @@ export function createSystemCalls(
             );
         } catch (e) {
             console.log(e);
-        } 
+            Position.removeOverride(positionId);
+            Moves.removeOverride(movesId);
+        } finally {
+            Position.removeOverride(positionId);
+            Moves.removeOverride(movesId);
+        }
     };
-    const create_team = async (account: Account) => {
+
+    const move = async (account: AccountInterface, direction: Direction) => {
+        const entityId = getEntityIdFromKeys([
+            BigInt(account.address),
+        ]) as Entity;
+
+        const positionId = uuid();
+        Position.addOverride(positionId, {
+            entity: entityId,
+            value: {
+                player: BigInt(entityId),
+                vec: updatePositionWithDirection(
+                    direction,
+                    getComponentValue(Position, entityId) as any
+                ).vec,
+            },
+        });
+
+        const movesId = uuid();
+        Moves.addOverride(movesId, {
+            entity: entityId,
+            value: {
+                player: BigInt(entityId),
+                remaining:
+                    (getComponentValue(Moves, entityId)?.remaining || 0) - 1,
+            },
+        });
 
         try {
-            const { transaction_hash } = await client.builder.create_team({
+            const { transaction_hash } = await client.actions.move({
                 account,
+                direction,
             });
 
             setComponentsFromEvents(
-                //@ts-ignore
                 contractComponents,
                 getEvents(
                     await account.waitForTransaction(transaction_hash, {
@@ -74,142 +105,16 @@ export function createSystemCalls(
             );
         } catch (e) {
             console.log(e);
-        } 
+            Position.removeOverride(positionId);
+            Moves.removeOverride(movesId);
+        } finally {
+            Position.removeOverride(positionId);
+            Moves.removeOverride(movesId);
+        }
     };
-    const add_piece_to_team = async (account: Account, piece_id: number, team_id: number) => {
-
-        try {
-            const { transaction_hash } = await client.builder.add_piece_to_team({
-                account, piece_id, team_id
-            });
-
-            setComponentsFromEvents(
-                //@ts-ignore
-                contractComponents,
-                getEvents(
-                    await account.waitForTransaction(transaction_hash, {
-                        retryInterval: 100,
-                    })
-                )
-            );
-        } catch (e) {
-            console.log(e);
-        } 
-    };
-    const remove_piece_from_team = async (account: Account, piece_id: number, team_id: number) => {
-
-        try {
-            const { transaction_hash } = await client.builder.remove_piece_from_team({
-                account, piece_id, team_id
-            });
-
-            setComponentsFromEvents(
-                //@ts-ignore
-                contractComponents,
-                getEvents(
-                    await account.waitForTransaction(transaction_hash, {
-                        retryInterval: 100,
-                    })
-                )
-            );
-        } catch (e) {
-            console.log(e);
-        } 
-    };
-    const starter_team = async (account: Account) => {
-
-        try {
-            const { transaction_hash } = await client.builder.starter_team({
-                account,
-            });
-
-            setComponentsFromEvents(
-                //@ts-ignore
-                contractComponents,
-                getEvents(
-                    await account.waitForTransaction(transaction_hash, {
-                        retryInterval: 100,
-                    })
-                )
-            );
-        } catch (e) {
-            console.log(e);
-        } 
-    };
-    const create_challenge = async (account: Account, team_id: number) => {
-
-        try {
-            const { transaction_hash } = await client.arena.create_challenge({
-                account, team_id
-            });
-
-            setComponentsFromEvents(
-                //@ts-ignore
-                contractComponents,
-                getEvents(
-                    await account.waitForTransaction(transaction_hash, {
-                        retryInterval: 100,
-                    })
-                )
-            );
-        } catch (e) {
-            console.log(e);
-        } 
-    };
-    const accept_challenge = async (account: Account, game_id: number, team_id: number) => {
-
-        try {
-            const { transaction_hash } = await client.arena.accept_challenge({
-                account, game_id, team_id
-            });
-
-            setComponentsFromEvents(
-                //@ts-ignore
-                contractComponents,
-                getEvents(
-                    await account.waitForTransaction(transaction_hash, {
-                        retryInterval: 100,
-                    })
-                )
-            );
-        } catch (e) {
-            console.log(e);
-        } 
-    };
-    const take_turn = async (account: Account, piece_id: number, game_id: number, x: number, y:number) => {
-
-        try {
-            const { transaction_hash } = await client.arena.take_turn({
-                account, piece_id, game_id, x, y
-            });
-
-            setComponentsFromEvents(
-                //@ts-ignore
-                contractComponents,
-                getEvents(
-                    await account.waitForTransaction(transaction_hash, {
-                        retryInterval: 100,
-                    })
-                )
-            );
-        } catch (e) {
-            console.log(e);
-        } 
-    };
-
-
-    
-
 
     return {
-        new_player,
-        mint_piece,
-        add_piece_to_team,
-        remove_piece_from_team,
-        create_team,
-        starter_team,
-        create_challenge,
-        accept_challenge,
-        take_turn
+        spawn,
+        move,
     };
 }

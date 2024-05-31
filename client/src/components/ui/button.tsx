@@ -1,120 +1,57 @@
-import { AllOptionalProperties, Container, DefaultProperties } from '@react-three/uikit'
-import React, { ComponentPropsWithoutRef } from 'react'
-import { colors } from './theme'
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
 
-const buttonVariants = {
-  default: {
-    containerHoverProps: {
-      backgroundOpacity: 0.9,
-    },
-    containerProps: {
-      backgroundColor: colors.primary,
-    },
-    defaultProps: {
-      color: colors.primaryForeground,
-    },
-  },
-  destructive: {
-    containerHoverProps: {
-      backgroundOpacity: 0.9,
-    },
-    containerProps: {
-      backgroundColor: colors.destructive,
-    },
-    defaultProps: {
-      color: colors.destructiveForeground,
-    },
-  },
-  outline: {
-    containerHoverProps: {
-      backgroundColor: colors.accent,
-    },
-    containerProps: {
-      border: 1,
-      borderColor: colors.input,
-      backgroundColor: colors.background,
-    },
-  }, //TODO: hover:text-accent-foreground",
-  secondary: {
-    containerHoverProps: {
-      backgroundOpacity: 0.8,
-    },
-    containerProps: {
-      backgroundColor: colors.secondary,
-    },
-    defaultProps: {
-      color: colors.secondaryForeground,
-    },
-  },
-  ghost: {
-    containerHoverProps: {
-      backgroundColor: colors.accent,
-    },
-    defaultProps: {},
-  }, // TODO: hover:text-accent-foreground",
-  link: {
-    containerProps: {},
-    defaultProps: {
-      color: colors.primary,
-    },
-  }, //TODO: underline-offset-4 hover:underline",
-}
+import { cn } from "@/lib/utils";
 
-const buttonSizes = {
-  default: { height: 40, paddingX: 16, paddingY: 8 },
-  sm: { height: 36, paddingX: 12 },
-  lg: { height: 42, paddingX: 32 },
-  icon: { height: 40, width: 40 },
-} satisfies { [Key in string]: ComponentPropsWithoutRef<typeof Container> }
-
-export function Button({
-  children,
-  variant = 'default',
-  size = 'default',
-  disabled = false,
-  hover,
-  ...props
-}: ComponentPropsWithoutRef<typeof Container> & {
-  variant?: keyof typeof buttonVariants
-  size?: keyof typeof buttonSizes
-  disabled?: boolean
-}) {
-  const { containerProps, defaultProps, containerHoverProps } = buttonVariants[variant] as {
-    [Key in string]: {
-      containerHoverProps?: ComponentPropsWithoutRef<typeof Container>['hover']
-      containerProps?: Omit<ComponentPropsWithoutRef<typeof Container>, 'hover'>
-      defaultProps?: AllOptionalProperties
+const buttonVariants = cva(
+    "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+    {
+        variants: {
+            variant: {
+                default:
+                    "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+                destructive:
+                    "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+                outline:
+                    "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+                secondary:
+                    "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+                ghost: "hover:bg-accent hover:text-accent-foreground",
+                link: "text-primary underline-offset-4 hover:underline",
+            },
+            size: {
+                default: "h-9 px-4 py-2",
+                sm: "h-8 rounded-md px-3 text-xs",
+                lg: "h-10 rounded-md px-8",
+                icon: "h-9 w-9",
+            },
+        },
+        defaultVariants: {
+            variant: "default",
+            size: "default",
+        },
     }
-  }
-  const sizeProps = buttonSizes[size]
+);
 
-  return (
-    <Container
-      borderRadius={6}
-      alignItems="center"
-      justifyContent="center"
-      {...containerProps}
-      {...sizeProps}
-      borderOpacity={disabled ? 0.5 : undefined}
-      backgroundOpacity={disabled ? 0.5 : undefined}
-      cursor={disabled ? undefined : 'pointer'}
-      flexDirection="row"
-      hover={{
-        ...containerHoverProps,
-        ...hover,
-      }}
-      {...props}
-    >
-      <DefaultProperties
-        fontSize={14}
-        lineHeight={1.43}
-        fontWeight="medium"
-        wordBreak="keep-all"
-        {...defaultProps}
-        opacity={disabled ? 0.5 : undefined}
-      >
-        {children}
-      </DefaultProperties>
-    </Container>
-  )
+export interface ButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+        VariantProps<typeof buttonVariants> {
+    asChild?: boolean;
 }
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+    ({ className, variant, size, asChild = false, ...props }, ref) => {
+        const Comp = asChild ? Slot : "button";
+        return (
+            <Comp
+                className={cn(buttonVariants({ variant, size, className }))}
+                ref={ref}
+                {...props}
+            />
+        );
+    }
+);
+Button.displayName = "Button";
+
+export { Button, buttonVariants };

@@ -1,0 +1,20 @@
+kind = "DojoModel"
+class_hash = "0x5bdccadbfd11a84e9dbaf245cf7bfbd3c418f5c8345ba79f40ecbfdc0d98b19"
+original_class_hash = "0x5bdccadbfd11a84e9dbaf245cf7bfbd3c418f5c8345ba79f40ecbfdc0d98b19"
+abi = "manifests/dev/abis/base/models/dojo_starter_models_position_tile.json"
+name = "dojo_starter::models::position::tile"
+
+[[members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "location"
+type = "Vec2"
+key = true
+
+[[members]]
+name = "occupant"
+type = "u32"
+key = false

@@ -1,9 +1,0 @@
-kind = "DojoContract"
-class_hash = "0x56cd466df468198612417865089c0d02e2564ec633cb84083813a626995487d"
-original_class_hash = "0x56cd466df468198612417865089c0d02e2564ec633cb84083813a626995487d"
-base_class_hash = "0x0"
-abi = "manifests/dev/abis/base/contracts/project_systems_gov_gov.json"
-reads = []
-writes = []
-computed = []
-name = "project::systems::gov::gov"

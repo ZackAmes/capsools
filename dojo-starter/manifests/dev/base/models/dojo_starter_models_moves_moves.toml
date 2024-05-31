@@ -1,0 +1,15 @@
+kind = "DojoModel"
+class_hash = "0xd4ac04f91bd207f01288082a551ea07e147cafddbf30dece4a0a69779e1f55"
+original_class_hash = "0xd4ac04f91bd207f01288082a551ea07e147cafddbf30dece4a0a69779e1f55"
+abi = "manifests/dev/abis/base/models/dojo_starter_models_moves_moves.json"
+name = "dojo_starter::models::moves::moves"
+
+[[members]]
+name = "piece_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "valid"
+type = "Array<Vec2>"
+key = false

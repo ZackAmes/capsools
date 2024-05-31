@@ -2,113 +2,44 @@
 
 import { defineComponent, Type as RecsType, World } from "@dojoengine/recs";
 
-export type ContractComponents = Awaited<ReturnType<typeof defineContractComponents>>;
+export type ContractComponents = Awaited<
+    ReturnType<typeof defineContractComponents>
+>;
 
 export function defineContractComponents(world: World) {
-  return {
-    Game: (() => {
-      return defineComponent(
-        world,
-        { id: RecsType.Number, data: { team_one: RecsType.Number, team_two: RecsType.Number, turn_count: RecsType.Number, is_active: RecsType.Boolean, ones_turn: RecsType.Boolean } },
-        {
-          metadata: {
-            name: "Game",
-            types: ["u32","u32","u32","u32","bool","bool"],
-            customTypes: ["GameData"],
-          },
-        }
-      );
-    })(),
-    Manager: (() => {
-      return defineComponent(
-        world,
-        { owner: RecsType.BigInt, label: RecsType.Number, index: RecsType.Number, id: RecsType.BigInt },
-        {
-          metadata: {
-            name: "Manager",
-            types: ["felt252","u8","u32","felt252"],
-            customTypes: [],
-          },
-        }
-      );
-    })(),
-    PlayerCount: (() => {
-      return defineComponent(
-        world,
-        { world: RecsType.BigInt, count: RecsType.Number },
-        {
-          metadata: {
-            name: "PlayerCount",
-            types: ["felt252","u32"],
-            customTypes: [],
-          },
-        }
-      );
-    })(),
-    SetManager: (() => {
-      return defineComponent(
-        world,
-        { set_id: RecsType.Number, piece_type_count: RecsType.Number, challenge_count: RecsType.Number },
-        {
-          metadata: {
-            name: "SetManager",
-            types: ["u32","u32","u32"],
-            customTypes: [],
-          },
-        }
-      );
-    })(),
-    Piece: (() => {
-      return defineComponent(
-        world,
-        { id: RecsType.Number, data: { owner: RecsType.BigInt, location: RecsType.BigInt, position: { x: RecsType.Number, y: RecsType.Number }, cur_hp: RecsType.Number, base_stats: { name: RecsType.BigInt, type_id: RecsType.Number, base_hp: RecsType.Number, cost: RecsType.Number, dmg: RecsType.Number, is_tower: RecsType.Boolean, color: RecsType.String }, xp: RecsType.Number } },
-        {
-          metadata: {
-            name: "Piece",
-            types: ["u32","felt252","felt252","u8","u8","u32","felt252","u32","u32","u32","u32","bool","enum","u32"],
-            customTypes: ["PieceData","Vec2","PieceStats","Color"],
-          },
-        }
-      );
-    })(),
-    PieceType: (() => {
-      return defineComponent(
-        world,
-        { id: RecsType.Number, piece_stats: { name: RecsType.BigInt, type_id: RecsType.Number, base_hp: RecsType.Number, cost: RecsType.Number, dmg: RecsType.Number, is_tower: RecsType.Boolean, color: RecsType.String } },
-        {
-          metadata: {
-            name: "PieceType",
-            types: ["u32","felt252","u32","u32","u32","u32","bool","enum"],
-            customTypes: ["PieceStats","Color"],
-          },
-        }
-      );
-    })(),
-    Player: (() => {
-      return defineComponent(
-        world,
-        { address: RecsType.BigInt, name: RecsType.BigInt, counts: { game_count: RecsType.Number, piece_count: RecsType.Number, team_count: RecsType.Number }, points: RecsType.Number },
-        {
-          metadata: {
-            name: "Player",
-            types: ["felt252","felt252","u32","u32","u32","u32"],
-            customTypes: ["Counts"],
-          },
-        }
-      );
-    })(),
-    Team: (() => {
-      return defineComponent(
-        world,
-        { id: RecsType.Number, owner: RecsType.BigInt, location: RecsType.BigInt, piece_count: RecsType.Number, pieces: { tower: RecsType.Number, piece_one: RecsType.Number, piece_two: RecsType.Number, piece_three: RecsType.Number, piece_four: RecsType.Number, piece_five: RecsType.Number }, color: RecsType.Number },
-        {
-          metadata: {
-            name: "Team",
-            types: ["u32","felt252","felt252","u8","u32","u32","u32","u32","u32","u32","enum"],
-            customTypes: ["Pieces","Color"],
-          },
-        }
-      );
-    })(),
-  };
+    return {
+        Moves: (() => {
+            return defineComponent(
+                world,
+                {
+                    player: RecsType.BigInt,
+                    remaining: RecsType.Number,
+                    last_direction: RecsType.Number,
+                },
+                {
+                    metadata: {
+                        name: "Moves",
+                        types: ["contractaddress", "u8", "enum"],
+                        customTypes: ["Direction"],
+                    },
+                }
+            );
+        })(),
+        Position: (() => {
+            return defineComponent(
+                world,
+                {
+                    player: RecsType.BigInt,
+                    vec: { x: RecsType.Number, y: RecsType.Number },
+                },
+                {
+                    metadata: {
+                        name: "Position",
+                        types: ["contractaddress", "u32", "u32"],
+                        customTypes: ["Vec2"],
+                    },
+                }
+            );
+        })(),
+    };
 }

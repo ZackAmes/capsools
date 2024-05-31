@@ -1,7 +1,0 @@
-kind = "DojoContract"
-class_hash = "0x43f31940c65b370f5610dd9ea487bae2346357da8d860d1f0f2ca6c0e32effc"
-abi = "abis/base/contracts/arena.json"
-reads = []
-writes = []
-computed = []
-name = "project::systems::arena::arena"
